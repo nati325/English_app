@@ -3,7 +3,7 @@ const KEY = 'ea2';
 const today = () => new Date().toLocaleDateString('sv'); // YYYY-MM-DD מקומי
 const DEFAULT = {
   v: 2, xp: 0, streak: 0, best: 0, lastDay: '', animal: 'fox',
-  settings: { voice: '', rate: 0.9, pitch: 0, accent: 'en-US', goal: 20, azureKey: '', azureRegion: '', azureTTS: true, azureVoice: '', claudeKey: '', claudeModel: '', aiProvider: 'claude', geminiKey: '', geminiModel: 'gemini-2.5-flash' },
+  settings: { voice: '', rate: 0.9, pitch: 0, accent: 'en-US', goal: 20, azureKey: '', azureRegion: '', azureTTS: true, azureVoice: '', claudeKey: '', claudeModel: '', aiProvider: 'claude', geminiKey: '', geminiModel: 'gemini-flash-lite-latest' },
   cards: {},          // id -> { ease, ivl, reps, lapses, due }
   ear: {},            // 'ɪ / i' -> { ok, n }
   phon: {},           // ipa -> { n, best }

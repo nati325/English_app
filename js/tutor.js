@@ -44,16 +44,26 @@ const refusalModels = (m) => !/haiku/i.test(m);
 const GBASE = 'https://generativelanguage.googleapis.com/v1beta';
 const toGSchema = (n) => Array.isArray(n) ? n.map(toGSchema) : n && typeof n === 'object'
   ? Object.fromEntries(Object.entries(n).filter(([k]) => k !== 'additionalProperties').map(([k, v]) => [k, k === 'type' ? String(v).toUpperCase() : toGSchema(v)])) : n;
+const G_FALLBACK = 'gemini-flash-lite-latest';
+const gModel = () => { const m = (state.settings.geminiModel || G_FALLBACK).replace(/^models\//, ''); return /^gemini-2\.5-flash$/.test(m) ? G_FALLBACK : m; }; // 2.5-flash הוסר למשתמשים חדשים
 async function gcall(params) {
-  const model = (state.settings.geminiModel || 'gemini-2.5-flash').replace(/^models\//, '');
   const body = { systemInstruction: { parts: [{ text: params.system }] },
     contents: params.messages.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
     generationConfig: { maxOutputTokens: 1024, ...(params.format ? { responseMimeType: 'application/json', responseSchema: toGSchema(params.format.schema) } : {}) } };
-  const r = await fetch(`${GBASE}/models/${model}:generateContent`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': state.settings.geminiKey.trim() }, body: JSON.stringify(body) });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) { const e = new Error(j?.error?.message || 'gemini ' + r.status); e.status = r.status; throw e; }
-  if (j.promptFeedback?.blockReason || j.candidates?.[0]?.finishReason === 'SAFETY') throw new Error('refusal');
-  return j.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') ?? '';
+  const once = async (model) => {
+    const r = await fetch(`${GBASE}/models/${model}:generateContent`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': state.settings.geminiKey.trim() }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) { const e = new Error(j?.error?.message || 'gemini ' + r.status); e.status = r.status; throw e; }
+    if (j.promptFeedback?.blockReason || j.candidates?.[0]?.finishReason === 'SAFETY') throw new Error('refusal');
+    return j.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') ?? '';
+  };
+  const model = gModel();
+  try { return await once(model); }
+  catch (e) {
+    if (e.status === 503) { await new Promise(r => setTimeout(r, 1500)); try { return await once(model); } catch (e2) { e = e2; } } // עומס זמני: ניסיון נוסף
+    if ((e.status === 503 || e.status === 404) && model !== G_FALLBACK) return once(G_FALLBACK); // מעבר למודל הקל והיציב
+    throw e;
+  }
 }
 export async function listGeminiModels() {
   const r = await fetch(`${GBASE}/models?pageSize=200`, { headers: { 'x-goog-api-key': state.settings.geminiKey.trim() } });
@@ -94,6 +104,7 @@ export const errMsg = (e) => {
   const s = e?.status, m = String(e?.message || e);
   if (provider() === 'gemini') {
     if (s === 400 && /api key/i.test(m) || s === 403) return 'מפתח Gemini לא תקין או ללא הרשאה. בדוק בהגדרות.';
+    if (s === 503) return 'Gemini עמוס כרגע – נסה שוב בעוד רגע.';
     if (s === 404) return 'המודל לא קיים. לחץ "הצג מודלים זמינים" בהגדרות ובחר אחד.';
     if (s === 429) return 'חרגת ממכסת Gemini החינמית – נסה שוב בעוד דקה.';
     if (m === 'refusal') return 'Gemini חסם את התשובה. נסה לנסח אחרת.';

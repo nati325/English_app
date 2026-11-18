@@ -357,7 +357,7 @@ export function settings() {
     <label class="field" style="margin-top:12px">ספק שיחת AI<select id="aip"><option value="claude" ${s.aiProvider !== 'gemini' ? 'selected' : ''}>Claude</option><option value="gemini" ${s.aiProvider === 'gemini' ? 'selected' : ''}>Gemini (Google)</option></select></label>
     <div class="card"><b>✨ Gemini</b> <span class="mut">(שכבה חינמית ב-Google AI Studio)</span>
       <label class="field" style="margin-top:8px">מפתח API<input id="gmk" type="password" class="srch ltr" style="margin:0" autocomplete="off" placeholder="AIza..." value="${s.geminiKey || ''}"></label>
-      <label class="field">מודל<input id="gmm" list="gmodels" class="srch ltr" style="margin:0" value="${s.geminiModel || 'gemini-2.5-flash'}"><datalist id="gmodels"><option>gemini-2.5-flash</option><option>gemini-2.5-flash-lite</option><option>gemini-2.5-pro</option></datalist></label>
+      <label class="field">מודל<input id="gmm" list="gmodels" class="srch ltr" style="margin:0" value="${s.geminiModel || 'gemini-flash-lite-latest'}"><datalist id="gmodels"><option>gemini-flash-lite-latest</option><option>gemini-flash-latest</option><option>gemini-pro-latest</option></datalist></label>
       <div class="row"><button class="btn g" id="gmt">בדוק חיבור</button><button class="btn g" id="gml">הצג מודלים זמינים</button></div><div class="res" id="gmres"></div></div>
     <div class="card"><b>🧠 Claude</b> <span class="mut">(שיחה חכמה ותיקוני ניסוח)</span>
       <label class="field" style="margin-top:8px">מפתח API<input id="clk" type="password" class="srch ltr" style="margin:0" autocomplete="off" placeholder="sk-ant-..." value="${s.claudeKey}"></label>
@@ -372,7 +372,7 @@ export function settings() {
   ['acc', 'voice', 'rate', 'pitch'].forEach(id => $('#' + id, b).onchange = $('#' + id, b).oninput = upd);
   $('#acc', b).onchange = () => { upd(); s.voice = ''; save(); settings(); };
   $('#test', b).onclick = () => say(`Hello! I'm ${ANIMALS[state.animal].name}. Nice to meet you!`); $('#close', b).onclick = closeSheet;
-  const adv = () => { s.aiProvider = $('#aip', b).value; s.geminiKey = $('#gmk', b).value.trim(); s.geminiModel = $('#gmm', b).value.trim() || 'gemini-2.5-flash'; s.azureKey = $('#azk', b).value.trim(); s.azureRegion = $('#azr', b).value.trim().toLowerCase(); s.azureTTS = $('#azt', b).checked; s.azureVoice = $('#azv', b).value; s.claudeKey = $('#clk', b).value.trim(); s.claudeModel = $('#clm', b).value; save(); };
+  const adv = () => { s.aiProvider = $('#aip', b).value; s.geminiKey = $('#gmk', b).value.trim(); s.geminiModel = $('#gmm', b).value.trim() || 'gemini-flash-lite-latest'; s.azureKey = $('#azk', b).value.trim(); s.azureRegion = $('#azr', b).value.trim().toLowerCase(); s.azureTTS = $('#azt', b).checked; s.azureVoice = $('#azv', b).value; s.claudeKey = $('#clk', b).value.trim(); s.claudeModel = $('#clm', b).value; save(); };
   ['azk', 'azr', 'azt', 'azv', 'clk', 'clm', 'aip', 'gmk', 'gmm'].forEach(id => $('#' + id, b).onchange = adv);
   $('#azt1', b).onclick = async () => { adv(); const o = $('#azres', b); if (!azure.enabled()) { o.textContent = 'הכנס מפתח ואזור.'; return; } o.textContent = '⏳ בודק…';
     try { await azure.speak('Connection successful. Nice to meet you!', { voice: azure.voiceFor(ANIMALS[state.animal].voice), onStart: () => ctx.stage.speaking = true, onPulse: () => ctx.stage.pulse = 1, onEnd: () => ctx.stage.speaking = false }); o.innerHTML = '<span class="pill ok">✅ מחובר</span>'; } catch (e) { o.innerHTML = `<span class="pill hot">${azureErr(e)}</span>`; } };
