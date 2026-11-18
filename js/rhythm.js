@@ -2,7 +2,8 @@
 import { state, save, addXP } from './store.js';
 import { say, listen, compare, measure, listenStart, stopSpeaking } from './speech.js';
 import { startRecording, canRecord, countSyllables } from './rec.js';
-import { ALL, hl, pick, shuffle, trySpeak } from './views.js';
+import { ALL, hl, pick, shuffle, trySpeak, renderAssess, recordPhonemes, azureErr } from './views.js';
+import * as azure from './azure.js';
 import { FUNCTION_WORDS, LESSONS } from '../data/rhythm.js';
 
 let ctx, V;
@@ -113,26 +114,32 @@ function shadow() {
     say(s, { rate: 1, show: false });
     $('#nx').onclick = () => { if (++i < q.length) card(); else menu(); };
     let session = null;
+    const finish = async (btn) => { // עצירה וניתוח
+      if (!session) return; const { r, st, azp } = session; session = null;
+      btn.disabled = true; btn.textContent = '⏳ מנתח…';
+      const [rec, alts, az] = await Promise.all([r.stop(), st ? st.stop() : Promise.resolve([]), azp || Promise.resolve(null)]);
+      btn.disabled = false; btn.classList.remove('rec'); btn.textContent = '🎙️ הקלט שוב';
+      report(s, rec, alts, az);
+    };
     $('#rec').onclick = async (e) => {
       const btn = e.currentTarget;
-      if (session) { // עצירה וניתוח
-        btn.disabled = true; btn.textContent = '⏳ מנתח…'; const { r, st } = session; session = null;
-        const [rec, alts] = await Promise.all([r.stop(), st ? st.stop() : Promise.resolve([])]);
-        btn.disabled = false; btn.classList.remove('rec'); btn.textContent = '🎙️ הקלט שוב';
-        report(s, rec, alts); return;
-      }
+      if (session) return finish(btn);
       stopSpeaking();
       try {
         const r = await (canRecord ? startRecording() : Promise.reject(new Error('norec')));
-        const st = listenStart(); session = { r, st }; btn.classList.add('rec'); btn.textContent = '⏹ עצור';
+        let azp = null, st = null;
+        if (azure.enabled()) { azp = azure.assess(s, { stream: r.stream }).catch(err => ({ error: err })); azp.then(() => { if (session) finish(btn); }); } // Azure מזהה סיום דיבור לבד
+        else st = listenStart();
+        session = { r, st, azp }; btn.classList.add('rec'); btn.textContent = '⏹ עצור';
       } catch (err) {
         $('#fb').innerHTML = `<div class="tip">${err.message === 'norec' ? 'הדפדפן לא תומך בהקלטה.' : err.name === 'NotAllowedError' ? 'צריך לאשר גישה למיקרופון.' : 'לא ניתן להקליט: ' + err.message}</div>`;
       }
     };
   };
-  const report = async (s, rec, alts) => {
+  const report = async (s, rec, alts, az) => {
     const fb = $('#fb'); const a = rec.analysis; const syl = countSyllables(s);
-    const acc = alts?.length ? compare(s, alts) : null;
+    const azOk = az && !az.error && !az.nomatch; if (az?.error) ctx.toast(azureErr(az.error));
+    const acc = azOk ? { score: az.accuracy / 100 } : alts?.length ? compare(s, alts) : null;
     const ref = await measure(s, 1); const refRate = ref ? syl / ref : 4.5;
     let paceScore = 0, pauseScore = 0, rate = 0, ratio = 0;
     if (a?.ok) {
@@ -140,7 +147,7 @@ function shadow() {
       paceScore = ratio < .85 ? ratio / .85 : ratio > 1.3 ? 1.3 / ratio : 1; pauseScore = Math.max(0, 1 - a.pauses * .34);
     }
     const accScore = acc ? acc.score : .6; // ללא זיהוי – ניטרלי
-    const total = a?.ok ? accScore * .5 + paceScore * .3 + pauseScore * .2 : accScore;
+    const total = azOk ? (az.accuracy * .35 + (az.prosody ?? az.pron) * .25 + az.fluency * .2) / 100 + (a?.ok ? paceScore * .1 + pauseScore * .1 : .2 * accScore) : a?.ok ? accScore * .5 + paceScore * .3 + pauseScore * .2 : accScore;
     const pct = (x) => Math.round(x * 100), bar = (v, c = 'var(--acc2)') => `<div class="prog"><i style="width:${pct(v)}%;background:${c}"></i></div>`;
     const tips = [];
     if (a?.ok) { if (ratio < .8) tips.push('איטי מדי – נסה לחבר מילים ולהמעיך מילות פונקציה (to, of, and).'); else if (ratio > 1.4) tips.push('מהר מדי – האט מעט והדגש את מילות התוכן.'); else tips.push('קצב טוב! 👏'); if (a.pauses >= 2) tips.push(`היו ${a.pauses} הפסקות באמצע – בדוק חיבורים (linking) ונסה ברצף אחד.`); }
@@ -149,8 +156,10 @@ function shadow() {
       ${bar(total)}
       <p style="margin:10px 0 2px"><b>דיוק מילים</b> ${acc ? pct(acc.score) + '%' : '(אין זיהוי דיבור במכשיר)'}</p>${acc ? bar(acc.score) : ''}
       ${a?.ok ? `<p style="margin:10px 0 2px"><b>קצב</b> ${rate.toFixed(1)} הברות/שנייה · ייחוס ${refRate.toFixed(1)}</p>${bar(paceScore)}<p style="margin:10px 0 2px"><b>רציפות</b> ${a.pauses} הפסקות</p>${bar(pauseScore)}` : '<p class="mut">לא זוהה קול בהקלטה – התקרב למיקרופון.</p>'}
+      ${azOk ? `<div id="azd" style="margin-top:10px"></div>` : ''}
       ${tips.map(t => `<div class="tip">${t}</div>`).join('')}
       <div class="row" style="margin-top:8px"><button class="btn g" id="me">▶ ההקלטה שלי</button><button class="btn b" id="mod">🔊 המקור</button></div></div>`;
+    if (azOk) { renderAssess($('#azd'), az); recordPhonemes(az); }
     const au = new Audio(rec.url); $('#me').onclick = () => { stopSpeaking(); au.currentTime = 0; au.play(); }; $('#mod').onclick = () => say(s, { rate: 1, show: false });
     const xp = Math.round(total * 8) + 1; addXP(xp, 'shadow'); ctx.refreshTop(); ctx.toast(`+${xp} XP`); total >= .75 ? ctx.stage.celebrate() : ctx.stage.sad();
   };

@@ -7,6 +7,7 @@ export async function startRecording() {
   rec.ondataavailable = e => e.data.size && chunks.push(e.data);
   rec.start();
   return {
+    stream,
     stop: () => new Promise(res => {
       rec.onstop = async () => {
         stream.getTracks().forEach(t => t.stop());

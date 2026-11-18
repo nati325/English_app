@@ -4,13 +4,13 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 // חיות Quaternius (CC0) – קבצי GLB עם שלד ואנימציות
 export const ANIMALS = {
-  fox:   { name:'Foxy',   emoji:'🦊', file:'fox',       pitch:1.15, desc:'שועל סקרן',     yaw:.55, mult:1.1 },
-  shiba: { name:'Shiba',  emoji:'🐕', file:'shiba',     pitch:1.0,  desc:'שיבה שמח',      yaw:.55, mult:1.2 },
-  husky: { name:'Storm',  emoji:'🐺', file:'husky',     pitch:0.8,  desc:'האסקי חזק',     yaw:.55, mult:1.1 },
-  deer:  { name:'Bambi',  emoji:'🦌', file:'deer',      pitch:1.1,  desc:'צבי רגוע',      yaw:.5,  mult:1.4 },
-  frog:  { name:'Ribbit', emoji:'🐸', file:'frog',      pitch:1.2,  desc:'צפרדע קופצנית', yaw:0,   mult:.9 },
-  pug:   { name:'Pogo',   emoji:'🐶', file:'pug',       pitch:1.05, desc:'פאג מצחיק',     yaw:.3,  mult:1 },
-  wolf:  { name:'Luna',   emoji:'🐾', file:'wolf',      pitch:0.9,  desc:'זאבה חכמה',     yaw:.55, mult:1.1 },
+  fox:   { name:'Foxy',   emoji:'🦊', file:'fox',       pitch:1.15, desc:'שועל סקרן',     yaw:.55, mult:1.1, voice:'en-US-AriaNeural' },
+  shiba: { name:'Shiba',  emoji:'🐕', file:'shiba',     pitch:1.0,  desc:'שיבה שמח',      yaw:.55, mult:1.2, voice:'en-US-GuyNeural' },
+  husky: { name:'Storm',  emoji:'🐺', file:'husky',     pitch:0.8,  desc:'האסקי חזק',     yaw:.55, mult:1.1, voice:'en-US-DavisNeural' },
+  deer:  { name:'Bambi',  emoji:'🦌', file:'deer',      pitch:1.1,  desc:'צבי רגוע',      yaw:.5,  mult:1.4, voice:'en-US-JennyNeural' },
+  frog:  { name:'Ribbit', emoji:'🐸', file:'frog',      pitch:1.2,  desc:'צפרדע קופצנית', yaw:0,   mult:.9, voice:'en-US-TonyNeural' },
+  pug:   { name:'Pogo',   emoji:'🐶', file:'pug',       pitch:1.05, desc:'פאג מצחיק',     yaw:.3,  mult:1, voice:'en-US-JasonNeural' },
+  wolf:  { name:'Luna',   emoji:'🐾', file:'wolf',      pitch:0.9,  desc:'זאבה חכמה',     yaw:.55, mult:1.1, voice:'en-US-AvaMultilingualNeural' },
 };
 
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);

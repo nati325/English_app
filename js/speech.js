@@ -1,4 +1,5 @@
 import { state, save } from './store.js';
+import * as az from './azure.js';
 
 export const hasTTS = 'speechSynthesis' in window;
 export const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -15,8 +16,16 @@ if (hasTTS) { speechSynthesis.onvoiceschanged = () => hooks.voices?.(listVoices(
 const chosen = () => { const s = state.settings; return voices.find(v => v.voiceURI === s.voice) || voices.find(v => v.lang.replace('_','-') === s.accent) || voices[0]; };
 
 export function say(text, { rate, pitch, show = true } = {}) {
+  if (show) hooks.bubble?.(text);
+  if (az.ttsEnabled()) { // קול עצבי של Azure; נפילה לקול הדפדפן אם נכשל
+    return az.speak(text, { voice: az.voiceFor(hooks.animalVoice?.()), rate: rate ?? Math.min(1.3, Math.max(.6, state.settings.rate + .1)),
+      onStart: () => hooks.speaking?.(true), onPulse: () => hooks.pulse?.(), onEnd: () => hooks.speaking?.(false) })
+      .catch(e => { hooks.speaking?.(false); hooks.azureFail?.(e); return browserSay(text, { rate, pitch }); });
+  }
+  return browserSay(text, { rate, pitch });
+}
+function browserSay(text, { rate, pitch } = {}) {
   return new Promise(res => {
-    if (show) hooks.bubble?.(text);
     if (!hasTTS) return res();
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text); const v = chosen();
@@ -29,7 +38,7 @@ export function say(text, { rate, pitch, show = true } = {}) {
     speechSynthesis.speak(u);
   });
 }
-export const stopSpeaking = () => { if (hasTTS) speechSynthesis.cancel(); hooks.speaking?.(false); };
+export const stopSpeaking = () => { az.stop(); if (hasTTS) speechSynthesis.cancel(); hooks.speaking?.(false); };
 
 // ----- זיהוי דיבור -----
 export function listen(btn) {
@@ -63,8 +72,9 @@ export function compare(target, alts) {
 // משך משפט בקול (שקט) – משמש כייחוס לקצב בשיעורי shadowing
 const refCache = new Map();
 export function measure(text, rate) {
-  const key = text + '|' + rate + '|' + state.settings.voice;
+  const key = text + '|' + rate + '|' + state.settings.voice + az.ttsEnabled();
   if (refCache.has(key)) return Promise.resolve(refCache.get(key));
+  if (az.ttsEnabled()) return az.duration(text, { voice: az.voiceFor(hooks.animalVoice?.()), rate: Math.min(1.3, Math.max(.6, rate + .1)) }).then(d => { if (d) refCache.set(key, d); return d; });
   return new Promise(res => {
     if (!hasTTS) return res(null);
     const u = new SpeechSynthesisUtterance(text); const v = chosen(); if (v) { u.voice = v; u.lang = v.lang; }

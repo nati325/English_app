@@ -1,8 +1,10 @@
-import { state, save, addXP, rollDay, levelProgress, reset } from './store.js';
+import { state, save, addXP, rollDay, levelProgress, reset, exportData, importData } from './store.js';
+import * as azure from './azure.js';
+import * as tutor from './tutor.js';
 import * as srs from './srs.js';
 import { say, listen, compare, norm, SR, listVoices, stopSpeaking } from './speech.js';
 import { ANIMALS } from './stage.js';
-import { PHONEMES, PAIRS } from '../data/phonemes.js';
+import { PHONEMES, PAIRS, byIPA } from '../data/phonemes.js';
 import { SCENARIOS, REACTS, FIXES } from '../data/talk.js';
 
 const WORDS = await fetch('data/words.json').then(r => r.json());
@@ -21,6 +23,7 @@ const on = (s, fn, el = V) => el.querySelectorAll(s).forEach(b => b.onclick = ()
 
 // ---------- מעטפת דיבור משותפת ----------
 async function trySpeak(btn, target, out, { kind = 'speak', xp = 3 } = {}) {
+  if (azure.enabled()) return trySpeakAzure(btn, target, out, { kind, xp });
   try {
     const alts = await listen(btn);
     if (!alts.length) { out.innerHTML = '<div class="mut">לא שמעתי 🙈 נסה שוב, קרוב יותר למיקרופון</div>'; return null; }
@@ -35,6 +38,40 @@ async function trySpeak(btn, target, out, { kind = 'speak', xp = 3 } = {}) {
     out.innerHTML = `<div class="mut">${e.message === 'nosr' ? 'זיהוי דיבור זמין ב-Chrome / Edge / Safari. אפשר להאזין ולחזור בקול.' : e.message === 'not-allowed' ? 'צריך לאשר גישה למיקרופון בדפדפן.' : 'שגיאת זיהוי: ' + e.message}</div>`; return null;
   }
 }
+
+// ---------- הערכת הגייה ברמת פונמה (Azure) ----------
+const IPAFIX = { r: 'ɹ', g: 'ɡ', 'ɜ': 'ɝ', 'ɹ̩': 'ɝ', 'ʧ': 'tʃ', 'ʤ': 'dʒ' };
+const normP = (p) => IPAFIX[p] || p;
+const cls = (a) => a >= 80 ? 'ok' : a >= 60 ? 'mid' : 'no';
+export const azureErr = (e) => ({ 'azure-auth': 'מפתח Azure לא תקין או שהאזור שגוי. בדוק בהגדרות.', 'azure-network': 'אין חיבור ל-Azure כרגע.', 'not-allowed': 'צריך לאשר גישה למיקרופון בדפדפן.', 'sdk-load': 'לא הצלחתי לטעון את רכיב Azure (אינטרנט?).' }[e.message] || 'שגיאת Azure: ' + e.message.slice(0, 100));
+export function recordPhonemes(r) {
+  for (const w of r.words) for (const p of w.ph) { const k = normP(p.p), t = state.pacc[k] ||= { s: 0, n: 0 }; t.s += p.acc; t.n++; }
+  save();
+}
+export function renderAssess(out, r) {
+  const pills = [['ציון כולל', r.pron], ['דיוק', r.accuracy], ['שטף', r.fluency], ['מקצב ואינטונציה', r.prosody], ['שלמות', r.completeness]].filter(x => x[1] != null)
+    .map(([l, v]) => `<span class="pill ${v >= 80 ? 'ok' : v < 60 ? 'hot' : ''}">${l} ${Math.round(v)}</span>`).join(' ');
+  const worst = r.words.flatMap(w => w.ph.map(p => ({ ...p, w: w.w }))).filter(p => p.acc < 70).sort((a, b) => a.acc - b.acc)[0];
+  const tip = worst && byIPA[normP(worst.p)] ? `<div class="tip"><b class="ltr">/${normP(worst.p)}/ במילה ${worst.w}</b> (${Math.round(worst.acc)}): ${byIPA[normP(worst.p)][3]}</div>` : '';
+  out.innerHTML = `<div class="row c" style="margin-bottom:6px">${pills}</div>
+    <div class="ltr">${r.words.map((w, i) => `<button class="w ${cls(w.acc)}" data-i="${i}">${w.w}${w.err === 'Omission' ? ' (חסרה)' : w.err === 'Insertion' ? ' (מיותרת)' : ''} <small>${Math.round(w.acc)}</small></button>`).join('')}</div>
+    <div id="ph" class="ltr" style="margin-top:6px"></div>${tip}`;
+  out.querySelectorAll('.w[data-i]').forEach(b => b.onclick = () => { const w = r.words[+b.dataset.i]; out.querySelector('#ph').innerHTML = `<b>${w.w}</b> ` + (w.ph.length ? w.ph.map(p => `<span class="w ${cls(p.acc)}">/${normP(p.p)}/ ${Math.round(p.acc)}</span>`).join('') : '<span class="mut">אין פירוט</span>'); });
+}
+async function trySpeakAzure(btn, target, out, { kind, xp }) {
+  const old = btn.innerHTML; btn.classList.add('rec'); btn.innerHTML = '🎙️ מקשיב…'; stopSpeaking();
+  try {
+    const r = await azure.assess(target);
+    if (r.nomatch) { out.innerHTML = '<div class="mut">לא שמעתי 🙈 נסה שוב, קרוב יותר למיקרופון</div>'; return null; }
+    renderAssess(out, r); recordPhonemes(r);
+    if (r.pron >= 85) { addXP(xp, kind); ctx.stage.celebrate(); ctx.bubble(pick(['Perfect! 🎉', 'Excellent!', 'That sounded great!'])); ctx.toast(`+${xp} XP`); }
+    else if (r.pron >= 60) { addXP(1, kind); ctx.bubble('Good! Tap the red words to see which sounds to fix.'); }
+    else { ctx.stage.sad(); ctx.bubble('Listen again, then try once more 👂'); }
+    ctx.refreshTop(); return r;
+  } catch (e) { out.innerHTML = `<div class="mut">${azureErr(e)}</div>`; return null; }
+  finally { btn.classList.remove('rec'); btn.innerHTML = old; }
+}
+
 const speakBtns = (w) => `<div class="row"><button class="btn b" data-say="${w}">🔊 שמע</button><button class="btn g" data-slow="${w}">🐢 לאט</button><button class="btn o" data-mic="${w}">🎤 אמור</button></div><div class="res" id="res"></div>`;
 function bindSpeak(el = V, opts) {
   on('[data-say]', b => say(b.dataset.say), el); on('[data-slow]', b => say(b.dataset.slow, { rate: .5 }), el);
@@ -166,7 +203,7 @@ function startSentences() {
 
 // ---------- צלילים ----------
 export function sounds(sub = 'map') {
-  V.innerHTML = `<div class="seg"><button data-s="map" class="${sub === 'map' ? 'on' : ''}">מפת הצלילים</button><button data-s="ear" class="${sub === 'ear' ? 'on' : ''}">אימון אוזן</button><button data-s="me" class="${sub === 'me' ? 'on' : ''}">הנקודות שלי</button></div><div id="sv"></div>`;
+  V.innerHTML = `<div class="seg"><button data-s="map" class="${sub === 'map' ? 'on' : ''}">מפת הצלילים</button><button data-s="ear" class="${sub === 'ear' ? 'on' : ''}">אימון אוזן</button><button data-s="lab" class="${sub === 'lab' ? 'on' : ''}">מעבדה 🎯</button><button data-s="me" class="${sub === 'me' ? 'on' : ''}">הנקודות שלי</button></div><div id="sv"></div>`;
   on('.seg button', b => sounds(b.dataset.s));
   const sv = $('#sv');
   if (sub === 'map') {
@@ -178,9 +215,18 @@ export function sounds(sub = 'map') {
       <button class="btn o full" id="all">התחל אימון</button><h3>לפי תחום</h3><div class="chips"><button data-f="vowel">תנועות</button><button data-f="cons">עיצורים</button><button data-f="th">TH</button><button data-f="vb">V / B</button><button data-f="rl">R / L</button></div>`;
     $('#all').onclick = () => startEar();
     on('[data-f]', b => startEar(b.dataset.f));
+  } else if (sub === 'lab') {
+    sv.innerHTML = `<h2>מעבדת הגייה 🎯</h2><p class="sub">כתוב כל משפט באנגלית, אמור אותו, וקבל ציון לכל מילה ולכל פונמה (IPA), כולל מקצב ואינטונציה.</p>
+      ${azure.enabled() ? '' : '<div class="tip">צריך לחבר Azure כדי להשתמש במעבדה (הגדרות ⚙️ › שירותים מתקדמים). בלי זה אפשר לתרגל עם הזיהוי הרגיל.</div>'}
+      <textarea id="labtxt" class="srch ltr" rows="2" placeholder="Type a sentence… e.g. I would like a glass of water, please.">I would like a glass of water, please.</textarea>
+      <div class="row"><button class="btn b" id="labhear">🔊 שמע</button><button class="btn o" id="labmic">🎤 אמור</button></div><div class="res" id="res"></div>`;
+    $('#labhear').onclick = () => say($('#labtxt').value.trim() || 'Hello');
+    $('#labmic').onclick = (e) => { const t = $('#labtxt').value.trim(); if (t) trySpeak(e.currentTarget, t, $('#res'), { kind: 'speak', xp: 3 }); };
   } else {
+    const weak = Object.entries(state.pacc).filter(([, v]) => v.n >= 3).map(([k, v]) => ({ k, avg: v.s / v.n, n: v.n })).sort((a, b) => a.avg - b.avg).slice(0, 8);
     const rows = Object.entries(state.ear).map(([k, v]) => ({ k, acc: v.ok / v.n, n: v.n })).sort((a, b) => a.acc - b.acc);
-    sv.innerHTML = `<h2>הנקודות שלי</h2><p class="sub">מדד הדיוק שלך בזיהוי צלילים. התחל מהחלשים.</p>` + (rows.length ? rows.map(r => `<div class="card"><div class="row" style="justify-content:space-between"><b class="ltr">${r.k}</b><span class="pill ${r.acc >= .85 ? 'ok' : r.acc < .6 ? 'hot' : ''}">${Math.round(r.acc * 100)}% · ${r.n} שאלות</span></div><div class="prog"><i style="width:${r.acc * 100}%"></i></div></div>`).join('') : '<div class="card center">עוד אין נתונים – התחל אימון אוזן 👂</div>');
+    sv.innerHTML = `<h2>הנקודות שלי</h2>` + (weak.length ? `<h3>צלילים להתמקד בהם (מדידת Azure)</h3>${weak.map(w => `<button class="task" data-ph="${w.k}"><div class="ic ltr" style="font-weight:800">/${w.k}/</div><div class="t"><b>${Math.round(w.avg)}/100</b><small>${w.n} מדידות · ${byIPA[w.k] ? byIPA[w.k][2] : ''}</small><div class="prog"><i style="width:${w.avg}%;background:${w.avg >= 80 ? 'var(--good)' : w.avg < 60 ? 'var(--bad)' : 'var(--gold)'}"></i></div></div><div class="st">‹</div></button>`).join('')}` : '') + `<h3>זיהוי צלילים (אימון אוזן)</h3>` + (rows.length ? rows.map(r => `<div class="card"><div class="row" style="justify-content:space-between"><b class="ltr">${r.k}</b><span class="pill ${r.acc >= .85 ? 'ok' : r.acc < .6 ? 'hot' : ''}">${Math.round(r.acc * 100)}% · ${r.n} שאלות</span></div><div class="prog"><i style="width:${r.acc * 100}%"></i></div></div>`).join('') : '<div class="card center">עוד אין נתונים – התחל אימון אוזן 👂</div>');
+    on('[data-ph]', b => { if (byIPA[b.dataset.ph]) phoneme(b.dataset.ph); }, sv);
   }
 }
 function phoneme(ipa) {
@@ -231,24 +277,55 @@ function startEar(filter) {
 // ---------- שיחה ----------
 let scen = SCENARIOS[0];
 export function talk() {
-  V.innerHTML = `<h2>שיחה 💬</h2><p class="sub">דבר חופשי. ${ANIMALS[state.animal].name} שואל/ת ומתקן/ת ניסוחים נפוצים. (בשלב הבא: שיחה חכמה עם AI.)</p>
+  const ai = tutor.enabled();
+  V.innerHTML = `<h2>שיחה 💬 ${ai ? '<span class="pill ok">AI</span>' : ''}</h2><p class="sub">${ai ? `${ANIMALS[state.animal].name} מנהל/ת איתך שיחה אמיתית ומתקן/ת ניסוחים לא טבעיים.` : 'שיחה מבוססת כללים. לשיחה חכמה עם AI – הוסף מפתח Claude בהגדרות ⚙️.'}</p>
     <div class="chips">${SCENARIOS.map(s => `<button data-s="${s.id}" class="${s.id === scen.id ? 'on' : ''}">${s.icon} ${s.title}</button>`).join('')}</div>
     <div class="chat" id="log"></div><div id="fx"></div>
-    <div class="row" style="margin-top:10px"><button class="btn o full" id="mic">🎤 ענה בקול</button></div>
+    <div class="row" style="margin-top:10px"><button class="btn o full" id="mic">🎤 ענה בקול</button>${ai ? '<button class="btn g" id="sum" style="flex:0 0 auto">📋 סיכום</button>' : ''}</div>
     <div class="input"><input id="txt" placeholder="או הקלד באנגלית…" autocomplete="off" autocapitalize="sentences"><button class="btn" id="send" style="min-height:44px;padding:0 16px">שלח</button></div>`;
   on('.chips button', b => { scen = SCENARIOS.find(s => s.id === b.dataset.s); talk(); });
-  const log = $('#log'); let q = 0, busy = false;
-  const add = (c, t) => { log.insertAdjacentHTML('beforeend', `<div class="msg ${c}">${t}</div>`); log.scrollTop = log.scrollHeight; };
+  const log = $('#log'); let busy = false;
+  const add = (c, t) => { log.insertAdjacentHTML('beforeend', `<div class="msg ${c}">${t}</div>`); log.scrollTop = log.scrollHeight; return log.lastElementChild; };
+  const fix = (html) => { $('#fx').innerHTML = html ? `<div class="tip">${html}</div>` : ''; };
+  const micPress = async (e, handler) => {
+    const btn = e.currentTarget;
+    if (azure.enabled()) { // Azure: תמלול + הערכת הגייה במעבר אחד (ללא טקסט ייחוס – מצב חופשי)
+      try { const SDK = await azure.loadSDK(); const c = SDK.SpeechConfig.fromSubscription(state.settings.azureKey.trim(), state.settings.azureRegion.trim()); c.speechRecognitionLanguage = 'en-US';
+        const old = btn.innerHTML; btn.classList.add('rec'); btn.innerHTML = '🎙️ מקשיב…'; stopSpeaking();
+        const rec = new SDK.SpeechRecognizer(c, SDK.AudioConfig.fromDefaultMicrophoneInput());
+        rec.recognizeOnceAsync(r => { rec.close(); btn.classList.remove('rec'); btn.innerHTML = old; if (r.text) handler(r.text); }, () => { rec.close(); btn.classList.remove('rec'); btn.innerHTML = old; fix('לא הצלחתי להקשיב – בדוק מיקרופון/Azure.'); });
+      } catch (err) { fix(azureErr(err)); }
+      return;
+    }
+    try { const a = await listen(btn); if (a[0]) handler(a[0]); } catch { fix('זיהוי דיבור לא זמין בדפדפן הזה – אפשר להקליד.'); }
+  };
+
+  if (ai) {
+    const sess = tutor.session(ANIMALS[state.animal].name, `${scen.title} (${scen.qs[0]})`);
+    const run = async (p) => {
+      busy = true; const dots = add('a', '…');
+      try { const out = await p; dots.textContent = out.reply; fix(out.better ? `💡 ${out.why_he}<div class="ltr"><s>${out.original}</s> → <b>${out.better}</b></div>` : ''); await say(out.reply); return out; }
+      catch (e) { dots.remove(); fix(tutor.errMsg(e)); return null; } finally { busy = false; }
+    };
+    const answer = async (txt) => { txt = txt.trim(); if (!txt || busy) return; add('u', txt); $('#txt').value = ''; const o = await run(sess.send(txt)); if (o) { addXP(o.better ? 2 : 5, 'speak'); ctx.refreshTop(); } };
+    $('#sum').onclick = async () => { if (busy) return; busy = true; fix('מכין סיכום…'); try { const t = await sess.summary(); $('#fx').innerHTML = `<div class="tip" style="white-space:pre-wrap">${t.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]))}</div>`; addXP(8, 'speak'); ctx.refreshTop(); } catch (e) { fix(tutor.errMsg(e)); } busy = false; };
+    $('#send').onclick = () => answer($('#txt').value); $('#txt').onkeydown = e => { if (e.key === 'Enter') answer($('#txt').value); };
+    $('#mic').onclick = (e) => micPress(e, answer);
+    run(sess.start());
+    return;
+  }
+
+  let q = 0;
   const ask = () => { if (q >= scen.qs.length) { add('a', 'That was a great conversation! 🎉'); say('That was a great conversation!'); addXP(10, 'speak'); ctx.refreshTop(); ctx.stage.celebrate(); q = 0; return; } const t = scen.qs[q++]; add('a', t); return say(t); };
   const answer = async (txt) => {
     txt = txt.trim(); if (!txt || busy) return; busy = true; add('u', txt); $('#txt').value = '';
     const f = FIXES.find(x => x[0].test(txt));
-    $('#fx').innerHTML = f ? `<div class="tip">💡 ${f[2]}<div class="ltr"><b>${txt.replace(f[0], f[1])}</b></div></div>` : '';
+    fix(f ? `💡 ${f[2]}<div class="ltr"><b>${txt.replace(f[0], f[1])}</b></div>` : '');
     addXP(f ? 1 : 4, 'speak'); ctx.refreshTop();
     await say(pick(REACTS)); busy = false; ask();
   };
   $('#send').onclick = () => answer($('#txt').value); $('#txt').onkeydown = e => { if (e.key === 'Enter') answer($('#txt').value); };
-  $('#mic').onclick = async (e) => { try { const a = await listen(e.currentTarget); if (a[0]) answer(a[0]); } catch { $('#fx').innerHTML = '<div class="tip">זיהוי דיבור לא זמין בדפדפן הזה – אפשר להקליד.</div>'; } };
+  $('#mic').onclick = (e) => micPress(e, answer);
   ask();
 }
 
@@ -264,16 +341,40 @@ export function settings() {
   const voices = listVoices(), s = state.settings;
   const b = openSheet(`<h2>הגדרות</h2>
     <label class="field">מבטא יעד<select id="acc"><option value="en-US">אמריקאי (General American)</option><option value="en-GB">בריטי (RP)</option><option value="en-AU">אוסטרלי</option></select></label>
-    <label class="field">קול<select id="voice">${voices.length ? voices.map(v => `<option value="${v.voiceURI}" ${v.voiceURI === s.voice ? 'selected' : ''}>${/natural|neural|online/i.test(v.name) ? '⭐ ' : ''}${v.name} (${v.lang})</option>`).join('') : '<option value="">לא נמצאו קולות באנגלית במכשיר</option>'}</select></label>
+    <label class="field">קול הדפדפן (כשאין Azure)<select id="voice">${voices.length ? voices.map(v => `<option value="${v.voiceURI}" ${v.voiceURI === s.voice ? 'selected' : ''}>${/natural|neural|online/i.test(v.name) ? '⭐ ' : ''}${v.name} (${v.lang})</option>`).join('') : '<option value="">לא נמצאו קולות באנגלית במכשיר</option>'}</select></label>
     <label class="field">מהירות דיבור: <span id="rv">${s.rate}</span><input type="range" id="rate" min="0.5" max="1.2" step="0.05" value="${s.rate}"></label>
-    <label class="field">גובה קול: <span id="pv">${s.pitch || 'אוטומטי לפי החבר'}</span><input type="range" id="pitch" min="0" max="1.8" step="0.05" value="${s.pitch}"></label>
+    <label class="field">גובה קול (קול הדפדפן): <span id="pv">${s.pitch || 'אוטומטי לפי החבר'}</span><input type="range" id="pitch" min="0" max="1.8" step="0.05" value="${s.pitch}"></label>
     <div class="row"><button class="btn b" id="test">🔊 נסה קול</button><button class="btn g" id="close">סגור</button></div>
-    <p class="mut" style="font-size:.8rem;margin-top:14px">טיפ: קולות עם ⭐ (Natural/Neural) נשמעים הכי טבעי. ב-Android מומלץ להתקין "Google TTS" ולהוריד קול באנגלית; ב-iPhone: הגדרות › נגישות › תוכן מדובר › קולות.</p>
-    <button class="btn g full" id="rst" style="margin-top:10px;color:#b3254a">איפוס כל ההתקדמות</button>`);
+
+    <h3 style="margin-top:22px">⚡ שירותים מתקדמים (אופציונלי)</h3>
+    <p class="mut" style="font-size:.82rem;margin:0 0 10px">המפתחות נשמרים <b>רק במכשיר הזה</b> ולא נשלחים לשום מקום מלבד השירות עצמו. השתמש במפתחות ייעודיים עם מגבלת הוצאה. מדריך: SETUP.md בריפו.</p>
+    <div class="card"><b>🎯 Azure Speech</b> <span class="mut">(הערכת הגייה ברמת פונמה + קולות עצביים; שכבה חינמית F0)</span>
+      <label class="field" style="margin-top:8px">מפתח (Key 1)<input id="azk" type="password" class="srch ltr" style="margin:0" autocomplete="off" value="${s.azureKey}"></label>
+      <label class="field">אזור (Region)<input id="azr" list="regions" class="srch ltr" style="margin:0" placeholder="westeurope" value="${s.azureRegion}"><datalist id="regions"><option>westeurope</option><option>northeurope</option><option>eastus</option><option>uksouth</option><option>uaenorth</option><option>israelcentral</option></datalist></label>
+      <label class="field"><span><input type="checkbox" id="azt" ${s.azureTTS !== false ? 'checked' : ''}> קול עצבי של Azure (במקום קול הדפדפן)</span></label>
+      <label class="field">קול (ריק = קול ייחודי לכל חבר)<select id="azv"><option value="">אוטומטי לפי החבר</option>${azure.AZURE_VOICES.map(([id, l]) => `<option value="${id}" ${id === s.azureVoice ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+      <button class="btn g full" id="azt1">בדוק חיבור Azure</button><div class="res" id="azres"></div></div>
+    <div class="card"><b>🧠 Claude</b> <span class="mut">(שיחה חכמה ותיקוני ניסוח)</span>
+      <label class="field" style="margin-top:8px">מפתח API<input id="clk" type="password" class="srch ltr" style="margin:0" autocomplete="off" placeholder="sk-ant-..." value="${s.claudeKey}"></label>
+      <label class="field">מודל<select id="clm">${tutor.MODELS.map(([id, l]) => `<option value="${id}" ${id === (s.claudeModel || tutor.MODELS[0][0]) ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+      <button class="btn g full" id="clt">בדוק חיבור Claude</button><div class="res" id="clres"></div></div>
+
+    <h3>💾 גיבוי התקדמות</h3><p class="mut" style="font-size:.82rem;margin:0 0 8px">כדי להעביר בין מכשירים (בלי מפתחות).</p>
+    <div class="row"><button class="btn g" id="exp">⬇ ייצוא</button><button class="btn g" id="imp">⬆ ייבוא</button></div><input type="file" id="impf" accept="application/json" hidden>
+    <button class="btn g full" id="rst" style="margin-top:14px;color:#b3254a">איפוס כל ההתקדמות</button>`);
   $('#acc', b).value = s.accent;
   const upd = () => { s.accent = $('#acc', b).value; s.voice = $('#voice', b).value; s.rate = +$('#rate', b).value; s.pitch = +$('#pitch', b).value; $('#rv', b).textContent = s.rate; $('#pv', b).textContent = s.pitch || 'אוטומטי'; save(); };
   ['acc', 'voice', 'rate', 'pitch'].forEach(id => $('#' + id, b).onchange = $('#' + id, b).oninput = upd);
   $('#acc', b).onchange = () => { upd(); s.voice = ''; save(); settings(); };
   $('#test', b).onclick = () => say(`Hello! I'm ${ANIMALS[state.animal].name}. Nice to meet you!`); $('#close', b).onclick = closeSheet;
+  const adv = () => { s.azureKey = $('#azk', b).value.trim(); s.azureRegion = $('#azr', b).value.trim().toLowerCase(); s.azureTTS = $('#azt', b).checked; s.azureVoice = $('#azv', b).value; s.claudeKey = $('#clk', b).value.trim(); s.claudeModel = $('#clm', b).value; save(); };
+  ['azk', 'azr', 'azt', 'azv', 'clk', 'clm'].forEach(id => $('#' + id, b).onchange = adv);
+  $('#azt1', b).onclick = async () => { adv(); const o = $('#azres', b); if (!azure.enabled()) { o.textContent = 'הכנס מפתח ואזור.'; return; } o.textContent = '⏳ בודק…';
+    try { await azure.speak('Connection successful. Nice to meet you!', { voice: azure.voiceFor(ANIMALS[state.animal].voice), onStart: () => ctx.stage.speaking = true, onPulse: () => ctx.stage.pulse = 1, onEnd: () => ctx.stage.speaking = false }); o.innerHTML = '<span class="pill ok">✅ מחובר</span>'; } catch (e) { o.innerHTML = `<span class="pill hot">${azureErr(e)}</span>`; } };
+  $('#clt', b).onclick = async () => { adv(); const o = $('#clres', b); if (!tutor.enabled()) { o.textContent = 'הכנס מפתח.'; return; } o.textContent = '⏳ בודק…';
+    try { const t = await tutor.test(); o.innerHTML = `<span class="pill ok">✅ מחובר (${t.slice(0, 20)})</span>`; } catch (e) { o.innerHTML = `<span class="pill hot">${tutor.errMsg(e)}</span>`; } };
+  $('#exp', b).onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([exportData()], { type: 'application/json' })); a.download = `native-path-${new Date().toLocaleDateString('sv')}.json`; a.click(); };
+  $('#imp', b).onclick = () => $('#impf', b).click();
+  $('#impf', b).onchange = async (e) => { try { importData(await e.target.files[0].text()); ctx.toast('שוחזר ✔'); ctx.refreshTop(); closeSheet(); ctx.go('today'); } catch { ctx.toast('קובץ לא תקין'); } };
   $('#rst', b).onclick = () => { if (confirm('למחוק את כל ההתקדמות?')) reset(); };
 }

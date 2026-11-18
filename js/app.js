@@ -17,7 +17,9 @@ onSpeech({
   bubble, voices: () => {},
   speaking: (v) => { stage.speaking = v; },
   pulse: () => { stage.pulse = 1; },
-  defaultPitch: () => ANIMALS[state.animal]?.pitch ?? 1
+  defaultPitch: () => ANIMALS[state.animal]?.pitch ?? 1,
+  animalVoice: () => ANIMALS[state.animal]?.voice,
+  azureFail: (e) => toast(e.message === 'azure-auth' ? 'מפתח Azure לא תקין – חוזר לקול הדפדפן' : 'Azure לא זמין כרגע – קול הדפדפן')
 });
 stage.onTap = () => say(['Hello!', 'Hi there!', "Let's practice!", 'You can do it!', 'Great job!'][Math.random() * 5 | 0]);
 
