@@ -354,6 +354,11 @@ export function settings() {
       <label class="field"><span><input type="checkbox" id="azt" ${s.azureTTS !== false ? 'checked' : ''}> קול עצבי של Azure (במקום קול הדפדפן)</span></label>
       <label class="field">קול (ריק = קול ייחודי לכל חבר)<select id="azv"><option value="">אוטומטי לפי החבר</option>${azure.AZURE_VOICES.map(([id, l]) => `<option value="${id}" ${id === s.azureVoice ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
       <button class="btn g full" id="azt1">בדוק חיבור Azure</button><div class="res" id="azres"></div></div>
+    <label class="field" style="margin-top:12px">ספק שיחת AI<select id="aip"><option value="claude" ${s.aiProvider !== 'gemini' ? 'selected' : ''}>Claude</option><option value="gemini" ${s.aiProvider === 'gemini' ? 'selected' : ''}>Gemini (Google)</option></select></label>
+    <div class="card"><b>✨ Gemini</b> <span class="mut">(שכבה חינמית ב-Google AI Studio)</span>
+      <label class="field" style="margin-top:8px">מפתח API<input id="gmk" type="password" class="srch ltr" style="margin:0" autocomplete="off" placeholder="AIza..." value="${s.geminiKey || ''}"></label>
+      <label class="field">מודל<input id="gmm" list="gmodels" class="srch ltr" style="margin:0" value="${s.geminiModel || 'gemini-2.5-flash'}"><datalist id="gmodels"><option>gemini-2.5-flash</option><option>gemini-2.5-flash-lite</option><option>gemini-2.5-pro</option></datalist></label>
+      <div class="row"><button class="btn g" id="gmt">בדוק חיבור</button><button class="btn g" id="gml">הצג מודלים זמינים</button></div><div class="res" id="gmres"></div></div>
     <div class="card"><b>🧠 Claude</b> <span class="mut">(שיחה חכמה ותיקוני ניסוח)</span>
       <label class="field" style="margin-top:8px">מפתח API<input id="clk" type="password" class="srch ltr" style="margin:0" autocomplete="off" placeholder="sk-ant-..." value="${s.claudeKey}"></label>
       <label class="field">מודל<select id="clm">${tutor.MODELS.map(([id, l]) => `<option value="${id}" ${id === (s.claudeModel || tutor.MODELS[0][0]) ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
@@ -367,12 +372,16 @@ export function settings() {
   ['acc', 'voice', 'rate', 'pitch'].forEach(id => $('#' + id, b).onchange = $('#' + id, b).oninput = upd);
   $('#acc', b).onchange = () => { upd(); s.voice = ''; save(); settings(); };
   $('#test', b).onclick = () => say(`Hello! I'm ${ANIMALS[state.animal].name}. Nice to meet you!`); $('#close', b).onclick = closeSheet;
-  const adv = () => { s.azureKey = $('#azk', b).value.trim(); s.azureRegion = $('#azr', b).value.trim().toLowerCase(); s.azureTTS = $('#azt', b).checked; s.azureVoice = $('#azv', b).value; s.claudeKey = $('#clk', b).value.trim(); s.claudeModel = $('#clm', b).value; save(); };
-  ['azk', 'azr', 'azt', 'azv', 'clk', 'clm'].forEach(id => $('#' + id, b).onchange = adv);
+  const adv = () => { s.aiProvider = $('#aip', b).value; s.geminiKey = $('#gmk', b).value.trim(); s.geminiModel = $('#gmm', b).value.trim() || 'gemini-2.5-flash'; s.azureKey = $('#azk', b).value.trim(); s.azureRegion = $('#azr', b).value.trim().toLowerCase(); s.azureTTS = $('#azt', b).checked; s.azureVoice = $('#azv', b).value; s.claudeKey = $('#clk', b).value.trim(); s.claudeModel = $('#clm', b).value; save(); };
+  ['azk', 'azr', 'azt', 'azv', 'clk', 'clm', 'aip', 'gmk', 'gmm'].forEach(id => $('#' + id, b).onchange = adv);
   $('#azt1', b).onclick = async () => { adv(); const o = $('#azres', b); if (!azure.enabled()) { o.textContent = 'הכנס מפתח ואזור.'; return; } o.textContent = '⏳ בודק…';
     try { await azure.speak('Connection successful. Nice to meet you!', { voice: azure.voiceFor(ANIMALS[state.animal].voice), onStart: () => ctx.stage.speaking = true, onPulse: () => ctx.stage.pulse = 1, onEnd: () => ctx.stage.speaking = false }); o.innerHTML = '<span class="pill ok">✅ מחובר</span>'; } catch (e) { o.innerHTML = `<span class="pill hot">${azureErr(e)}</span>`; } };
   $('#clt', b).onclick = async () => { adv(); const o = $('#clres', b); if (!tutor.enabled()) { o.textContent = 'הכנס מפתח.'; return; } o.textContent = '⏳ בודק…';
     try { const t = await tutor.test(); o.innerHTML = `<span class="pill ok">✅ מחובר (${t.slice(0, 20)})</span>`; } catch (e) { o.innerHTML = `<span class="pill hot">${tutor.errMsg(e)}</span>`; } };
+  $('#gmt', b).onclick = async () => { adv(); const o = $('#gmres', b); if (!s.geminiKey) { o.textContent = 'הכנס מפתח.'; return; } o.textContent = '⏳ בודק…'; const prev = s.aiProvider; s.aiProvider = 'gemini';
+    try { const t = await tutor.test(); o.innerHTML = `<span class="pill ok">✅ מחובר (${t.slice(0, 20)})</span>`; } catch (e) { o.innerHTML = `<span class="pill hot">${tutor.errMsg(e)}</span>`; } s.aiProvider = prev; };
+  $('#gml', b).onclick = async () => { adv(); const o = $('#gmres', b); if (!s.geminiKey) { o.textContent = 'הכנס מפתח.'; return; } o.textContent = '⏳ מביא רשימה…';
+    try { const l = await tutor.listGeminiModels(); $('#gmodels', b).innerHTML = l.map(n => `<option>${n}</option>`).join(''); o.innerHTML = `<span class="pill ok">${l.length} מודלים</span><div class="ltr mut" style="font-size:.78rem;margin-top:4px">${l.slice(0, 12).join(' · ')}</div>`; } catch (e) { s.aiProvider = 'gemini'; o.innerHTML = `<span class="pill hot">${tutor.errMsg(e)}</span>`; s.aiProvider = $('#aip', b).value; } };
   $('#exp', b).onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([exportData()], { type: 'application/json' })); a.download = `native-path-${new Date().toLocaleDateString('sv')}.json`; a.click(); };
   $('#imp', b).onclick = () => $('#impf', b).click();
   $('#impf', b).onchange = async (e) => { try { importData(await e.target.files[0].text()); ctx.toast('שוחזר ✔'); ctx.refreshTop(); closeSheet(); ctx.go('today'); } catch { ctx.toast('קובץ לא תקין'); } };

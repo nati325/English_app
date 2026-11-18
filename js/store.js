@@ -3,7 +3,7 @@ const KEY = 'ea2';
 const today = () => new Date().toLocaleDateString('sv'); // YYYY-MM-DD מקומי
 const DEFAULT = {
   v: 2, xp: 0, streak: 0, best: 0, lastDay: '', animal: 'fox',
-  settings: { voice: '', rate: 0.9, pitch: 0, accent: 'en-US', goal: 20, azureKey: '', azureRegion: '', azureTTS: true, azureVoice: '', claudeKey: '', claudeModel: '' },
+  settings: { voice: '', rate: 0.9, pitch: 0, accent: 'en-US', goal: 20, azureKey: '', azureRegion: '', azureTTS: true, azureVoice: '', claudeKey: '', claudeModel: '', aiProvider: 'claude', geminiKey: '', geminiModel: 'gemini-2.5-flash' },
   cards: {},          // id -> { ease, ivl, reps, lapses, due }
   ear: {},            // 'ɪ / i' -> { ok, n }
   phon: {},           // ipa -> { n, best }
@@ -37,5 +37,5 @@ export const levelProgress = () => { const L = level(), a = 40*(L-1)**2, b = 40*
 export function reset() { localStorage.removeItem(KEY); location.reload(); }
 
 // גיבוי/שחזור התקדמות (בלי מפתחות) – תחליף לסנכרון עד שיהיה שרת
-export function exportData() { const { settings, ...rest } = S; const { azureKey, claudeKey, ...safe } = settings; return JSON.stringify({ ...rest, settings: safe }); }
-export function importData(txt) { const d = JSON.parse(txt); if (!d || typeof d !== 'object' || !('cards' in d)) throw new Error('bad'); const keep = { azureKey: S.settings.azureKey, claudeKey: S.settings.claudeKey }; Object.assign(S, d); S.settings = { ...DEFAULT.settings, ...d.settings, ...keep }; save(); }
+export function exportData() { const { settings, ...rest } = S; const { azureKey, claudeKey, geminiKey, ...safe } = settings; return JSON.stringify({ ...rest, settings: safe }); }
+export function importData(txt) { const d = JSON.parse(txt); if (!d || typeof d !== 'object' || !('cards' in d)) throw new Error('bad'); const keep = { azureKey: S.settings.azureKey, claudeKey: S.settings.claudeKey, geminiKey: S.settings.geminiKey }; Object.assign(S, d); S.settings = { ...DEFAULT.settings, ...d.settings, ...keep }; save(); }

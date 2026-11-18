@@ -6,7 +6,8 @@ export const MODELS = [
   ['claude-sonnet-5-5', 'Claude Sonnet 5.5 · מהיר וחכם'],
   ['claude-haiku-5-5', 'Claude Haiku 5.5 · הכי מהיר וזול']
 ];
-export const enabled = () => !!state.settings.claudeKey;
+export const provider = () => state.settings.aiProvider === 'gemini' ? 'gemini' : 'claude';
+export const enabled = () => provider() === 'gemini' ? !!state.settings.geminiKey : !!state.settings.claudeKey;
 
 let client, clientKey, SDKP;
 async function getClient() {
@@ -38,7 +39,30 @@ Rules:
 - Do not praise excessively and do not repeat the correction inside "reply".`;
 
 const refusalModels = (m) => !/haiku/i.test(m);
+
+// ---------- Gemini (REST ישיר מהדפדפן; מפתח אישי מ-Google AI Studio) ----------
+const GBASE = 'https://generativelanguage.googleapis.com/v1beta';
+const toGSchema = (n) => Array.isArray(n) ? n.map(toGSchema) : n && typeof n === 'object'
+  ? Object.fromEntries(Object.entries(n).filter(([k]) => k !== 'additionalProperties').map(([k, v]) => [k, k === 'type' ? String(v).toUpperCase() : toGSchema(v)])) : n;
+async function gcall(params) {
+  const model = (state.settings.geminiModel || 'gemini-2.5-flash').replace(/^models\//, '');
+  const body = { systemInstruction: { parts: [{ text: params.system }] },
+    contents: params.messages.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
+    generationConfig: { maxOutputTokens: 1024, ...(params.format ? { responseMimeType: 'application/json', responseSchema: toGSchema(params.format.schema) } : {}) } };
+  const r = await fetch(`${GBASE}/models/${model}:generateContent`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': state.settings.geminiKey.trim() }, body: JSON.stringify(body) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) { const e = new Error(j?.error?.message || 'gemini ' + r.status); e.status = r.status; throw e; }
+  if (j.promptFeedback?.blockReason || j.candidates?.[0]?.finishReason === 'SAFETY') throw new Error('refusal');
+  return j.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') ?? '';
+}
+export async function listGeminiModels() {
+  const r = await fetch(`${GBASE}/models?pageSize=200`, { headers: { 'x-goog-api-key': state.settings.geminiKey.trim() } });
+  const j = await r.json().catch(() => ({})); if (!r.ok) { const e = new Error(j?.error?.message || 'gemini ' + r.status); e.status = r.status; throw e; }
+  return (j.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent')).map(m => m.name.replace(/^models\//, '')).filter(n => /^gemini/.test(n));
+}
+
 async function call(params) {
+  if (provider() === 'gemini') return gcall(params);
   const c = await getClient(); const model = state.settings.claudeModel || MODELS[0][0];
   const base = { model, max_tokens: 1024, output_config: { effort: 'low', ...(params.format ? { format: params.format } : {}) }, system: params.system, messages: params.messages };
   // ברירת מחדל מומלצת למודלים אלה: מעבר אוטומטי למודל חלופי אם נדחתה הבקשה (פעולת בטיחות בצד השרת)
@@ -68,6 +92,13 @@ export function session(animalName, scenarioTitle) {
 
 export const errMsg = (e) => {
   const s = e?.status, m = String(e?.message || e);
+  if (provider() === 'gemini') {
+    if (s === 400 && /api key/i.test(m) || s === 403) return 'מפתח Gemini לא תקין או ללא הרשאה. בדוק בהגדרות.';
+    if (s === 404) return 'המודל לא קיים. לחץ "הצג מודלים זמינים" בהגדרות ובחר אחד.';
+    if (s === 429) return 'חרגת ממכסת Gemini החינמית – נסה שוב בעוד דקה.';
+    if (m === 'refusal') return 'Gemini חסם את התשובה. נסה לנסח אחרת.';
+    return 'שגיאת Gemini: ' + m.slice(0, 120);
+  }
   if (s === 401 || /authentication|invalid x-api-key/i.test(m)) return 'מפתח Claude לא תקין. בדוק בהגדרות.';
   if (s === 429) return 'עומס או מכסה – נסה שוב בעוד רגע.';
   if (s === 404 || /model/i.test(m) && s === 400) return 'המודל לא זמין לחשבון שלך – בחר מודל אחר בהגדרות.';
