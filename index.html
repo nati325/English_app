@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#fff4dc">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Native Path · חברים לאנגלית</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/" } }
+</script>
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <button class="chip" id="btnSettings" aria-label="הגדרות">⚙️</button>
+    <div class="lvl"><span class="lv">רמה <b id="lv">1</b></span><div class="bar"><i id="xpbar"></i></div></div>
+    <div class="chip streak">🔥 <b id="streak">0</b></div>
+  </header>
+
+  <section class="stage">
+    <canvas id="c"></canvas>
+    <div class="bubble" id="bubble" dir="ltr">Hi! Let's learn English!</div>
+    <button class="swap" id="btnFriend" aria-label="החלף חבר">🐾 <span id="friendName">Foxy</span></button>
+  </section>
+
+  <main id="view"></main>
+
+  <nav class="nav" id="nav">
+    <button data-tab="today" class="on"><i>🏠</i>היום</button>
+    <button data-tab="sounds"><i>🔊</i>צלילים</button>
+    <button data-tab="words"><i>📚</i>מילים</button>
+    <button data-tab="rhythm"><i>🥁</i>מקצב</button>
+    <button data-tab="talk"><i>💬</i>שיחה</button>
+  </nav>
+</div>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+<div id="toast" class="toast" hidden></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

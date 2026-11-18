@@ -1,0 +1,1163 @@
+## 1|ברכות ויסודות|👋
+hello|שלום|Hello, how are you?
+goodbye|להתראות|Goodbye, see you tomorrow.
+please|בבקשה|Could you help me, please?
+thanks|תודה|Thanks for your help.
+sorry|סליחה / מצטער|I'm sorry I'm late.
+welcome|ברוך הבא|Welcome to our home.
+excuse|לסלוח|Excuse me, where is the station?
+maybe|אולי|Maybe we can meet later.
+really|באמת|Is that really true?
+wonderful|נפלא|That sounds wonderful!
+understand|להבין|I don't understand this word.
+repeat|לחזור על|Can you repeat that, please?
+## 2|אנשים ומשפחה|👨‍👩‍👧
+family|משפחה|My family lives in Tel Aviv.
+mother|אמא|My mother cooks very well.
+father|אבא|My father works at a bank.
+brother|אח|I have one older brother.
+sister|אחות|My sister is a doctor.
+friend|חבר|She is my best friend.
+neighbor|שכן|Our neighbor is very kind.
+husband|בעל|Her husband is a teacher.
+daughter|בת|Their daughter is three years old.
+parents|הורים|I live near my parents.
+people|אנשים|Many people came to the party.
+children|ילדים|The children are playing outside.
+## 3|אוכל ושתייה|🍎
+breakfast|ארוחת בוקר|I eat breakfast at seven.
+dinner|ארוחת ערב|We have dinner together.
+coffee|קפה|I would like a coffee, please.
+water|מים|Can I have some water?
+bread|לחם|Fresh bread smells amazing.
+cheese|גבינה|I love cheese and crackers.
+chicken|עוף|The chicken is very tasty.
+vegetable|ירק|Eat your vegetables!
+fruit|פרי|I eat fruit every day.
+delicious|טעים|This soup is delicious.
+hungry|רעב|I'm so hungry right now.
+thirsty|צמא|After running, I was thirsty.
+## 4|בית|🏠
+house|בית|They bought a big house.
+kitchen|מטבח|She is in the kitchen.
+bedroom|חדר שינה|My bedroom is quiet.
+bathroom|חדר אמבטיה|Where is the bathroom?
+window|חלון|Please open the window.
+door|דלת|Close the door, please.
+table|שולחן|Put it on the table.
+chair|כיסא|Take a chair and sit down.
+garden|גינה|We have a small garden.
+furniture|רהיטים|The furniture is brand new.
+comfortable|נוח|This sofa is really comfortable.
+clean|נקי / לנקות|Please clean your room.
+## 5|שגרת יום|⏰
+wake|להתעורר|I wake up at six thirty.
+shower|מקלחת|I take a shower every morning.
+brush|להבריש|Brush your teeth twice a day.
+leave|לצאת / לעזוב|I leave home at eight.
+arrive|להגיע|We arrive at nine.
+begin|להתחיל|The lesson begins at ten.
+finish|לסיים|I finish work at five.
+sleep|לישון|I need to sleep early.
+usually|בדרך כלל|I usually walk to work.
+sometimes|לפעמים|Sometimes I cook dinner.
+always|תמיד|She always smiles.
+never|אף פעם|I never drink soda.
+## 6|זמן ומספרים|🕒
+morning|בוקר|Good morning!
+afternoon|אחר הצהריים|See you this afternoon.
+evening|ערב|We walk in the evening.
+yesterday|אתמול|I saw him yesterday.
+tomorrow|מחר|Let's meet tomorrow.
+weekend|סוף שבוע|What are you doing this weekend?
+schedule|לוח זמנים|My schedule is full today.
+thirty|שלושים|It costs thirty dollars.
+thirteen|שלוש עשרה|He is thirteen years old.
+hundred|מאה|There are a hundred people here.
+thousand|אלף|It costs a thousand shekels.
+early|מוקדם|I woke up early today.
+## 7|מקומות וכיוונים|🗺️
+street|רחוב|Our street is very quiet.
+corner|פינה|Turn left at the corner.
+straight|ישר|Go straight for two blocks.
+left|שמאלה|Turn left here.
+right|ימינה / נכון|Turn right at the light.
+near|קרוב|The bank is near here.
+far|רחוק|Is it far from here?
+library|ספרייה|I study at the library.
+restaurant|מסעדה|This restaurant is great.
+hospital|בית חולים|The hospital is across the street.
+airport|שדה תעופה|We arrive at the airport at noon.
+station|תחנה|Where is the train station?
+## 8|רגשות ותארים|😊
+happy|שמח|I'm happy to see you.
+tired|עייף|I'm really tired today.
+excited|נרגש|We are excited about the trip.
+nervous|לחוץ|I'm nervous about the interview.
+angry|כועס|Don't be angry with me.
+worried|מודאג|She looks worried.
+proud|גאה|I'm proud of you.
+bored|משועמם|The kids are bored.
+surprised|מופתע|I was surprised by the news.
+lonely|בודד|He felt lonely in the city.
+curious|סקרן|Children are naturally curious.
+relaxed|רגוע|After the beach, I feel relaxed.
+## 9|עבודה ולימודים|💼
+work|עבודה / לעבוד|I work in an office.
+job|משרה|She found a new job.
+meeting|פגישה|We have a meeting at noon.
+deadline|מועד אחרון|The deadline is on Friday.
+colleague|עמית לעבודה|My colleague is very helpful.
+manager|מנהל|Our manager is friendly.
+project|פרויקט|This project is important.
+appointment|תור / פגישה|I have a doctor's appointment.
+available|זמין|Are you available tomorrow?
+suggest|להציע|I suggest we start early.
+experience|ניסיון|She has a lot of experience.
+opportunity|הזדמנות|This is a great opportunity.
+## 10|קניות וכסף|🛍️
+buy|לקנות|I want to buy a new phone.
+sell|למכור|They sell fresh fish.
+price|מחיר|What's the price of this?
+cheap|זול|This shirt is cheap.
+expensive|יקר|That car is too expensive.
+cash|מזומן|Do you take cash?
+receipt|קבלה|Can I have a receipt?
+discount|הנחה|Is there a discount today?
+bargain|מציאה|This jacket is a bargain.
+afford|להרשות לעצמך|I can't afford a new car.
+borrow|ללוות|Can I borrow your pen?
+change|עודף / לשנות|Keep the change.
+## 11|נסיעות|✈️
+trip|טיול|We took a trip to Italy.
+ticket|כרטיס|I bought two tickets.
+luggage|מזוודות|My luggage is heavy.
+passport|דרכון|Don't forget your passport.
+hotel|מלון|We booked a hotel near the beach.
+reservation|הזמנה|I have a reservation for two.
+journey|מסע|The journey took six hours.
+delayed|מאחר|Our flight is delayed.
+beautiful|יפה|The view is beautiful.
+adventure|הרפתקה|Travel is an adventure.
+tourist|תייר|Many tourists visit the old city.
+map|מפה|Let's check the map.
+## 12|בריאות|🩺
+doctor|רופא|I need to see a doctor.
+medicine|תרופה|Take this medicine twice a day.
+headache|כאב ראש|I have a terrible headache.
+healthy|בריא|A healthy diet is important.
+exercise|פעילות גופנית|I exercise three times a week.
+fever|חום|The baby has a fever.
+dangerous|מסוכן|It's dangerous to cross here.
+accident|תאונה|There was an accident on the road.
+recover|להחלים|I hope you recover soon.
+painful|כואב|My knee is painful.
+allergic|אלרגי|I'm allergic to nuts.
+pharmacy|בית מרקחת|The pharmacy is open late.
+## 13|שיחה ודעות|💬
+think|לחשוב|I think it's a good idea.
+believe|להאמין|I believe you.
+agree|להסכים|I totally agree with you.
+disagree|לא להסכים|I disagree, but I respect your view.
+explain|להסביר|Can you explain this to me?
+mention|להזכיר|I forgot to mention it.
+decide|להחליט|I can't decide what to wear.
+prefer|להעדיף|I prefer tea to coffee.
+probably|כנראה|It will probably rain.
+definitely|בהחלט|I'll definitely come.
+actually|למעשה|Actually, I changed my mind.
+honestly|בכנות|Honestly, I don't like it.
+## 14|פעלים נפוצים|⚡
+bring|להביא|Please bring your notebook.
+carry|לשאת|Can you carry this bag?
+choose|לבחור|Choose any color you like.
+remember|לזכור|I can't remember his name.
+forget|לשכוח|Don't forget your keys.
+learn|ללמוד|I want to learn English.
+teach|ללמד|She teaches math.
+visit|לבקר|We visit my grandma often.
+invite|להזמין|I'd like to invite you to dinner.
+wait|לחכות|Wait for me outside.
+improve|להשתפר|My English is improving.
+practice|לתרגל|I practice every day.
+## 15|תארים ותיאורים|🎨
+easy|קל|This exercise is easy.
+difficult|קשה|English can be difficult.
+important|חשוב|Sleep is important.
+different|שונה|They are very different.
+similar|דומה|Our phones are similar.
+popular|פופולרי|This song is very popular.
+famous|מפורסם|She is a famous singer.
+strange|מוזר|That's a strange noise.
+quiet|שקט|The library is quiet.
+noisy|רועש|The street is noisy.
+interesting|מעניין|That's an interesting story.
+fantastic|פנטסטי|The show was fantastic!
+## 16|מילות קישור|🔗
+because|כי|I stayed home because I was sick.
+although|למרות ש|Although it was late, we kept talking.
+however|אולם|It's cheap. However, it's not good.
+instead|במקום זאת|Let's walk instead.
+already|כבר|I've already eaten.
+still|עדיין|Are you still here?
+again|שוב|Please try again.
+together|ביחד|Let's study together.
+probably|כנראה|She'll probably be late.
+especially|במיוחד|I love fruit, especially mango.
+anyway|בכל מקרה|Anyway, let's go.
+either|גם לא / או|I don't like it either.
+## 17|מילים עם הגייה מאתגרת|🎯
+three|שלוש|I have three brothers.
+through|דרך|We walked through the park.
+thought|חשבתי|I thought about you.
+weather|מזג אוויר|The weather is lovely.
+world|עולם|I want to travel the world.
+girl|ילדה|The girl is reading.
+very|מאוד|It's very important.
+rural|כפרי|They live in a rural area.
+squirrel|סנאי|A squirrel climbed the tree.
+comfortable|נוח|I feel comfortable here.
+thorough|יסודי|She did a thorough job.
+clothes|בגדים|I need new clothes.
+## 18|טבע ומזג אוויר|🌤️
+rain|גשם|It's going to rain.
+sunny|שמשי|It's sunny today.
+cloudy|מעונן|It was cloudy all day.
+windy|סוער / רוחות|It's windy at the beach.
+cold|קר|It's cold in winter.
+warm|חם / נעים|The water is warm.
+mountain|הר|We climbed a mountain.
+river|נהר|The river is wide.
+forest|יער|We walked in the forest.
+sky|שמיים|The sky is blue.
+ocean|אוקיינוס|The ocean is huge.
+season|עונה|Summer is my favorite season.
+## 19|טכנולוגיה|📱
+phone|טלפון|My phone is dead.
+computer|מחשב|I work on a computer.
+message|הודעה|I sent you a message.
+password|סיסמה|I forgot my password.
+screen|מסך|The screen is broken.
+download|להוריד|Download the app.
+internet|אינטרנט|The internet is slow.
+charge|לטעון|I need to charge my phone.
+battery|סוללה|The battery is low.
+video|סרטון|Watch this video.
+website|אתר|Visit our website.
+online|מקוון|I study online.
+## 20|שיחת חולין|☕
+weekend|סוף שבוע|How was your weekend?
+hobby|תחביב|What's your hobby?
+favorite|אהוב|Blue is my favorite color.
+birthday|יום הולדת|Happy birthday!
+movie|סרט|Let's watch a movie.
+music|מוזיקה|I love listening to music.
+travel|לטייל|I love to travel.
+sports|ספורט|Do you like sports?
+join|להצטרף|Would you like to join us?
+enjoy|ליהנות|I enjoy cooking.
+promise|הבטחה / להבטיח|I promise I'll call.
+congratulations|מזל טוב|Congratulations on your new job!
+## 21|פעלים: פעולות יומיות|🏃
+open|לפתוח|Please open the door.
+close|לסגור|Close the window, it's cold.
+cook|לבשל|I cook dinner every night.
+wash|לשטוף|Wash your hands before eating.
+drive|לנהוג|I drive to work.
+walk|ללכת ברגל|Let's walk to the park.
+run|לרוץ|I run every morning.
+read|לקרוא|I read before bed.
+write|לכתוב|Please write your name here.
+listen|להקשיב|Listen to this song.
+watch|לצפות|We watch movies on Friday.
+play|לשחק / לנגן|The kids play outside.
+sing|לשיר|She loves to sing.
+dance|לרקוד|Let's dance!
+draw|לצייר|He likes to draw animals.
+swim|לשחות|We swim in the sea.
+## 22|פעלים: תקשורת|📞
+ask|לשאול|Can I ask you a question?
+answer|לענות|Please answer the phone.
+call|להתקשר|I'll call you tonight.
+tell|לספר|Tell me about your day.
+speak|לדבר|Do you speak English?
+say|לומר|What did you say?
+talk|לשוחח|We talk every day.
+shout|לצעוק|Don't shout, please.
+whisper|ללחוש|She whispered a secret.
+reply|להשיב|I'll reply tomorrow.
+discuss|לדון|Let's discuss the plan.
+argue|להתווכח|They always argue about money.
+complain|להתלונן|Stop complaining!
+apologize|להתנצל|I want to apologize.
+## 23|פעלים: מחשבה ורגש|🧠
+know|לדעת|I know the answer.
+guess|לנחש|Can you guess my age?
+wonder|לתהות|I wonder what time it is.
+imagine|לדמיין|Imagine you're on a beach.
+hope|לקוות|I hope you feel better.
+wish|לאחל / לייחל|I wish I could fly.
+love|לאהוב|I love my job.
+hate|לשנוא|I hate waiting in line.
+miss|להתגעגע / להחמיץ|I miss my family.
+trust|לסמוך|I trust you.
+worry|לדאוג|Don't worry about it.
+realize|להבין לפתע|I realized I was wrong.
+expect|לצפות / לצפות לקבל|I expect good news.
+mean|להתכוון|What do you mean?
+## 24|בגדים|👕
+shirt|חולצה|I like your shirt.
+jacket|מעיל קל|Take a jacket, it's cold.
+dress|שמלה|She wore a red dress.
+shoes|נעליים|My shoes are new.
+socks|גרביים|I can't find my socks.
+hat|כובע|Wear a hat in the sun.
+jeans|ג'ינס|These jeans fit perfectly.
+sweater|סוודר|This sweater is warm.
+umbrella|מטרייה|Take an umbrella.
+wear|ללבוש|What should I wear?
+size|מידה|What size are you?
+fit|להתאים|Does it fit?
+## 25|גוף ובריאות|🧍
+head|ראש|My head hurts.
+eyes|עיניים|She has green eyes.
+hands|ידיים|Wash your hands.
+fingers|אצבעות|I crossed my fingers.
+back|גב / חזרה|My back hurts.
+stomach|בטן|I have a stomachache.
+throat|גרון|My throat is sore.
+heart|לב|He has a kind heart.
+tooth|שן|I have a toothache.
+knee|ברך|I hurt my knee.
+shoulder|כתף|My shoulder is sore.
+voice|קול|She has a beautiful voice.
+## 26|עיר ותחבורה|🚌
+bus|אוטובוס|I take the bus to work.
+train|רכבת|The train leaves at six.
+taxi|מונית|Let's take a taxi.
+bicycle|אופניים|I ride my bicycle.
+traffic|פקק / תנועה|There's a lot of traffic.
+bridge|גשר|We crossed the bridge.
+park|פארק / לחנות|We met in the park.
+parking|חניה|Is there parking nearby?
+crossroad|צומת|Turn left at the crossroad.
+subway|רכבת תחתית|Take the subway.
+downtown|מרכז העיר|I work downtown.
+distance|מרחק|What's the distance?
+## 27|בית ומטבח|🍳
+fridge|מקרר|The milk is in the fridge.
+oven|תנור|Put it in the oven.
+plate|צלחת|Pass me a plate.
+fork|מזלג|I need a fork.
+knife|סכין|Be careful with the knife.
+spoon|כף|Use a spoon.
+bowl|קערה|A bowl of soup, please.
+cup|כוס|A cup of tea, please.
+bottle|בקבוק|A bottle of water.
+towel|מגבת|Bring me a towel.
+blanket|שמיכה|I need a blanket.
+pillow|כרית|This pillow is soft.
+## 28|אוכל: מסעדה|🍽️
+menu|תפריט|Can I see the menu?
+order|להזמין|I'd like to order.
+waiter|מלצר|The waiter was friendly.
+bill|חשבון|Can we have the bill?
+tip|טיפ|Don't forget the tip.
+soup|מרק|The soup is hot.
+salad|סלט|I'll have a salad.
+sandwich|כריך|A tuna sandwich, please.
+dessert|קינוח|Do you want dessert?
+spicy|חריף|Is it spicy?
+sweet|מתוק|This cake is too sweet.
+sour|חמוץ|The lemon is sour.
+## 29|כסף ובנק|🏦
+bank|בנק|I went to the bank.
+account|חשבון|I opened an account.
+credit|אשראי|Do you take credit cards?
+salary|משכורת|My salary is paid monthly.
+save|לחסוך|I save money every month.
+spend|להוציא|I spend too much.
+pay|לשלם|I'll pay by card.
+owe|לחייב / להיות חייב|I owe you ten dollars.
+budget|תקציב|We have a tight budget.
+cost|לעלות|How much does it cost?
+rent|שכר דירה / לשכור|The rent is high.
+tax|מס|We pay a lot of tax.
+## 30|בית ספר ולימודים|🎓
+teacher|מורה|My teacher is great.
+student|תלמיד / סטודנט|She is a good student.
+class|שיעור / כיתה|Class starts at nine.
+lesson|שיעור|Today's lesson was easy.
+homework|שיעורי בית|I finished my homework.
+exam|מבחן|I have an exam tomorrow.
+grade|ציון|She got a good grade.
+subject|נושא / מקצוע|My favorite subject is history.
+university|אוניברסיטה|I study at the university.
+degree|תואר|He has a degree in law.
+notebook|מחברת|Open your notebook.
+question|שאלה|I have a question.
+## 31|משרד ועבודה 2|🖥️
+office|משרד|The office is downtown.
+email|אימייל|I'll send you an email.
+report|דוח|I'm writing a report.
+presentation|מצגת|My presentation is tomorrow.
+customer|לקוח|The customer is waiting.
+client|לקוח (שירות)|We met with a new client.
+boss|בוס|My boss is on vacation.
+team|צוות|Our team is great.
+salary|משכורת|The salary is good.
+interview|ראיון|I have a job interview.
+resume|קורות חיים|Send me your resume.
+promotion|קידום|She got a promotion.
+## 32|רגשות מורכבים|💭
+disappointed|מאוכזב|I'm disappointed in the result.
+embarrassed|נבוך|I felt so embarrassed.
+jealous|קנאי|Don't be jealous.
+grateful|אסיר תודה|I'm grateful for your help.
+confident|בטוח בעצמו|She feels confident.
+confused|מבולבל|I'm confused.
+overwhelmed|המום|I'm overwhelmed with work.
+satisfied|מרוצה|We're satisfied with the service.
+thrilled|נרגש מאוד|I'm thrilled to be here.
+stressed|לחוץ|I'm so stressed out.
+amazed|נפעם|I'm amazed by the view.
+annoyed|מרוגז|He looked annoyed.
+## 33|ביטויי זמן ותדירות|📅
+recently|לאחרונה|I recently moved here.
+nowadays|בימינו|Nowadays everyone has a phone.
+suddenly|פתאום|Suddenly, it started to rain.
+finally|סוף סוף|We finally arrived.
+immediately|מיד|Please come immediately.
+eventually|בסופו של דבר|Eventually, he agreed.
+frequently|בתדירות גבוהה|We frequently travel.
+rarely|לעיתים רחוקות|I rarely eat meat.
+occasionally|מדי פעם|I occasionally go hiking.
+daily|יומי|I do daily exercise.
+weekly|שבועי|We have a weekly meeting.
+meanwhile|בינתיים|Meanwhile, I'll cook dinner.
+## 34|תארים: אנשים|🧑
+kind|אדיב|She is very kind.
+polite|מנומס|He is always polite.
+rude|גס רוח|That was rude.
+funny|מצחיק|He tells funny stories.
+smart|חכם|You're so smart.
+lazy|עצלן|I feel lazy today.
+shy|ביישן|She is a bit shy.
+brave|אמיץ|The firefighter was brave.
+generous|נדיב|He is a generous man.
+patient|סבלני|Please be patient.
+honest|ישר|I'll be honest with you.
+creative|יצירתי|She is very creative.
+## 35|תארים: דברים|📦
+huge|עצום|That's a huge house.
+tiny|זעיר|It's a tiny room.
+heavy|כבד|This box is heavy.
+light|קל / אור|The bag is light.
+sharp|חד|Careful, it's sharp.
+smooth|חלק|The table is smooth.
+rough|מחוספס|The road is rough.
+fresh|טרי|The bread is fresh.
+empty|ריק|The bottle is empty.
+full|מלא|I'm full.
+modern|מודרני|It's a modern building.
+ancient|עתיק|We visited an ancient city.
+## 36|טבע וחיות|🌿
+animal|חיה|I love animals.
+bird|ציפור|A bird sang outside.
+horse|סוס|She rides a horse.
+rabbit|ארנב|The rabbit is fast.
+turtle|צב|The turtle is slow.
+butterfly|פרפר|A butterfly landed on me.
+flower|פרח|She gave me a flower.
+tree|עץ|We sat under a tree.
+grass|דשא|The grass is green.
+beach|חוף|Let's go to the beach.
+island|אי|They live on an island.
+desert|מדבר|The desert is hot.
+## 37|ספורט ופנאי|⚽
+football|כדורגל|He plays football.
+basketball|כדורסל|We play basketball.
+swimming|שחייה|Swimming is great exercise.
+hiking|טיולי הליכה|We went hiking.
+gym|חדר כושר|I go to the gym.
+team|קבוצה|Our team won.
+win|לנצח|I hope we win.
+lose|להפסיד|We lost the game.
+practice|אימון|Practice makes perfect.
+coach|מאמן|The coach is strict.
+match|משחק|The match starts at eight.
+champion|אלוף|She is the champion.
+## 38|אירועים וחגים|🎈
+party|מסיבה|We had a party.
+wedding|חתונה|I'm going to a wedding.
+holiday|חג / חופשה|Happy holidays!
+gift|מתנה|Thank you for the gift.
+celebrate|לחגוג|Let's celebrate!
+surprise|הפתעה|It's a surprise!
+invitation|הזמנה|I got an invitation.
+anniversary|יום נישואין|It's our anniversary.
+dinner|ארוחת ערב|Dinner is at eight.
+guests|אורחים|We have guests tonight.
+decorate|לקשט|Let's decorate the room.
+toast|הרמת כוסית|Let's make a toast.
+## 39|ביטויים שימושיים|🗨️
+however|אולם|It's late. However, I'll stay.
+sort|סוג / למיין|What sort of music do you like?
+anyone|מישהו|Does anyone know?
+everything|הכול|Everything is ready.
+nothing|כלום|There is nothing here.
+somewhere|איפשהו|Let's go somewhere quiet.
+whatever|מה שלא|Whatever you want.
+whenever|מתי שלא|Call me whenever you want.
+though|אף על פי|It's cold, though.
+perhaps|אולי|Perhaps we should leave.
+otherwise|אחרת|Hurry up, otherwise we'll be late.
+basically|בעצם|Basically, it's a good plan.
+## 40|עשרים הפעלים החשובים|⭐
+get|לקבל / להגיע|I got a new phone.
+go|ללכת|Let's go home.
+make|לעשות / ליצור|I made a cake.
+take|לקחת|Take your time.
+give|לתת|Give me a minute.
+come|לבוא|Come with us.
+want|לרצות|I want some tea.
+need|להזדקק|I need help.
+use|להשתמש|Can I use your phone?
+find|למצוא|I can't find my keys.
+try|לנסות|Try this soup.
+keep|לשמור|Keep the change.
+let|לתת ל|Let me help you.
+put|לשים|Put it on the table.
+turn|להסתובב|Turn left here.
+start|להתחיל|Let's start now.
+## 41|ביטויי זמן ומקום|🧭
+above|מעל|The picture is above the sofa.
+below|מתחת|Please sign below.
+behind|מאחורי|He stood behind me.
+between|בין|Sit between us.
+beside|ליד|Sit beside me.
+inside|בפנים|Come inside.
+outside|בחוץ|Let's wait outside.
+across|מעבר|The shop is across the street.
+among|בין (רבים)|She is among friends.
+toward|לכיוון|He walked toward the door.
+until|עד|Wait until six.
+during|במהלך|I slept during the flight.
+## 42|שאלות ושיחה|❓
+whose|של מי|Whose bag is this?
+whether|אם|I don't know whether it's true.
+whom|את מי|With whom are you talking?
+which|איזה|Which one do you want?
+whatever|כל מה ש|Do whatever you like.
+how|איך|How are you?
+why|למה|Why are you late?
+where|איפה|Where do you live?
+when|מתי|When does it start?
+who|מי|Who is that?
+whole|שלם|I ate the whole cake.
+wonder|לתהות|I wonder why.
+## 43|הגייה: צלילים קשים|🎯
+three|שלוש|Three thin trees.
+thirsty|צמא|I'm thirsty.
+thousand|אלף|A thousand thanks.
+rhythm|קצב|I love the rhythm.
+clothes|בגדים|Put on your clothes.
+months|חודשים|Twelve months in a year.
+sixth|שישי (סדר)|Take the sixth street.
+squirrel|סנאי|The squirrel ran away.
+literature|ספרות|I study literature.
+vocabulary|אוצר מילים|I'm building my vocabulary.
+pronunciation|הגייה|Your pronunciation is improving.
+temperature|טמפרטורה|The temperature is rising.
+## 44|רגיסטר רשמי|👔
+request|בקשה|I have a request.
+require|לדרוש|This job requires experience.
+provide|לספק|We provide great service.
+inform|ליידע|Please inform me.
+consider|לשקול|Please consider my offer.
+approve|לאשר|The manager approved it.
+regarding|בנוגע ל|Regarding your email, I agree.
+sincerely|בכנות|Sincerely, Anna.
+appreciate|להעריך|I appreciate your help.
+attend|להשתתף|Will you attend the meeting?
+confirm|לאשר|Please confirm your booking.
+apologies|התנצלויות|My apologies for the delay.
+## 45|מקצועות|🧑‍🔧
+engineer|מהנדס|My brother is an engineer.
+lawyer|עורך דין|She works as a lawyer.
+nurse|אחות|The nurse was very kind.
+farmer|חקלאי|The farmer grows wheat.
+driver|נהג|The driver was careful.
+chef|שף|The chef cooks Italian food.
+artist|אמן|He is a talented artist.
+pilot|טייס|The pilot welcomed us.
+dentist|רופא שיניים|I have a dentist appointment.
+mechanic|מכונאי|The mechanic fixed my car.
+accountant|רואה חשבון|My accountant does my taxes.
+journalist|עיתונאי|The journalist asked a question.
+programmer|מתכנת|She is a software programmer.
+photographer|צלם|The photographer took great pictures.
+## 46|מכולת|🛒
+milk|חלב|I need milk and eggs.
+eggs|ביצים|Two eggs, please.
+rice|אורז|We eat rice with chicken.
+sugar|סוכר|No sugar, thanks.
+salt|מלח|Pass the salt, please.
+butter|חמאה|Spread some butter on the bread.
+potato|תפוח אדמה|I love baked potatoes.
+tomato|עגבנייה|Add a tomato to the salad.
+onion|בצל|Cut the onion first.
+lemon|לימון|Squeeze a lemon over it.
+cucumber|מלפפון|A cucumber salad is refreshing.
+banana|בננה|I eat a banana every morning.
+strawberry|תות|These strawberries are sweet.
+grocery|מכולת|I'm going to the grocery store.
+## 47|מדע וטכנולוגיה|🔬
+science|מדע|I love science.
+experiment|ניסוי|We did an experiment today.
+research|מחקר|She does cancer research.
+invention|המצאה|The phone was a great invention.
+energy|אנרגיה|Solar energy is clean.
+machine|מכונה|The machine is broken.
+robot|רובוט|The robot can talk.
+software|תוכנה|I installed new software.
+network|רשת|The network is down.
+device|מכשיר|This device is very small.
+digital|דיגיטלי|We live in a digital world.
+artificial|מלאכותי|Artificial intelligence is growing.
+technology|טכנולוגיה|Technology changes fast.
+discovery|גילוי|It was an amazing discovery.
+## 48|חדשות ותקשורת|📰
+news|חדשות|I watch the news every night.
+newspaper|עיתון|He reads the newspaper.
+article|כתבה|I read an interesting article.
+headline|כותרת|The headline surprised me.
+channel|ערוץ|Change the channel, please.
+radio|רדיו|I listen to the radio.
+podcast|פודקאסט|I love this podcast.
+announce|להודיע|They announced the winner.
+broadcast|שידור|It's a live broadcast.
+rumor|שמועה|It's just a rumor.
+media|תקשורת|The media loves a good story.
+advertisement|פרסומת|That advertisement is funny.
+## 49|תרבות ואמנות|🎨
+painting|ציור|I like this painting.
+museum|מוזיאון|We visited the museum.
+theater|תיאטרון|We went to the theater.
+concert|קונצרט|The concert was amazing.
+poem|שיר (כתוב)|She wrote a poem.
+novel|רומן|I'm reading a novel.
+author|סופר|The author signed my book.
+singer|זמר|He is a famous singer.
+actor|שחקן|The actor was brilliant.
+audience|קהל|The audience clapped.
+culture|תרבות|I love learning about culture.
+tradition|מסורת|It's a family tradition.
+festival|פסטיבל|We went to a music festival.
+gallery|גלריה|The gallery opens at ten.
+## 50|חברה וחוק|⚖️
+law|חוק|It's against the law.
+rule|כלל|Follow the rules.
+government|ממשלה|The government announced a plan.
+citizen|אזרח|Every citizen has rights.
+vote|להצביע|I vote in every election.
+election|בחירות|The election is next month.
+police|משטרה|Call the police!
+crime|פשע|Crime has gone down.
+court|בית משפט|The case is in court.
+right|זכות|Everyone has the right to speak.
+freedom|חופש|Freedom is important.
+justice|צדק|We want justice.
+society|חברה|Society is changing.
+community|קהילה|Our community is friendly.
+## 51|סביבה|🌍
+environment|סביבה|We must protect the environment.
+pollution|זיהום|Pollution is a big problem.
+recycle|למחזר|We recycle paper and glass.
+plastic|פלסטיק|Plastic bags are bad.
+climate|אקלים|The climate is changing.
+planet|כוכב לכת|We have only one planet.
+nature|טבע|I love nature.
+protect|להגן|Let's protect the animals.
+waste|בזבוז / פסולת|Don't waste water.
+solar|סולארי|We use solar panels.
+fuel|דלק|Fuel is expensive.
+earthquake|רעידת אדמה|There was an earthquake.
+flood|שיטפון|The flood damaged the town.
+storm|סערה|A big storm is coming.
+## 52|שדה תעופה|🛫
+flight|טיסה|Our flight leaves at nine.
+gate|שער|Go to gate twelve.
+boarding|עלייה למטוס|Boarding starts in ten minutes.
+customs|מכס|We went through customs.
+security|ביטחון|Security was very fast.
+suitcase|מזוודה|My suitcase is heavy.
+departure|יציאה|Departure is at noon.
+arrival|הגעה|The arrival time is five.
+seat|מושב|Is this seat taken?
+window|חלון|I prefer a window seat.
+cabin|תא|The cabin is very quiet.
+landing|נחיתה|The landing was smooth.
+visa|ויזה|Do I need a visa?
+## 53|מלון ולינה|🏨
+room|חדר|I booked a double room.
+key|מפתח|Here is your key.
+reception|קבלה|Ask at the reception.
+breakfast|ארוחת בוקר|Is breakfast included?
+checkout|עזיבת חדר|Checkout is at noon.
+elevator|מעלית|The elevator is broken.
+floor|קומה|Our room is on the third floor.
+view|נוף|The room has a sea view.
+service|שירות|The service was excellent.
+complaint|תלונה|I'd like to make a complaint.
+stay|להישאר|We'll stay for three nights.
+available|פנוי|Is a room available?
+## 54|בריאות 2|💊
+symptom|סימפטום|What are your symptoms?
+infection|זיהום|He has an ear infection.
+injury|פציעה|It's a minor injury.
+bandage|תחבושת|I need a bandage.
+prescription|מרשם|Here is your prescription.
+surgery|ניתוח|He needs surgery.
+cough|שיעול|I have a bad cough.
+sneeze|להתעטש|I keep sneezing.
+dizzy|סחרחורת|I feel dizzy.
+sore|כואב|I have a sore throat.
+vitamin|ויטמין|Take a vitamin every day.
+hospital|בית חולים|She works at the hospital.
+blood|דם|They took a blood test.
+sleep|שינה|I need more sleep.
+## 55|יחסים|❤️
+relationship|מערכת יחסים|They have a good relationship.
+marry|להתחתן|They want to marry.
+divorce|גירושין|They went through a divorce.
+date|דייט / תאריך|We have a date tonight.
+trust|אמון|Trust is important.
+argue|להתווכח|We argued about money.
+forgive|לסלוח|I forgive you.
+miss|להתגעגע|I miss you.
+support|תמיכה|Thanks for your support.
+respect|כבוד|Show some respect.
+advice|עצה|Can I ask for your advice?
+share|לחלוק|Let's share the cake.
+care|לדאוג|I care about you.
+## 56|פעלים לא סדירים 1|🔧
+begin|להתחיל|Let's begin.
+break|לשבור|Don't break the glass.
+build|לבנות|They build houses.
+buy|לקנות|I want to buy bread.
+catch|לתפוס|Catch the ball!
+feel|להרגיש|I feel great.
+fall|ליפול|Don't fall.
+fight|להילחם|Don't fight.
+hold|להחזיק|Hold my hand.
+hurt|לפגוע|My leg hurts.
+lead|להוביל|She leads the team.
+lend|להשאיל|Can you lend me a pen?
+meet|להיפגש|Nice to meet you.
+send|לשלוח|I'll send you a message.
+sit|לשבת|Please sit down.
+stand|לעמוד|Please stand up.
+steal|לגנוב|Someone stole my bike.
+throw|לזרוק|Throw the ball.
+## 57|פעלים 2|🔨
+add|להוסיף|Add some salt.
+agree|להסכים|I agree.
+allow|לאפשר|Dogs are not allowed.
+cancel|לבטל|I need to cancel my order.
+change|לשנות|People change.
+check|לבדוק|Check your email.
+clean|לנקות|Clean your room.
+collect|לאסוף|I collect stamps.
+compare|להשוות|Compare the prices.
+connect|לחבר|Connect to Wi-Fi.
+cover|לכסות|Cover the pot.
+create|ליצור|Create a new account.
+cut|לחתוך|Cut the cake.
+deliver|לספק משלוח|They deliver in an hour.
+describe|לתאר|Describe your day.
+destroy|להרוס|The storm destroyed the roof.
+develop|לפתח|They develop software.
+## 58|פעלים 3|📌
+enter|להיכנס|Enter your password.
+exist|להתקיים|Does it really exist?
+fix|לתקן|Can you fix my phone?
+follow|לעקוב|Follow me.
+guide|להדריך|He guided us through the city.
+happen|לקרות|What happened?
+help|לעזור|Can you help me?
+hide|להסתיר|Hide the gift.
+include|לכלול|Breakfast is included.
+increase|לעלות|Prices increase every year.
+keep|לשמור|Keep this safe.
+kill|להרוג|Don't kill the plant.
+laugh|לצחוק|We laughed a lot.
+manage|לנהל / להצליח|I manage a small shop.
+notice|להבחין|Did you notice that?
+offer|להציע|They offered me a job.
+prepare|להכין|I prepare dinner.
+## 59|פעלים 4|🧩
+reach|להגיע|We reached the top.
+receive|לקבל|I received your email.
+reduce|להפחית|Reduce the noise.
+refuse|לסרב|She refused to answer.
+rely|לסמוך|You can rely on me.
+remove|להסיר|Remove your shoes.
+replace|להחליף|Replace the battery.
+rest|לנוח|Let's rest for a while.
+return|לחזור|I return tomorrow.
+save|להציל|He saved my life.
+search|לחפש|I search for my keys.
+serve|להגיש|They serve breakfast.
+shake|לנער|Shake the bottle.
+share|לחלוק|We share an office.
+show|להראות|Show me your photo.
+solve|לפתור|We solved the problem.
+stop|לעצור|Stop here, please.
+## 60|פעלים 5|🎯
+succeed|להצליח|I hope you succeed.
+suffer|לסבול|He suffers from headaches.
+suppose|להניח|I suppose you're right.
+survive|לשרוד|They survived the storm.
+taste|לטעום|Taste this soup.
+touch|לגעת|Don't touch it.
+travel|לנסוע|I travel a lot.
+treat|לטפל|The doctor treated him.
+try|לנסות|Try again.
+type|להקליד|Type your name.
+wake|להעיר|Wake me at six.
+warn|להזהיר|I warned him.
+waste|לבזבז|Don't waste time.
+wear|ללבוש|Wear a coat.
+whisper|ללחוש|Whisper in my ear.
+wrap|לעטוף|Wrap the gift.
+## 61|תארים 3|🌈
+serious|רציני|This is a serious problem.
+careful|זהיר|Be careful!
+careless|רשלן|That was careless.
+dirty|מלוכלך|My shoes are dirty.
+dry|יבש|The towel is dry.
+wet|רטוב|My hair is wet.
+loud|רועש|The music is loud.
+bright|בהיר / מבריק|It's a bright day.
+dark|חשוך|It's dark outside.
+rich|עשיר|He is very rich.
+poor|עני|Many families are poor.
+safe|בטוח|Is it safe here?
+sick|חולה|I feel sick.
+tight|צר|These shoes are too tight.
+loose|רפוי|This shirt is loose.
+## 62|תארים 4|🔍
+bitter|מר|The coffee is bitter.
+cheerful|עליז|She is a cheerful girl.
+cruel|אכזרי|That was cruel.
+curious|סקרן|The cat is curious.
+fair|הוגן|That's not fair.
+fragile|שביר|Be careful, it's fragile.
+gentle|עדין|Be gentle with the baby.
+guilty|אשם|I feel guilty.
+helpful|מועיל|Thanks, you've been very helpful.
+innocent|חף מפשע|He is innocent.
+lucky|ברי מזל|I'm so lucky.
+mad|כועס / מטורף|He's mad at me.
+mysterious|מסתורי|It was a mysterious letter.
+perfect|מושלם|This is perfect!
+useful|שימושי|This app is useful.
+## 63|צבעים וצורות|🔴
+red|אדום|She wore a red dress.
+blue|כחול|The sky is blue.
+green|ירוק|I love green tea.
+yellow|צהוב|The sun is yellow.
+black|שחור|He has black hair.
+white|לבן|The snow is white.
+orange|כתום|I painted it orange.
+purple|סגול|She loves purple.
+pink|ורוד|It's a pink flower.
+brown|חום|The bear is brown.
+gray|אפור|The sky is gray.
+round|עגול|The table is round.
+square|ריבוע|It's a square box.
+circle|עיגול|Draw a circle.
+## 64|כמויות ומספרים|🔢
+many|הרבה (נספרים)|How many people came?
+much|הרבה (לא נספרים)|How much is it?
+few|מעט|I have a few friends.
+little|מעט|I have little time.
+several|כמה|I waited several hours.
+half|חצי|Half of it is gone.
+double|כפול|I'd like a double.
+twice|פעמיים|I called twice.
+enough|מספיק|Is that enough?
+plenty|שפע|We have plenty of time.
+first|ראשון|It's my first time.
+second|שני|He came in second.
+third|שלישי|Take the third left.
+fifteen|חמש עשרה|I'm fifteen minutes late.
+## 65|ימים וחודשים|🗓️
+Monday|יום שני|See you on Monday.
+Tuesday|יום שלישי|Tuesday is my busy day.
+Wednesday|יום רביעי|The meeting is on Wednesday.
+Thursday|יום חמישי|Thursday is fine.
+Friday|יום שישי|Happy Friday!
+Saturday|שבת|We rest on Saturday.
+Sunday|יום ראשון|Sunday is the first day.
+January|ינואר|It's cold in January.
+February|פברואר|February is short.
+August|אוגוסט|August is very hot.
+December|דצמבר|We travel in December.
+month|חודש|Next month is my birthday.
+year|שנה|This year was great.
+decade|עשור|It happened a decade ago.
+## 66|משפחה מורחבת|👪
+grandmother|סבתא|My grandmother bakes cookies.
+grandfather|סבא|My grandfather tells stories.
+uncle|דוד|My uncle lives in Haifa.
+aunt|דודה|My aunt is a nurse.
+cousin|בן דוד|My cousin is my age.
+nephew|אחיין|My nephew is five.
+niece|אחיינית|My niece loves drawing.
+wife|אישה / רעיה|His wife is a doctor.
+son|בן|Their son is ten.
+baby|תינוק|The baby is sleeping.
+twin|תאום|She has a twin sister.
+relative|קרוב משפחה|A relative is visiting.
+generation|דור|Three generations live here.
+adult|מבוגר|She is an adult now.
+## 67|דעות והערכות|👍
+opinion|דעה|In my opinion, it's good.
+reason|סיבה|What's the reason?
+idea|רעיון|That's a great idea.
+choice|בחירה|You have a choice.
+chance|סיכוי|Give me a chance.
+point|נקודה|That's a good point.
+problem|בעיה|No problem!
+solution|פתרון|We need a solution.
+advantage|יתרון|That's an advantage.
+disadvantage|חיסרון|There's one disadvantage.
+mistake|טעות|It was a mistake.
+success|הצלחה|Congratulations on your success!
+effort|מאמץ|Thanks for your effort.
+purpose|מטרה|What's the purpose?
+## 68|עבודה 3|📊
+business|עסק|He runs a small business.
+company|חברה|She works for a big company.
+market|שוק|The market is growing.
+profit|רווח|We made a profit.
+contract|חוזה|Please sign the contract.
+budget|תקציב|It fits our budget.
+agreement|הסכם|We reached an agreement.
+negotiate|לנהל משא ומתן|We negotiate prices.
+manager|מנהל|The manager approved it.
+employee|עובד|Each employee gets a badge.
+salary|משכורת|The salary is fair.
+invoice|חשבונית|I'll send the invoice.
+strategy|אסטרטגיה|We need a new strategy.
+goal|מטרה|My goal is to speak fluently.
+## 69|פנאי ובידור|🍿
+film|סרט|It's a great film.
+series|סדרה|I'm watching a series.
+episode|פרק|Did you see the last episode?
+comedy|קומדיה|I love a good comedy.
+horror|אימה|I don't like horror movies.
+ticket|כרטיס|Two tickets, please.
+cinema|קולנוע|Let's go to the cinema.
+camera|מצלמה|I bought a new camera.
+photo|תמונה|Take a photo of us.
+game|משחק|Do you want to play a game?
+puzzle|פאזל|We did a puzzle.
+joke|בדיחה|Tell me a joke.
+story|סיפור|Tell me a story.
+magic|קסם|The show was full of magic.
+## 70|בישול|👨‍🍳
+recipe|מתכון|I love this recipe.
+ingredient|מרכיב|What's the main ingredient?
+boil|להרתיח|Boil the water.
+fry|לטגן|Fry the eggs.
+bake|לאפות|I bake bread on Fridays.
+chop|לקצוץ|Chop the onions.
+stir|לערבב|Stir the soup.
+mix|לערבב|Mix the flour and eggs.
+pour|לשפוך|Pour the milk.
+taste|טעם|It has a strange taste.
+flavor|טעם|I love this flavor.
+pepper|פלפל|Add some pepper.
+garlic|שום|I love garlic.
+sauce|רוטב|The sauce is spicy.
+## 71|חפצים יומיומיים|🔑
+key|מפתח|I lost my keys.
+wallet|ארנק|My wallet is empty.
+bag|תיק|Her bag is heavy.
+watch|שעון|I bought a new watch.
+glasses|משקפיים|I can't find my glasses.
+mirror|מראה|Look in the mirror.
+brush|מברשת|I need a brush.
+soap|סבון|Use soap and water.
+candle|נר|Light a candle.
+lamp|מנורה|Turn on the lamp.
+clock|שעון קיר|The clock is slow.
+box|קופסה|Open the box.
+rope|חבל|Tie the rope.
+tool|כלי|I need a tool.
+## 72|מילים שימושיות: שמות|📦
+thing|דבר|What is this thing?
+place|מקום|It's a nice place.
+way|דרך|Which way is it?
+reason|סיבה|Give me a reason.
+kind|סוג|What kind of music?
+piece|חתיכה|A piece of cake.
+part|חלק|This is the best part.
+case|מקרה|In that case, yes.
+fact|עובדה|That's a fact.
+side|צד|Which side are you on?
+group|קבוצה|A group of friends.
+level|רמה|My level is improving.
+field|שדה / תחום|He works in the medical field.
+area|אזור|It's a quiet area.
+## 73|מילים קשות להגייה 2|🎯
+world|עולם|The world is big.
+girl|ילדה|The girl is happy.
+work|עבודה|Work is hard.
+word|מילה|I learned a new word.
+third|שלישי|The third floor.
+thirteen|שלוש עשרה|I'm thirteen.
+health|בריאות|Health is important.
+wealth|עושר|Wealth isn't everything.
+breath|נשימה|Take a deep breath.
+breathe|לנשום|Breathe slowly.
+cloth|בד|It's made of cloth.
+bother|להטריד|Don't bother me.
+either|גם לא|I don't like either.
+neither|אף אחד|Neither of us knows.
+## 74|שיחת חולין 2|🗣️
+awesome|מדהים|That's awesome!
+terrible|נורא|The weather is terrible.
+lovely|מקסים|It's a lovely day.
+exactly|בדיוק|Exactly what I thought.
+absolutely|בהחלט|Absolutely not.
+obviously|ברור|Obviously, he's tired.
+apparently|כנראה / לפי הנראה|Apparently, it's closed.
+fortunately|למרבה המזל|Fortunately, nobody was hurt.
+unfortunately|לרוע המזל|Unfortunately, I can't come.
+seriously|ברצינות|Seriously, it's great.
+literally|ממש|It's literally freezing.
+honestly|בכנות|Honestly, I'm not sure.
+whatever|מה שלא יהיה|Whatever, let's go.
+## 75|הבעת רגש וקשר|🙌
+thanks|תודה|Thanks a lot!
+cheers|לחיים|Cheers!
+bless|לברך|God bless you.
+pity|חבל|What a pity!
+shame|בושה / חבל|What a shame.
+luck|מזל|Good luck!
+congratulations|ברכות|Congratulations!
+welcome|ברוך הבא|You're welcome.
+regards|ד״ש|Give my regards to your mother.
+cheer|לעודד|Let's cheer him up.
+hug|חיבוק|Give me a hug.
+kiss|נשיקה|A kiss on the cheek.
+smile|חיוך|Your smile is beautiful.
+## 76|אנגלית אקדמית בסיסית|📘
+analyze|לנתח|We analyze the data.
+argument|טיעון|Her argument is strong.
+conclude|להסיק|We concluded that it's true.
+evidence|ראיה|There is no evidence.
+example|דוגמה|For example, this one.
+issue|סוגיה|It's a serious issue.
+method|שיטה|This method works.
+period|תקופה|In that period, he lived here.
+process|תהליך|The process is slow.
+result|תוצאה|The results are clear.
+theory|תאוריה|It's just a theory.
+topic|נושא|Let's change the topic.
+## 77|תיאור אנשים|🧍‍♂️
+tall|גבוה|He is very tall.
+short|נמוך / קצר|She is short.
+slim|רזה|She looks slim.
+strong|חזק|He is strong.
+weak|חלש|I feel weak.
+young|צעיר|She is young.
+old|זקן|My dog is old.
+beard|זקן (שיער)|He has a beard.
+hair|שיער|She has long hair.
+curly|מתולתל|His hair is curly.
+handsome|נאה|He is handsome.
+pretty|יפה|She is pretty.
+## 78|תחבורה 2|🚗
+engine|מנוע|The engine is loud.
+tire|צמיג|I have a flat tire.
+fuel|דלק|We need fuel.
+license|רישיון|Show me your license.
+speed|מהירות|Slow down, your speed is high.
+road|כביש|The road is closed.
+highway|כביש מהיר|We took the highway.
+signal|רמזור / אות|Use your signal.
+brake|בלם|Press the brake.
+seatbelt|חגורת בטיחות|Fasten your seatbelt.
+passenger|נוסע|Each passenger has a ticket.
+vehicle|רכב|This vehicle is new.
+## 79|מילות יחס ופעלים ביטוי|🔀
+about|על / בערך|Tell me about it.
+against|נגד|I'm against this idea.
+along|לאורך|We walked along the beach.
+around|מסביב|Look around.
+beyond|מעבר|It's beyond my reach.
+despite|למרות|Despite the rain, we went.
+except|חוץ מ|Everyone except me.
+inside|בפנים|It's inside the box.
+instead|במקום|Instead of coffee, tea.
+onto|על גבי|Jump onto the bed.
+past|עבר / אחרי|It's past noon.
+without|בלי|I can't live without music.
+within|בתוך|Within an hour.
+## 80|תיאור מצבים|🌟
+common|נפוץ|It's a common mistake.
+rare|נדיר|It's a rare chance.
+possible|אפשרי|Is it possible?
+impossible|בלתי אפשרי|It's impossible.
+necessary|הכרחי|It's necessary to sign.
+ready|מוכן|Are you ready?
+busy|עסוק|I'm busy right now.
+free|פנוי / חינם|I'm free tonight.
+late|מאוחר|I'm late!
+sure|בטוח|I'm sure.
+certain|וודאי|Are you certain?
+alone|לבד|I live alone.
+## 81|מילים לשיחה יומיומית|🧃
+anyone|מישהו|Is anyone there?
+someone|מישהו|Someone called you.
+anything|משהו|Do you need anything?
+something|משהו|I want something sweet.
+everyone|כולם|Everyone is here.
+nobody|אף אחד|Nobody knows.
+everywhere|בכל מקום|I looked everywhere.
+anywhere|בכל מקום|Can we go anywhere?
+nowhere|בשום מקום|It's nowhere to be found.
+sometimes|לפעמים|Sometimes I cry.
+somehow|איכשהו|Somehow, we made it.
+enough|מספיק|I've had enough.
+## 82|זמנים ותהליכים|⏳
+before|לפני|Call me before noon.
+after|אחרי|After dinner, we walked.
+during|במהלך|He slept during the movie.
+since|מאז|I live here since 2020.
+while|בזמן ש|I read while I eat.
+once|פעם אחת|I went there once.
+soon|בקרוב|See you soon.
+later|מאוחר יותר|I'll call you later.
+ago|לפני (זמן)|Two years ago.
+lately|לאחרונה|I've been tired lately.
+anymore|עוד לא|I don't live there anymore.
+forever|לנצח|I'll love you forever.
+## 83|חיי יומיום: עוד|🧺
+laundry|כביסה|I do laundry on Sundays.
+rubbish|זבל|Take out the rubbish.
+shopping|קניות|I love shopping.
+neighborhood|שכונה|It's a quiet neighborhood.
+appointment|תור|I made an appointment.
+errand|סידור|I have a few errands to run.
+chore|מטלה|Washing dishes is my least favorite chore.
+routine|שגרה|I have a daily routine.
+habit|הרגל|It's a bad habit.
+hurry|למהר|Hurry up!
+pack|לארוז|I need to pack my bag.
+lock|לנעול|Don't forget to lock the door.
