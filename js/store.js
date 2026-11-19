@@ -3,11 +3,13 @@ const KEY = 'ea2';
 const today = () => new Date().toLocaleDateString('sv'); // YYYY-MM-DD מקומי
 const DEFAULT = {
   v: 2, xp: 0, streak: 0, best: 0, lastDay: '', animal: 'fox',
-  settings: { voice: '', rate: 0.9, pitch: 0, accent: 'en-US', goal: 20, azureKey: '', azureRegion: '', azureTTS: true, azureVoice: '', claudeKey: '', claudeModel: '', aiProvider: 'claude', geminiKey: '', geminiModel: 'gemini-flash-lite-latest' },
+  settings: { voice: '', rate: 0.9, pitch: 0, accent: 'en-US', goal: 20, azureKey: '', azureRegion: '', azureTTS: true, azureVoice: '', claudeKey: '', claudeModel: '', newPerDay: 5, aiProvider: 'claude', geminiKey: '', geminiModel: 'gemini-flash-lite-latest' },
   cards: {},          // id -> { ease, ivl, reps, lapses, due }
   ear: {},            // 'ɪ / i' -> { ok, n }
   phon: {},           // ipa -> { n, best }
-  seen: {},           // key -> { id: 1 } פריטים שכבר הוצגו (לא חוזרים עד שכל המאגר נוצל)
+  seen: {},
+  known: {},          // מילים שמבחן הרמה סימן כמוכרות (לא יוצגו כחדשות)
+  placement: null,    // תוצאת מבחן הרמה           // key -> { id: 1 } פריטים שכבר הוצגו (לא חוזרים עד שכל המאגר נוצל)
   pacc: {},           // ipa -> { s, n } ממוצע דיוק לפי Azure
   daily: { date: '', review: 0, ear: 0, learn: 0, speak: 0, rhythm: 0, shadow: 0, xp: 0 }
 };

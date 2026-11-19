@@ -3,6 +3,7 @@ import { state, save, levelProgress, rollDay } from './store.js';
 import { onSpeech, say, listVoices } from './speech.js';
 import * as views from './views.js';
 import * as rhythm from './rhythm.js';
+import * as placement from './placement.js';
 
 const $ = (s) => document.querySelector(s);
 rollDay();
@@ -41,7 +42,8 @@ $('#btnFriend').onclick = () => views.friends();
 document.querySelector('[data-close]').onclick = views.closeSheet;
 
 const C = { stage, view: $('#view'), bubble, toast, refreshTop, go, setAnimal, R: rhythm };
-views.init(C); rhythm.init(C);
+C.placement = placement;
+views.init(C); rhythm.init(C); placement.init(C);
 refreshTop();
 await setAnimal(state.animal, false);
 go('today');

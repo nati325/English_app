@@ -149,3 +149,12 @@ details summary::-webkit-details-marker{display:none}
 #view #nx{position:sticky;bottom:-6px;margin-top:14px;box-shadow:0 -10px 14px -6px #fff, 0 3px 0 #1c8a74;z-index:2}
 .word{font-size:2.8rem}.he{font-size:1.4rem}.ex{font-size:1.1rem}
 .task{padding:14px}
+
+/* מבחן רמה */
+.ptop{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:.88rem;color:var(--mut)}
+.ptop .back{padding:4px 0}
+.opt{display:block;width:100%;text-align:start;background:#fff;border:2px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px;font-size:1.08rem;min-height:56px}
+.opt:active{background:#fff4ee;border-color:var(--acc)}
+.opt.idk{color:var(--mut);border-style:dashed;text-align:center}
+.lvlbig{font-size:4rem;font-weight:900;color:var(--acc);line-height:1.1;margin:4px 0}
+body:has(.ptest:not(.flowfin)) .nav{display:none}

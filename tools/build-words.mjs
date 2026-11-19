@@ -65,6 +65,9 @@ const freqFiles = fs.readdirSync('data').filter(f => /^core_freq.*\.txt$/.test(f
 const fw = []; for (const f of freqFiles) for (const line of fs.readFileSync('data/' + f, 'utf8').split('\n')) { if (!line.trim()) continue; const [w, he, ex] = line.split('|'); if (!w || !he || !ex) { console.log('bad line:', line); continue; } if (seen.has(w.toLowerCase()) || seen.has(w)) continue; seen.add(w); const ph = cmu.get(w.toLowerCase()); if (!ph) { missing.push(w); continue; } fw.push({ w, he, ex, ...(({ ipa, n, stress }) => ({ ipa, syl: n, st: stress }))(toIPA(ph)) }); }
 let nextId = Math.max(...units.map(u => u.id)) + 1; const base = [...seen].length - fw.length;
 for (let i = 0; i < fw.length; i += 25) { const chunk = fw.slice(i, i + 25); const from = base + i + 1, to = base + i + chunk.length; units.push({ id: nextId++, title: `מילים נפוצות ${from.toLocaleString('en')}–${to.toLocaleString('en')}`, icon: '🔢', lvl: from <= 1700 ? 'B1' : from <= 2400 ? 'B2' : 'C1', words: chunk }); }
+// דירוג שכיחות בדיבור (רשימת כתוביות) – משמש את מבחן הרמה לסימון מילים מוכרות
+const rank = new Map(fs.readFileSync('data/freq_subs50k.txt', 'utf8').split('\n').map((l, i) => [l.split(' ')[0], i + 1]));
+for (const u of units) for (const w of u.words) { const r = rank.get(w.w.toLowerCase()); if (r) w.fr = r; }
 fs.writeFileSync('data/words.json', JSON.stringify({ units }));
 const total = units.reduce((a,u)=>a+u.words.length,0);
 console.log('words:', total, 'missing:', missing.join(','));

@@ -11,6 +11,7 @@ const WORDS = await fetch('data/words.json').then(r => r.json());
 const ALL = WORDS.units.flatMap(u => u.words.map(w => ({ ...w, unit: u.id })));
 const BYW = Object.fromEntries(ALL.map(w => [w.w, w]));
 const cid = (w) => 'w:' + w;
+const isDone = (w) => !!srs.get(cid(w.w)) || !!state.known?.[w.w]; // נלמדה או סומנה כמוכרת במבחן הרמה
 const pick = (a) => a[Math.random() * a.length | 0];
 const shuffle = (a) => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
 const hl = (ex, w) => ex.replace(new RegExp(`\\b(${w}\\w*)`, 'i'), '<b>$1</b>');
@@ -21,7 +22,7 @@ export const init = (c) => {
   ctx = c; V = c.view; c.flowNext = flowNext;
   // מצב "מיקוד": בזמן תרגיל הבמה מתכווצת והתוכן מקבל את רוב המסך. סרגל התקדמות לשיעור היומי נוסף אוטומטית.
   new MutationObserver(() => {
-    document.body.classList.toggle('compact', !!V.querySelector('.dots,.wcard,.speaker,.chat,.flowfin'));
+    document.body.classList.toggle('compact', !!V.querySelector('.dots,.wcard,.speaker,.chat,.flowfin,.ptest'));
     if (flow && !V.querySelector('.flowbar') && !V.querySelector('.flowfin')) V.insertAdjacentHTML('afterbegin', `<div class="flowbar"><span>שלב ${flow.i + 1} מתוך ${flow.steps.length} · <b>${flow.names[flow.i]}</b></span><i style="width:${(flow.i + .5) / flow.steps.length * 100}%"></i></div>`);
   }).observe(V, { childList: true });
 };
@@ -108,9 +109,19 @@ export function today() {
   rollDay(); const d = state.daily, due = srs.dueIds().length, A = ANIMALS[state.animal], lp = levelProgress();
   const goals = [[d.review, due ? 10 : 0], [d.learn, 5], [d.ear, 6], [d.speak, 3]].filter(g => g[1] > 0);
   const pct = Math.round(goals.reduce((a, g) => a + Math.min(1, g[0] / g[1]), 0) / goals.length * 100);
-  const known = Object.keys(state.cards).length, left = ALL.filter(w => !srs.get(cid(w.w))).length;
+  const known = Object.keys(state.cards).length, left = ALL.filter(w => !isDone(w)).length;
+  if (!state.placement && !known && !state.skipPlacement) { // משתמש חדש: קודם מבחן רמה
+    V.innerHTML = `<div class="hero center"><div style="font-size:3rem">${A.emoji}</div><h2>ברוך הבא! אני ${A.name}</h2>
+      <p class="sub">כדי לא לבזבז לך זמן על מה שאתה כבר יודע, בוא נבדוק את הרמה שלך. לוקח כ-8 דקות.</p>
+      <button class="btn big full" id="pt">🎯 התחל מבחן רמה</button>
+      <button class="btn g full" id="skip" style="margin-top:10px">אני מתחיל מאפס – דלג</button></div>`;
+    $('#pt').onclick = () => ctx.placement.start();
+    $('#skip').onclick = () => { state.skipPlacement = true; save(); today(); };
+    return;
+  }
+  const P = state.placement, LV = ['Pre-A1', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   V.innerHTML = `
-    <div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><div class="big">${A.emoji}</div><div style="flex:1"><b style="font-size:1.1rem">${greet()}! אני ${A.name}</b><div class="sub" style="margin:2px 0 6px">היום ${pct}% · עוד ${lp.next} XP לרמה ${lp.L + 1}</div><div class="prog"><i style="width:${pct}%"></i></div></div></div>
+    <div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><div class="big">${A.emoji}</div><div style="flex:1"><b style="font-size:1.1rem">${greet()}! אני ${A.name}</b><div class="sub" style="margin:2px 0 6px">${P ? `<button class="pill ok" id="lvl" style="border:0">רמה ${LV[P.overall]}</button> · ` : ''}היום ${pct}%</div><div class="prog"><i style="width:${pct}%"></i></div></div></div>
       <button class="btn big full" id="goDaily" style="margin-top:14px">▶ ${pct >= 100 ? 'עוד שיעור' : pct > 0 ? 'המשך לשיעור היומי' : 'התחל את השיעור היומי'}</button>
       <div class="sub center" style="margin:8px 0 0">${due ? 'חזרות · ' : ''}5 מילים חדשות · אימון אוזן · דיבור · כ-10 דקות</div></div>
     <h3>תרגול חופשי</h3>
@@ -131,6 +142,8 @@ export function today() {
       <div class="step on"><i>S5</i><span><b>שיחה עם AI</b></span></div>
       <div class="step lock"><i>S6–7</i><span>אידיומות וסלנג 🔒</span></div></div></details>`;
   $('#goDaily').onclick = startDaily;
+  if ($('#lvl')) $('#lvl').onclick = () => ctx.placement.showResult(state.placement);
+  if (!P) V.insertAdjacentHTML('beforeend', `<button class="task" id="pt2"><div class="ic">🎯</div><div class="t"><b>מבחן רמה</b><small>8 דקות – כדי לדלג על מה שאתה כבר יודע</small></div><div class="st">‹</div></button>`), $('#pt2').onclick = () => ctx.placement.start();
   on('[data-q]', b => ({ review: startReview, learn: () => startLearn(), ear: () => startEar(), speak: () => startSentences(), rhythm: () => ctx.go('rhythm'), talk: () => ctx.go('talk') })[b.dataset.q]());
 }
 const greet = () => { const h = new Date().getHours(); return h < 5 ? 'לילה טוב' : h < 12 ? 'בוקר טוב' : h < 18 ? 'צהריים טובים' : 'ערב טוב'; };
@@ -138,22 +151,22 @@ const greet = () => { const h = new Date().getHours(); return h < 5 ? 'לילה 
 // ---------- מילים ----------
 export function words(uid) {
   if (uid) return unitView(uid);
-  const nextW = ALL.find(w => !srs.get(cid(w.w))); const nextU = nextW && nextW.unit;
+  const nextW = ALL.find(w => !isDone(w)); const nextU = nextW && nextW.unit;
   const levels = [...new Set(WORDS.units.map(u => u.lvl))];
-  const done = ALL.length - ALL.filter(w => !srs.get(cid(w.w))).length;
+  const done = ALL.length - ALL.filter(w => !isDone(w)).length;
   V.innerHTML = `<h2>מילים</h2>
     <button class="btn big full" id="go">▶ ${nextW ? 'המשך ללמוד: 5 מילים הבאות' : 'למדת הכול! 🎉'}</button>
     <div class="sub center" style="margin:8px 0 12px">${done} מתוך ${ALL.length} · כל מילה נלמדת פעם אחת ואז חוזרת רק בזמן החזרות</div>
     <input id="q" class="srch" placeholder="🔍 חפש מילה באנגלית או בעברית…" autocomplete="off"><div id="hits"></div>
-    <div id="ul">${levels.map(l => { const us = WORDS.units.filter(u => u.lvl === l), tot = us.reduce((a, u) => a + u.words.length, 0), n = us.reduce((a, u) => a + u.words.filter(w => srs.get(cid(w.w))).length, 0);
-      return `<details class="lvl" ${us.some(u => u.id === nextU) ? 'open' : ''}><summary><b>רמה ${l}</b><span class="mut">${n}/${tot}</span></summary>${us.map(u => { const k = u.words.filter(w => srs.get(cid(w.w))).length; return `<button class="urow" data-u="${u.id}"><span class="ic">${u.icon}</span><b>${u.title}</b><small>${k}/${u.words.length}</small></button>`; }).join('')}</details>`; }).join('')}</div>`;
+    <div id="ul">${levels.map(l => { const us = WORDS.units.filter(u => u.lvl === l), tot = us.reduce((a, u) => a + u.words.length, 0), n = us.reduce((a, u) => a + u.words.filter(w => isDone(w)).length, 0);
+      return `<details class="lvl" ${us.some(u => u.id === nextU) ? 'open' : ''}><summary><b>רמה ${l}</b><span class="mut">${n}/${tot}</span></summary>${us.map(u => { const k = u.words.filter(w => isDone(w)).length; return `<button class="urow" data-u="${u.id}"><span class="ic">${u.icon}</span><b>${u.title}</b><small>${k}/${u.words.length}</small></button>`; }).join('')}</details>`; }).join('')}</div>`;
   $('#go').onclick = () => startLearn();
   on('.urow', b => unitView(+b.dataset.u));
   $('#q').oninput = (e) => {
     const t = e.target.value.trim().toLowerCase(), h = $('#hits');
     $('#ul').hidden = !!t; if (!t) { h.innerHTML = ''; return; }
     const r = ALL.filter(w => w.w.toLowerCase().includes(t) || w.he.includes(t)).slice(0, 40);
-    h.innerHTML = r.length ? `<div class="wlist">${r.map(w => `<div class="wr"><button class="round" data-say="${w.w}">🔊</button><div class="l"><b>${w.w}</b> ${srs.get(cid(w.w)) ? '✅' : ''}<div>/${w.ipa}/</div></div><div class="r">${w.he}</div></div>`).join('')}</div>` : '<p class="sub center">לא נמצא</p>';
+    h.innerHTML = r.length ? `<div class="wlist">${r.map(w => `<div class="wr"><button class="round" data-say="${w.w}">🔊</button><div class="l"><b>${w.w}</b> ${isDone(w) ? '✅' : ''}<div>/${w.ipa}/</div></div><div class="r">${w.he}</div></div>`).join('')}</div>` : '<p class="sub center">לא נמצא</p>';
     on('[data-say]', b => say(b.dataset.say), h);
   };
 }
@@ -161,14 +174,14 @@ function unitView(uid) {
   const u = WORDS.units.find(x => x.id === uid);
   V.innerHTML = `<button class="back" id="bk">→ חזרה</button><h2>${u.icon} ${u.title}</h2>
     <div class="row" style="margin:10px 0"><button class="btn o" id="go">📚 למד מילים חדשות</button></div>
-    <div class="wlist">${u.words.map(w => `<div class="wr"><button class="round" data-say="${w.w}">🔊</button><div class="l"><b>${w.w}</b> ${srs.get(cid(w.w)) ? '✅' : ''}<div>/${w.ipa}/</div></div><div class="r">${w.he}</div></div>`).join('')}</div>`;
+    <div class="wlist">${u.words.map(w => `<div class="wr"><button class="round" data-say="${w.w}">🔊</button><div class="l"><b>${w.w}</b> ${isDone(w) ? '✅' : ''}<div>/${w.ipa}/</div></div><div class="r">${w.he}</div></div>`).join('')}</div>`;
   $('#bk').onclick = () => words(); $('#go').onclick = () => startLearn(uid);
   on('[data-say]', b => say(b.dataset.say));
 }
 
 function startLearn(uid) {
-  const pool = ALL.filter(w => !srs.get(cid(w.w)) && (!uid || w.unit === uid));
-  const q = pool.slice(0, 5);
+  const pool = ALL.filter(w => !isDone(w) && (!uid || w.unit === uid));
+  const q = pool.slice(0, state.settings.newPerDay || 5);
   if (!q.length) { ctx.toast('כבר למדת את כל המילים כאן 🎉'); return words(); }
   let i = 0;
   const card = () => {
@@ -222,7 +235,7 @@ function startReview() {
 
 // ---------- משפטים (דיבור) ----------
 function startSentences(n = 5) {
-  const learned = ALL.filter(w => srs.get(cid(w.w)));
+  const learned = ALL.filter(w => isDone(w));
   const q = fresh(learned.length >= 40 ? learned : ALL, 'sent', n, w => w.w); let i = 0;
   const card = () => {
     const w = q[i];
@@ -400,6 +413,7 @@ export function settings() {
       <label class="field">מודל<select id="clm">${tutor.MODELS.map(([id, l]) => `<option value="${id}" ${id === (s.claudeModel || tutor.MODELS[0][0]) ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
       <button class="btn g full" id="clt">בדוק חיבור Claude</button><div class="res" id="clres"></div></div>
 
+    <button class="btn b full" id="ptst" style="margin-top:14px">🎯 מבחן רמה ${state.placement ? '(מחדש)' : ''}</button>
     <h3>💾 גיבוי התקדמות</h3><p class="mut" style="font-size:.82rem;margin:0 0 8px">כדי להעביר בין מכשירים (בלי מפתחות).</p>
     <div class="row"><button class="btn g" id="exp">⬇ ייצוא</button><button class="btn g" id="imp">⬆ ייבוא</button></div><input type="file" id="impf" accept="application/json" hidden>
     <button class="btn g full" id="rst" style="margin-top:14px;color:#b3254a">איפוס כל ההתקדמות</button>`);
@@ -418,6 +432,7 @@ export function settings() {
     try { const t = await tutor.test(); o.innerHTML = `<span class="pill ok">✅ מחובר (${t.slice(0, 20)})</span>`; } catch (e) { o.innerHTML = `<span class="pill hot">${tutor.errMsg(e)}</span>`; } s.aiProvider = prev; };
   $('#gml', b).onclick = async () => { adv(); const o = $('#gmres', b); if (!s.geminiKey) { o.textContent = 'הכנס מפתח.'; return; } o.textContent = '⏳ מביא רשימה…';
     try { const l = await tutor.listGeminiModels(); $('#gmodels', b).innerHTML = l.map(n => `<option>${n}</option>`).join(''); o.innerHTML = `<span class="pill ok">${l.length} מודלים</span><div class="ltr mut" style="font-size:.78rem;margin-top:4px">${l.slice(0, 12).join(' · ')}</div>`; } catch (e) { s.aiProvider = 'gemini'; o.innerHTML = `<span class="pill hot">${tutor.errMsg(e)}</span>`; s.aiProvider = $('#aip', b).value; } };
+  $('#ptst', b).onclick = () => { closeSheet(); ctx.placement.start(); };
   $('#exp', b).onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([exportData()], { type: 'application/json' })); a.download = `native-path-${new Date().toLocaleDateString('sv')}.json`; a.click(); };
   $('#imp', b).onclick = () => $('#impf', b).click();
   $('#impf', b).onchange = async (e) => { try { importData(await e.target.files[0].text()); ctx.toast('שוחזר ✔'); ctx.refreshTop(); closeSheet(); ctx.go('today'); } catch { ctx.toast('קובץ לא תקין'); } };
