@@ -11,9 +11,6 @@
 <link rel="icon" href="icons/icon.svg">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="css/style.css">
-<script type="importmap">
-{ "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/" } }
-</script>
 </head>
 <body>
 <div id="app">
@@ -24,7 +21,7 @@
   </header>
 
   <section class="stage">
-    <canvas id="c"></canvas>
+    <div id="c" class="cwrap"></div>
     <div class="bubble" id="bubble" dir="ltr">Hi! Let's learn English!</div>
     <button class="swap" id="btnFriend" aria-label="החלף חבר">🐾 <span id="friendName">Foxy</span></button>
   </section>

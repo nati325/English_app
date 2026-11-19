@@ -7,6 +7,7 @@ import * as placement from './placement.js';
 
 const $ = (s) => document.querySelector(s);
 rollDay();
+if (!ANIMALS[state.animal]) { state.animal = 'fox'; save(); } // מעבר מהחיות הישנות
 const stage = new Stage($('#c')); window.__stage = stage;
 
 const bubble = (t) => { $('#bubble').textContent = t; };
@@ -27,11 +28,13 @@ stage.onTap = () => say(['Hello!', 'Hi there!', "Let's practice!", 'You can do i
 async function setAnimal(k, greet) {
   state.animal = k; save(); $('#friendName').textContent = ANIMALS[k].name;
   await stage.setAnimal(k);
-  if (greet) say(`Hi! I'm ${ANIMALS[k].name}. Let's learn English together!`);
+  if (greet) { if (curTab === 'today') views.today(); say(`Hi! I'm ${ANIMALS[k].name}. Let's learn English together!`); }
 }
 
 const tabs = { today: views.today, sounds: () => views.sounds('map'), words: () => views.words(), rhythm: rhythm.menu, talk: views.talk };
+let curTab = 'today';
 function go(tab) {
+  curTab = tab;
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   views.clearFlow(); stopSpeakingSafe(); $('#view').scrollTop = 0; tabs[tab]();
 }

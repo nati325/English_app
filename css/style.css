@@ -158,3 +158,22 @@ details summary::-webkit-details-marker{display:none}
 .opt.idk{color:var(--mut);border-style:dashed;text-align:center}
 .lvlbig{font-size:4rem;font-weight:900;color:var(--acc);line-height:1.1;margin:4px 0}
 body:has(.ptest:not(.flowfin)) .nav{display:none}
+
+/* ===== דמות 2D (Fluent Emoji 3D) ===== */
+.cwrap{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:30px;overflow:hidden}
+.char{position:relative;height:min(64%,220px);aspect-ratio:1;display:flex;justify-content:center;cursor:pointer;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.char img{height:100%;width:auto;position:relative;z-index:2;transform-origin:50% 90%;filter:drop-shadow(0 8px 10px #0002);will-change:transform}
+.char .cshadow{position:absolute;bottom:-8%;left:20%;right:20%;height:12%;border-radius:50%;background:radial-gradient(#0003,#0000 70%);transform:scaleX(var(--sh,1));z-index:1}
+.char.pop img{animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+.rings{position:absolute;inset:-6%;z-index:0;pointer-events:none}
+.rings i{position:absolute;inset:0;border-radius:50%;border:3px solid #ff7a4566;opacity:0}
+.char.talk .rings i{animation:ring 1.1s ease-out infinite}.char.talk .rings i:nth-child(2){animation-delay:.55s}
+@keyframes ring{from{transform:scale(.7);opacity:.9}to{transform:scale(1.25);opacity:0}}
+.cfx{position:absolute;left:50%;bottom:45%;z-index:5;pointer-events:none}
+.cfx span{position:absolute;font-size:1.6rem;animation:burst 1s ease-out forwards}
+@keyframes burst{from{transform:translate(0,0) scale(.4);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(1.1);opacity:0}}
+body.compact .cwrap{padding-bottom:22px}body.compact .char{height:78%}
+.av{width:56px;height:56px;flex:none}.av.big{width:110px;height:110px;display:block;margin:0 auto 6px}
+.pick button img{display:block;width:62px;height:62px;margin:2px auto 4px}
+#c.cwrap{display:flex;width:auto;height:auto}

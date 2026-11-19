@@ -3,7 +3,7 @@ import * as azure from './azure.js';
 import * as tutor from './tutor.js';
 import * as srs from './srs.js';
 import { say, listen, compare, norm, SR, listVoices, stopSpeaking } from './speech.js';
-import { ANIMALS } from './stage.js';
+import { ANIMALS, animalImg } from './stage.js';
 import { PHONEMES, PAIRS, byIPA } from '../data/phonemes.js';
 import { SCENARIOS, REACTS, FIXES } from '../data/talk.js';
 
@@ -111,7 +111,7 @@ export function today() {
   const pct = Math.round(goals.reduce((a, g) => a + Math.min(1, g[0] / g[1]), 0) / goals.length * 100);
   const known = Object.keys(state.cards).length, left = ALL.filter(w => !isDone(w)).length;
   if (!state.placement && !known && !state.skipPlacement) { // משתמש חדש: קודם מבחן רמה
-    V.innerHTML = `<div class="hero center"><div style="font-size:3rem">${A.emoji}</div><h2>ברוך הבא! אני ${A.name}</h2>
+    V.innerHTML = `<div class="hero center"><img class="av big" src="${animalImg(state.animal)}" alt=""><h2>ברוך הבא! אני ${A.name}</h2>
       <p class="sub">כדי לא לבזבז לך זמן על מה שאתה כבר יודע, בוא נבדוק את הרמה שלך. לוקח כ-8 דקות.</p>
       <button class="btn big full" id="pt">🎯 התחל מבחן רמה</button>
       <button class="btn g full" id="skip" style="margin-top:10px">אני מתחיל מאפס – דלג</button></div>`;
@@ -121,7 +121,7 @@ export function today() {
   }
   const P = state.placement, LV = ['Pre-A1', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   V.innerHTML = `
-    <div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><div class="big">${A.emoji}</div><div style="flex:1"><b style="font-size:1.1rem">${greet()}! אני ${A.name}</b><div class="sub" style="margin:2px 0 6px">${P ? `<button class="pill ok" id="lvl" style="border:0">רמה ${LV[P.overall]}</button> · ` : ''}היום ${pct}%</div><div class="prog"><i style="width:${pct}%"></i></div></div></div>
+    <div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><img class="av" src="${animalImg(state.animal)}" alt=""><div style="flex:1"><b style="font-size:1.1rem">${greet()}! אני ${A.name}</b><div class="sub" style="margin:2px 0 6px">${P ? `<button class="pill ok" id="lvl" style="border:0">רמה ${LV[P.overall]}</button> · ` : ''}היום ${pct}%</div><div class="prog"><i style="width:${pct}%"></i></div></div></div>
       <button class="btn big full" id="goDaily" style="margin-top:14px">▶ ${pct >= 100 ? 'עוד שיעור' : pct > 0 ? 'המשך לשיעור היומי' : 'התחל את השיעור היומי'}</button>
       <div class="sub center" style="margin:8px 0 0">${due ? 'חזרות · ' : ''}5 מילים חדשות · אימון אוזן · דיבור · כ-10 דקות</div></div>
     <h3>תרגול חופשי</h3>
@@ -383,7 +383,7 @@ export function openSheet(html) { const s = document.getElementById('sheet'); do
 export const closeSheet = () => { document.getElementById('sheet').hidden = true; };
 
 export function friends() {
-  const b = openSheet(`<h2>בחר חבר ללמידה</h2><p class="sub">כל חבר עם קול ברירת מחדל שונה. אפשר לשנות בהגדרות.</p><div class="pick">${Object.entries(ANIMALS).map(([k, a]) => `<button data-a="${k}" class="${k === state.animal ? 'on' : ''}"><i>${a.emoji}</i>${a.name}<br><span class="mut" style="font-weight:500">${a.desc}</span></button>`).join('')}</div>`);
+  const b = openSheet(`<h2>בחר חבר ללמידה</h2><p class="sub">לכל חבר קול משלו. לחץ כדי לבחור.</p><div class="pick">${Object.entries(ANIMALS).map(([k, a]) => `<button data-a="${k}" class="${k === state.animal ? 'on' : ''}"><img src="${animalImg(k)}" alt="" loading="lazy">${a.name}<br><span class="mut" style="font-weight:500">${a.desc}</span></button>`).join('')}</div>`);
   on('[data-a]', x => { closeSheet(); ctx.setAnimal(x.dataset.a, true); }, b);
 }
 export function settings() {
