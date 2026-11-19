@@ -54,7 +54,7 @@ export class Stage {
     this.r.setSize(w, h, false); this.cam.aspect = w/h; this.cam.updateProjectionMatrix(); this.frame();
   }
   frame() { // מרחק מצלמה לפי גודל וגובה הבמה
-    const h = 4.4, dist = (h/2) / Math.tan(THREE.MathUtils.degToRad(this.cam.fov/2)) / Math.min(1, this.cam.aspect*0.9);
+    const h = document.body.classList.contains('compact') ? 3.4 : 4.4, dist = (h/2) / Math.tan(THREE.MathUtils.degToRad(this.cam.fov/2)) / Math.min(1, this.cam.aspect*0.9);
     this.cam.position.set(0, 2.0, dist + 1.3); this.cam.lookAt(0, 1.45, 0);
   }
   async load(key) {

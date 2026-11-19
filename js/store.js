@@ -7,6 +7,7 @@ const DEFAULT = {
   cards: {},          // id -> { ease, ivl, reps, lapses, due }
   ear: {},            // 'ɪ / i' -> { ok, n }
   phon: {},           // ipa -> { n, best }
+  seen: {},           // key -> { id: 1 } פריטים שכבר הוצגו (לא חוזרים עד שכל המאגר נוצל)
   pacc: {},           // ipa -> { s, n } ממוצע דיוק לפי Azure
   daily: { date: '', review: 0, ear: 0, learn: 0, speak: 0, rhythm: 0, shadow: 0, xp: 0 }
 };
@@ -39,3 +40,12 @@ export function reset() { localStorage.removeItem(KEY); location.reload(); }
 // גיבוי/שחזור התקדמות (בלי מפתחות) – תחליף לסנכרון עד שיהיה שרת
 export function exportData() { const { settings, ...rest } = S; const { azureKey, claudeKey, geminiKey, ...safe } = settings; return JSON.stringify({ ...rest, settings: safe }); }
 export function importData(txt) { const d = JSON.parse(txt); if (!d || typeof d !== 'object' || !('cards' in d)) throw new Error('bad'); const keep = { azureKey: S.settings.azureKey, claudeKey: S.settings.claudeKey, geminiKey: S.settings.geminiKey }; Object.assign(S, d); S.settings = { ...DEFAULT.settings, ...d.settings, ...keep }; save(); }
+
+// בחירת n פריטים שעוד לא הוצגו (בלי חזרות עד שכל המאגר נוצל); סבב חדש מתחיל רק כשנגמר המאגר
+const shuf = (a) => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
+export function fresh(pool, key, n, id = (x) => String(x)) {
+  const seen = (S.seen[key] ||= {});
+  let out = shuf(pool.filter(x => !seen[id(x)])).slice(0, n);
+  if (out.length < n) { S.seen[key] = {}; out = out.concat(shuf(pool.filter(x => !out.includes(x))).slice(0, n - out.length)); }
+  const m = (S.seen[key] ||= {}); out.forEach(x => { m[id(x)] = 1; }); save(); return out;
+}

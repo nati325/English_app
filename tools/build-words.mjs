@@ -52,7 +52,7 @@ function toIPA(ph) {
 const units = []; const seen = new Set(); const missing = [];
 for (const line of fs.readFileSync('data/core.txt','utf8').split('\n')) {
   if (!line.trim()) continue;
-  if (line.startsWith('## ')) { const [id,title,icon] = line.slice(3).split('|'); units.push({ id:+id, title, icon, words:[] }); continue; }
+  if (line.startsWith('## ')) { const [id,title,icon,lvl] = line.slice(3).split('|'); units.push({ id:+id, title, icon, lvl: lvl || (+id <= 20 ? 'A1–A2' : +id <= 44 ? 'A2–B1' : 'B1'), words:[] }); continue; }
   const [w, he, ex] = line.split('|');
   if (seen.has(w)) continue; seen.add(w);
   const ph = cmu.get(w.toLowerCase());
@@ -60,6 +60,11 @@ for (const line of fs.readFileSync('data/core.txt','utf8').split('\n')) {
   const r = toIPA(ph);
   units.at(-1).words.push({ w, he, ex, ipa: r.ipa, syl: r.n, st: r.stress });
 }
+// ----- ליבת שכיחות (data/core_freq*.txt): מקובצת אוטומטית ל-25 מילים לפי סדר שכיחות -----
+const freqFiles = fs.readdirSync('data').filter(f => /^core_freq.*\.txt$/.test(f)).sort();
+const fw = []; for (const f of freqFiles) for (const line of fs.readFileSync('data/' + f, 'utf8').split('\n')) { if (!line.trim()) continue; const [w, he, ex] = line.split('|'); if (!w || !he || !ex) { console.log('bad line:', line); continue; } if (seen.has(w.toLowerCase()) || seen.has(w)) continue; seen.add(w); const ph = cmu.get(w.toLowerCase()); if (!ph) { missing.push(w); continue; } fw.push({ w, he, ex, ...(({ ipa, n, stress }) => ({ ipa, syl: n, st: stress }))(toIPA(ph)) }); }
+let nextId = Math.max(...units.map(u => u.id)) + 1; const base = [...seen].length - fw.length;
+for (let i = 0; i < fw.length; i += 25) { const chunk = fw.slice(i, i + 25); const from = base + i + 1, to = base + i + chunk.length; units.push({ id: nextId++, title: `מילים נפוצות ${from.toLocaleString('en')}–${to.toLocaleString('en')}`, icon: '🔢', lvl: from <= 1700 ? 'B1' : from <= 2400 ? 'B2' : 'C1', words: chunk }); }
 fs.writeFileSync('data/words.json', JSON.stringify({ units }));
 const total = units.reduce((a,u)=>a+u.words.length,0);
 console.log('words:', total, 'missing:', missing.join(','));

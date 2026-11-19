@@ -32,7 +32,7 @@ async function setAnimal(k, greet) {
 const tabs = { today: views.today, sounds: () => views.sounds('map'), words: () => views.words(), rhythm: rhythm.menu, talk: views.talk };
 function go(tab) {
   document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
-  stopSpeakingSafe(); $('#view').scrollTop = 0; tabs[tab]();
+  views.clearFlow(); stopSpeakingSafe(); $('#view').scrollTop = 0; tabs[tab]();
 }
 const stopSpeakingSafe = () => { try { speechSynthesis.cancel(); } catch {} stage.speaking = false; };
 document.querySelectorAll('#nav button').forEach(b => b.onclick = () => go(b.dataset.tab));

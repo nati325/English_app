@@ -1,5 +1,5 @@
 // Service worker: מטמון offline-first. מעלים גרסה כדי לרענן.
-const V = 'np-v10';
+const V = 'np-v12';
 const SHELL = ['./', 'index.html', 'css/style.css', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
   'js/app.js', 'js/stage.js', 'js/store.js', 'js/srs.js', 'js/speech.js', 'js/views.js', 'js/azure.js', 'js/tutor.js', 'js/rhythm.js', 'js/rec.js', 'data/rhythm.js', 'data/words.json', 'data/phonemes.js', 'data/talk.js',
   'vendor/three.module.js', 'vendor/addons/loaders/GLTFLoader.js', 'vendor/addons/utils/BufferGeometryUtils.js', 'vendor/addons/libs/meshopt_decoder.module.js'];

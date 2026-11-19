@@ -2,7 +2,7 @@
 import { state, save, addXP } from './store.js';
 import { say, listen, compare, measure, listenStart, stopSpeaking } from './speech.js';
 import { startRecording, canRecord, countSyllables } from './rec.js';
-import { ALL, hl, pick, shuffle, trySpeak, renderAssess, recordPhonemes, azureErr } from './views.js';
+import { ALL, hl, pick, shuffle, trySpeak, fresh, renderAssess, recordPhonemes, azureErr } from './views.js';
 import * as azure from './azure.js';
 import { FUNCTION_WORDS, LESSONS } from '../data/rhythm.js';
 
@@ -40,7 +40,7 @@ function lesson(kind) {
     <div class="res" id="res"></div>
     <div class="row"><button class="btn b" id="slow">🐢 שמע לאט</button>${kind === 'link' || kind === 'flap' || kind === 'intonation' ? '<button class="btn o" id="mic">🎤 תרגל</button>' : ''}</div>
     <p class="sub center" style="margin-top:12px">נסה לחקות את הקצב, לא את המילים.</p>`;
-  $('#bk').onclick = menu; let cur = 0;
+  $('#bk').onclick = () => menu(); let cur = 0;
   on('[data-s]', b => { cur = +b.dataset.s; say(speakable(L.items[cur]), { rate: 1 }); });
   $('#slow').onclick = () => say(speakable(L.items[cur]), { rate: .55 });
   const m = $('#mic'); if (m) m.onclick = () => trySpeak(m, speakable(L.items[cur]).replace(/[↗↘]/g, ''), $('#res'), { kind: 'rhythm', xp: 2 });
@@ -49,14 +49,14 @@ function lesson(kind) {
 
 // ---------- הטעמת מילים ----------
 function stressWords() {
-  const pool = shuffle(ALL.filter(w => w.syl >= 2 && w.syl <= 4)).slice(0, 8); let i = 0, ok = 0;
+  const pool = fresh(ALL.filter(w => w.syl >= 2 && w.syl <= 4), 'stressw', 8, w => w.w); let i = 0, ok = 0;
   const ask = () => {
     const w = pool[i]; const sy = w.ipa.split(/(?=[ˈˌ])|\./).filter(Boolean);
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${pool.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
       <p class="sub center">איזו הברה מוטעמת?</p><div class="word center">${w.w}</div><div class="he center">${w.he}</div>
       <div class="row c" style="margin:14px 0">${sy.map((s, k) => `<button class="choice" data-k="${k}" style="width:auto;flex:1;min-width:64px;font-size:1.3rem">${s.replace(/[ˈˌ]/g, '')}</button>`).join('')}</div>
       <div class="row c"><button class="btn g" id="hear" style="flex:0 0 auto">🔊 שמע</button></div><div id="fb"></div>`;
-    $('#bk').onclick = menu; $('#hear').onclick = () => say(w.w, { show: false });
+    $('#bk').onclick = () => menu(); $('#hear').onclick = () => say(w.w, { show: false });
     on('.choice', b => {
       const good = +b.dataset.k === w.st - 1; if (good) ok++;
       V.querySelectorAll('.choice').forEach((c, k) => { c.disabled = true; if (k === w.st - 1) c.classList.add('ok'); else if (c === b) c.classList.add('no'); });
@@ -72,14 +72,14 @@ function stressWords() {
 
 // ---------- הטעמת משפט ----------
 function stressSentence() {
-  const q = shuffle(goodSentences()).slice(0, 5); let i = 0;
+  const q = fresh(goodSentences(), 'stresssent', 5); let i = 0;
   const ask = () => {
     const s = q[i], ws = words(s);
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${q.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
       <p class="sub center">לחץ על המילים שמוטעמות (מילות תוכן: שמות, פעלים, תארים…)</p>
       <div class="row c ltr" id="ws" style="gap:6px;margin:12px 0">${ws.map((w, k) => `<button class="choice" data-k="${k}" style="width:auto;min-height:48px;padding:0 14px;font-size:1.2rem;margin:0">${w}</button>`).join('')}</div>
       <div class="row c"><button class="btn g" id="hear" style="flex:0 0 auto">🔊 שמע</button><button class="btn" id="chk" style="flex:0 0 auto">בדוק</button></div><div id="fb"></div>`;
-    $('#bk').onclick = menu; $('#hear').onclick = () => say(s, { rate: 1, show: false }); say(s, { rate: 1, show: false });
+    $('#bk').onclick = () => menu(); $('#hear').onclick = () => say(s, { rate: 1, show: false }); say(s, { rate: 1, show: false });
     const sel = new Set(); on('#ws .choice', b => { const k = +b.dataset.k; sel.has(k) ? sel.delete(k) : sel.add(k); b.style.background = sel.has(k) ? '#ffe0cf' : ''; b.style.borderColor = sel.has(k) ? 'var(--acc)' : ''; });
     $('#chk').onclick = () => {
       const exp = new Set(ws.map((w, k) => isStressed(w) ? k : -1).filter(k => k >= 0)); let hit = 0, wrong = 0;
@@ -101,7 +101,7 @@ function stressSentence() {
 // ---------- Shadowing ----------
 function shadow() {
   const learned = ALL.filter(w => state.cards['w:' + w.w]).map(w => w.ex).filter(e => { const n = words(e).length; return n >= 4 && n <= 9; });
-  const q = shuffle(learned.length >= 5 ? learned : goodSentences()).slice(0, 4); let i = 0;
+  const q = fresh(learned.length >= 5 ? learned : goodSentences(), 'shadow', 4); let i = 0;
   const card = () => {
     const s = q[i], ws = words(s);
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${q.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
@@ -110,7 +110,7 @@ function shadow() {
       <div class="row"><button class="btn b" id="n">🔊 רגיל</button><button class="btn g" id="sl">🐢 לאט</button></div>
       <div class="row" style="margin-top:8px"><button class="btn o" id="rec">🎙️ הקלט</button></div>
       <div id="fb"></div><button class="btn g full" id="nx" style="margin-top:12px">${i < q.length - 1 ? 'הבא ←' : 'סיום'}</button>`;
-    $('#bk').onclick = menu; $('#n').onclick = () => say(s, { rate: 1, show: false }); $('#sl').onclick = () => say(s, { rate: .6, show: false });
+    $('#bk').onclick = () => menu(); $('#n').onclick = () => say(s, { rate: 1, show: false }); $('#sl').onclick = () => say(s, { rate: .6, show: false });
     say(s, { rate: 1, show: false });
     $('#nx').onclick = () => { if (++i < q.length) card(); else menu(); };
     let session = null;

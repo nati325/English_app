@@ -1,4 +1,4 @@
-import { state, save, addXP, rollDay, levelProgress, reset, exportData, importData } from './store.js';
+import { state, save, addXP, rollDay, levelProgress, reset, exportData, importData, fresh } from './store.js';
 import * as azure from './azure.js';
 import * as tutor from './tutor.js';
 import * as srs from './srs.js';
@@ -15,9 +15,34 @@ const pick = (a) => a[Math.random() * a.length | 0];
 const shuffle = (a) => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
 const hl = (ex, w) => ex.replace(new RegExp(`\\b(${w}\\w*)`, 'i'), '<b>$1</b>');
 
-export { ALL, hl, pick, shuffle, trySpeak };
+export { ALL, hl, pick, shuffle, trySpeak, fresh };
 let ctx, V;
-export const init = (c) => { ctx = c; V = c.view; };
+export const init = (c) => {
+  ctx = c; V = c.view; c.flowNext = flowNext;
+  // מצב "מיקוד": בזמן תרגיל הבמה מתכווצת והתוכן מקבל את רוב המסך. סרגל התקדמות לשיעור היומי נוסף אוטומטית.
+  new MutationObserver(() => {
+    document.body.classList.toggle('compact', !!V.querySelector('.dots,.wcard,.speaker,.chat,.flowfin'));
+    if (flow && !V.querySelector('.flowbar') && !V.querySelector('.flowfin')) V.insertAdjacentHTML('afterbegin', `<div class="flowbar"><span>שלב ${flow.i + 1} מתוך ${flow.steps.length} · <b>${flow.names[flow.i]}</b></span><i style="width:${(flow.i + .5) / flow.steps.length * 100}%"></i></div>`);
+  }).observe(V, { childList: true });
+};
+// ---------- שיעור יומי מודרך: סדרת פעילויות אחת אחרי השנייה ----------
+let flow = null;
+export const clearFlow = () => { flow = null; };
+function flowNext(fallback) {
+  if (!flow) return fallback ? fallback() : ctx.go('today');
+  flow.i++; if (flow.i >= flow.steps.length) { flow = null; return dailyDone(); } flow.steps[flow.i]();
+}
+function startDaily() {
+  const st = [];
+  if (srs.dueIds().length) st.push(['חזרות', () => startReview()]);
+  st.push(['מילים חדשות', () => startLearn()]); st.push(['אימון אוזן', () => startEar(null, 6)]); st.push(['דיבור', () => startSentences(3)]);
+  flow = { steps: st.map(x => x[1]), names: st.map(x => x[0]), i: 0 }; flow.steps[0]();
+}
+function dailyDone() {
+  ctx.stage.celebrate(); addXP(10, null); ctx.refreshTop(); ctx.bubble('You did it! 🎉');
+  V.innerHTML = `<div class="center flowfin"><div style="font-size:3.5rem">🏆</div><h2>סיימת את השיעור היומי!</h2><p class="sub">+10 XP. עוד תרגול חופשי? או נתראה מחר 🔥</p><button class="btn full" id="h">חזרה לבית</button></div>`;
+  $('#h').onclick = () => ctx.go('today');
+}
 const $ = (s, el = V) => el.querySelector(s);
 const on = (s, fn, el = V) => el.querySelectorAll(s).forEach(b => b.onclick = () => fn(b));
 
@@ -81,41 +106,49 @@ function bindSpeak(el = V, opts) {
 // ---------- היום ----------
 export function today() {
   rollDay(); const d = state.daily, due = srs.dueIds().length, A = ANIMALS[state.animal], lp = levelProgress();
-  const tasks = [
-    { ic: '🔁', t: 'חזרות מרווחות', s: due ? `${due} מילים מחכות לך` : 'אין חזרות כרגע – כל הכבוד', cur: d.review, tgt: 10, go: startReview },
-    { ic: '👂', t: 'אימון אוזן', s: '10 זוגות – מה שומעים?', cur: d.ear, tgt: 10, go: () => startEar() },
-    { ic: '📚', t: 'מילים חדשות', s: '5 מילים + הגייה + משפט', cur: d.learn, tgt: 5, go: () => startLearn() },
-    { ic: '🥁', t: 'מקצב ו-Shadowing', s: 'הטעמה + משפטים בקצב טבעי', cur: d.rhythm + d.shadow, tgt: 6, go: () => ctx.go('rhythm') },
-    { ic: '🎤', t: 'תרגול דיבור', s: '5 משפטים בקול', cur: d.speak, tgt: 5, go: startSentences }
-  ];
-  const known = Object.keys(state.cards).length;
+  const goals = [[d.review, due ? 10 : 0], [d.learn, 5], [d.ear, 6], [d.speak, 3]].filter(g => g[1] > 0);
+  const pct = Math.round(goals.reduce((a, g) => a + Math.min(1, g[0] / g[1]), 0) / goals.length * 100);
+  const known = Object.keys(state.cards).length, left = ALL.filter(w => !srs.get(cid(w.w))).length;
   V.innerHTML = `
-    <div class="hello"><div class="big">${A.emoji}</div><div><b>${greet()}! אני ${A.name}.</b><div class="sub" style="margin:2px 0 0">היום צברת ${d.xp} XP · עוד ${lp.next} XP לרמה ${lp.L + 1}</div></div></div>
-    <h2>התוכנית של היום</h2><p class="sub">כ-30 דקות. עקביות חשובה יותר מכמות.</p>
-    ${tasks.map((t, i) => { const p = Math.min(1, t.cur / t.tgt); return `<button class="task ${p >= 1 ? 'done' : ''}" data-t="${i}"><div class="ic">${t.ic}</div><div class="t"><b>${t.t}</b><small>${t.s}</small><div class="prog"><i style="width:${p * 100}%"></i></div></div><div class="st">${p >= 1 ? '✅' : '‹'}</div></button>`; }).join('')}
-    <h3>ההתקדמות שלך</h3>
-    <div class="stats"><div class="stat"><b>${known}</b><small>מילים בלמידה</small></div><div class="stat"><b>${srs.mature()}</b><small>מילים בשליטה</small></div><div class="stat"><b>${state.best}</b><small>שיא רצף ימים</small></div></div>
-    <h3>מסלול Native Path</h3>
-    <div class="path">
-      <div class="step on"><i>S0</i><span><b>בסיס הצלילים</b> · 44 פונמות + אימון אוזן</span></div>
-      <div class="step on"><i>S1</i><span><b>1,000 מילים ראשונות</b> · ${ALL.length} זמינות עכשיו</span></div>
-      <div class="step on"><i>S2</i><span><b>מקצב, הטעמה וחיבורים</b> · לשונית מקצב</span></div>
-      <div class="step lock"><i>S3</i><span>3,000 מילים + phrasal verbs 🔒</span></div>
-      <div class="step on"><i>S4</i><span><b>Shadowing</b> · הקלטה וניתוח קצב</span></div>
-      <div class="step lock"><i>S5</i><span>שיחה חופשית עם AI 🔒</span></div>
-      <div class="step lock"><i>S6–7</i><span>אידיומות, סלנג, שפת אם 🔒</span></div>
-    </div>`;
-  on('.task', b => tasks[+b.dataset.t].go());
+    <div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><div class="big">${A.emoji}</div><div style="flex:1"><b style="font-size:1.1rem">${greet()}! אני ${A.name}</b><div class="sub" style="margin:2px 0 6px">היום ${pct}% · עוד ${lp.next} XP לרמה ${lp.L + 1}</div><div class="prog"><i style="width:${pct}%"></i></div></div></div>
+      <button class="btn big full" id="goDaily" style="margin-top:14px">▶ ${pct >= 100 ? 'עוד שיעור' : pct > 0 ? 'המשך לשיעור היומי' : 'התחל את השיעור היומי'}</button>
+      <div class="sub center" style="margin:8px 0 0">${due ? 'חזרות · ' : ''}5 מילים חדשות · אימון אוזן · דיבור · כ-10 דקות</div></div>
+    <h3>תרגול חופשי</h3>
+    <div class="quick">
+      <button data-q="review"><i>🔁</i><b>חזרות</b><small>${due ? due + ' ממתינות' : 'אין כרגע'}</small></button>
+      <button data-q="learn"><i>📚</i><b>מילים חדשות</b><small>${left} נותרו</small></button>
+      <button data-q="ear"><i>👂</i><b>אימון אוזן</b><small>שומעים ובוחרים</small></button>
+      <button data-q="speak"><i>🎤</i><b>דיבור</b><small>חוזרים אחרי משפט</small></button>
+      <button data-q="rhythm"><i>🥁</i><b>מקצב</b><small>הטעמה ו-Shadowing</small></button>
+      <button data-q="talk"><i>💬</i><b>שיחה</b><small>עם ${A.name}</small></button>
+    </div>
+    <div class="stats"><div class="stat"><b>${known}</b><small>מילים נלמדו</small></div><div class="stat"><b>${srs.mature()}</b><small>בשליטה</small></div><div class="stat"><b>${state.streak}🔥</b><small>ימים ברצף</small></div></div>
+    <details class="card"><summary><b>מסלול Native Path</b> <span class="mut">(לאן אנחנו הולכים)</span></summary><div class="path" style="margin-top:8px">
+      <div class="step on"><i>S0</i><span><b>צלילים</b> · 44 פונמות + אוזן</span></div>
+      <div class="step on"><i>S1</i><span><b>אוצר מילים</b> · ${ALL.length} מילים</span></div>
+      <div class="step on"><i>S2</i><span><b>מקצב וחיבורים</b></span></div>
+      <div class="step on"><i>S4</i><span><b>Shadowing</b></span></div>
+      <div class="step on"><i>S5</i><span><b>שיחה עם AI</b></span></div>
+      <div class="step lock"><i>S6–7</i><span>אידיומות וסלנג 🔒</span></div></div></details>`;
+  $('#goDaily').onclick = startDaily;
+  on('[data-q]', b => ({ review: startReview, learn: () => startLearn(), ear: () => startEar(), speak: () => startSentences(), rhythm: () => ctx.go('rhythm'), talk: () => ctx.go('talk') })[b.dataset.q]());
 }
 const greet = () => { const h = new Date().getHours(); return h < 5 ? 'לילה טוב' : h < 12 ? 'בוקר טוב' : h < 18 ? 'צהריים טובים' : 'ערב טוב'; };
 
 // ---------- מילים ----------
 export function words(uid) {
   if (uid) return unitView(uid);
-  V.innerHTML = `<h2>מילים</h2><p class="sub">${ALL.length} מילים ב-${WORDS.units.length} נושאים. כל מילה עם הגייה מדויקת (IPA), תרגום ומשפט.</p>
+  const nextW = ALL.find(w => !srs.get(cid(w.w))); const nextU = nextW && nextW.unit;
+  const levels = [...new Set(WORDS.units.map(u => u.lvl))];
+  const done = ALL.length - ALL.filter(w => !srs.get(cid(w.w))).length;
+  V.innerHTML = `<h2>מילים</h2>
+    <button class="btn big full" id="go">▶ ${nextW ? 'המשך ללמוד: 5 מילים הבאות' : 'למדת הכול! 🎉'}</button>
+    <div class="sub center" style="margin:8px 0 12px">${done} מתוך ${ALL.length} · כל מילה נלמדת פעם אחת ואז חוזרת רק בזמן החזרות</div>
     <input id="q" class="srch" placeholder="🔍 חפש מילה באנגלית או בעברית…" autocomplete="off"><div id="hits"></div>
-    <div class="units" id="ul">${WORDS.units.map(u => { const n = u.words.filter(w => srs.get(cid(w.w))).length; return `<button class="unit" data-u="${u.id}"><div class="ic">${u.icon}</div><b>${u.title}</b><small>${n}/${u.words.length}</small><div class="prog"><i style="width:${n / u.words.length * 100}%"></i></div></button>`; }).join('')}</div>`;
-  on('.unit', b => unitView(+b.dataset.u));
+    <div id="ul">${levels.map(l => { const us = WORDS.units.filter(u => u.lvl === l), tot = us.reduce((a, u) => a + u.words.length, 0), n = us.reduce((a, u) => a + u.words.filter(w => srs.get(cid(w.w))).length, 0);
+      return `<details class="lvl" ${us.some(u => u.id === nextU) ? 'open' : ''}><summary><b>רמה ${l}</b><span class="mut">${n}/${tot}</span></summary>${us.map(u => { const k = u.words.filter(w => srs.get(cid(w.w))).length; return `<button class="urow" data-u="${u.id}"><span class="ic">${u.icon}</span><b>${u.title}</b><small>${k}/${u.words.length}</small></button>`; }).join('')}</details>`; }).join('')}</div>`;
+  $('#go').onclick = () => startLearn();
+  on('.urow', b => unitView(+b.dataset.u));
   $('#q').oninput = (e) => {
     const t = e.target.value.trim().toLowerCase(), h = $('#hits');
     $('#ul').hidden = !!t; if (!t) { h.innerHTML = ''; return; }
@@ -144,16 +177,17 @@ function startLearn(uid) {
       <div class="wcard"><div class="word">${w.w}</div><div class="ipa">/${w.ipa}/</div><div class="he">${w.he}</div>
       <div class="ex">${hl(w.ex, w.w)}</div><div class="row c"><button class="btn g" data-say="${w.ex}" style="flex:0 0 auto">🔊 המשפט</button><span class="pill">${w.syl} הברות · הטעמה ${w.st}</span></div></div>
       ${speakBtns(w.w)}<button class="btn full" id="nx">${i < q.length - 1 ? 'הבנתי, הבא ←' : 'סיימתי ✔'}</button>`;
-    $('#bk').onclick = words; bindSpeak(V, { kind: 'speak' });
+    $('#bk').onclick = () => words(); bindSpeak(V, { kind: 'speak' });
     on('[data-say]', b => say(b.dataset.say));
-    ctx.stage.celebrate(); say(w.w, { show: false }); ctx.bubble(w.w);
-    $('#nx').onclick = () => { srs.learn(cid(w.w)); addXP(3, 'learn'); ctx.refreshTop(); if (++i < q.length) card(); else done(); };
+    srs.learn(cid(w.w)); // נכנס לחזרות מרגע שהוצג: לא יוצג שוב כ'חדש' גם אם יצאת באמצע
+    ctx.stage.celebrate(); say(w.w, { show: false });
+    $('#nx').onclick = () => { addXP(3, 'learn'); ctx.refreshTop(); if (++i < q.length) card(); else done(); };
   };
   const done = () => {
     ctx.stage.celebrate(); ctx.bubble('You learned ' + q.length + ' new words! 🎉');
     V.innerHTML = `<div class="center"><div style="font-size:3rem">🎉</div><h2>למדת ${q.length} מילים!</h2><p class="sub">הן נכנסו לחזרות המרווחות. כדי שיישארו – תחזור אליהן מחר.</p>
-      <div class="row c">${q.map(w => `<span class="w ok">${w.w}</span>`).join('')}</div><br><div class="row"><button class="btn o" id="m">עוד מילים</button><button class="btn g" id="h">למסך הבית</button></div></div>`;
-    $('#m').onclick = () => startLearn(uid); $('#h').onclick = () => ctx.go('today');
+      <div class="row c">${q.map(w => `<span class="w ok">${w.w}</span>`).join('')}</div><br>${flow ? '<button class="btn full" id="fl">המשך ←</button>' : '<div class="row"><button class="btn o" id="m">עוד מילים</button><button class="btn g" id="h">למסך הבית</button></div>'}</div>`;
+    if (flow) $('#fl').onclick = () => flowNext(); else { $('#m').onclick = () => startLearn(uid); $('#h').onclick = () => ctx.go('today'); }
   };
   card();
 }
@@ -161,7 +195,7 @@ function startLearn(uid) {
 // ---------- חזרות ----------
 function startReview() {
   const q = srs.dueIds().slice(0, 15);
-  if (!q.length) { V.innerHTML = `<div class="center"><div style="font-size:3rem">✨</div><h2>אין חזרות כרגע</h2><p class="sub">למד מילים חדשות כדי למלא את הסל.</p><button class="btn o" id="l">📚 מילים חדשות</button></div>`; $('#l').onclick = () => startLearn(); return; }
+  if (!q.length) { if (flow) return flowNext(); V.innerHTML = `<div class="center"><div style="font-size:3rem">✨</div><h2>אין חזרות כרגע</h2><p class="sub">למד מילים חדשות כדי למלא את הסל.</p><button class="btn o" id="l">📚 מילים חדשות</button></div>`; $('#l').onclick = () => startLearn(); return; }
   let i = 0, ok = 0;
   const front = () => {
     const w = BYW[q[i].slice(2)];
@@ -182,21 +216,21 @@ function startReview() {
     on('[data-say]', b => say(b.dataset.say)); on('[data-slow]', b => say(b.dataset.slow, { rate: .5 }));
     on('[data-g]', b => { const g = +b.dataset.g; srs.grade(cid(w.w), g); if (g >= 2) { ok++; ctx.stage.celebrate(); } addXP(g >= 2 ? 2 : 1, 'review'); ctx.refreshTop(); if (++i < q.length) front(); else fin(); });
   };
-  const fin = () => { V.innerHTML = `<div class="center"><div style="font-size:3rem">🔁</div><h2>סיימת ${q.length} חזרות</h2><p class="sub">זכרת ${ok} מתוכן.</p><button class="btn o full" id="h">לתוכנית היום</button></div>`; $('#h').onclick = () => ctx.go('today'); };
+  const fin = () => { V.innerHTML = `<div class="center"><div style="font-size:3rem">🔁</div><h2>סיימת ${q.length} חזרות</h2><p class="sub">זכרת ${ok} מתוכן.</p><button class="btn o full" id="h">${flow ? 'המשך ←' : 'חזרה לבית'}</button></div>`; $('#h').onclick = () => flowNext(); };
   front();
 }
 
 // ---------- משפטים (דיבור) ----------
-function startSentences() {
+function startSentences(n = 5) {
   const learned = ALL.filter(w => srs.get(cid(w.w)));
-  const q = shuffle(learned.length >= 3 ? learned : ALL).slice(0, 5); let i = 0;
+  const q = fresh(learned.length >= 40 ? learned : ALL, 'sent', n, w => w.w); let i = 0;
   const card = () => {
     const w = q[i];
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${q.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
       <p class="sub center">שמע, ואז חזור אחרי המשפט בקול</p><div class="ex" style="font-size:1.35rem;text-align:center">${hl(w.ex, w.w)}</div><div class="he center mut" style="font-size:1rem">מילת המפתח: ${w.w} – ${w.he}</div><br>
       ${speakBtns(w.ex)}<button class="btn g full" id="nx">${i < q.length - 1 ? 'הבא ←' : 'סיום'}</button>`;
     $('#bk').onclick = () => ctx.go('today'); bindSpeak(V, { kind: 'speak', xp: 3 }); say(w.ex);
-    $('#nx').onclick = () => { if (++i < q.length) card(); else ctx.go('today'); };
+    $('#nx').onclick = () => { if (++i < q.length) card(); else flowNext(); };
   };
   card();
 }
@@ -207,8 +241,11 @@ export function sounds(sub = 'map') {
   on('.seg button', b => sounds(b.dataset.s));
   const sv = $('#sv');
   if (sub === 'map') {
-    const row = (type) => `<div class="grid">${PHONEMES.filter(p => p[1] === type || (type === 'תנועה' && p[1] === 'דיפתונג')).map(p => `<button class="ph ${p[4] ? 'hard' : ''} ${state.phon[p[0]] ? 'dn' : ''}" data-p="${p[0]}">${p[0]}<small>${p[2].split(' · ')[0]}</small></button>`).join('')}</div>`;
-    sv.innerHTML = `<h2>44 הצלילים</h2><p class="sub">🔥 = קשה במיוחד לדוברי עברית. התחל משם.</p><h3>תנועות</h3>${row('תנועה')}<h3>עיצורים</h3>${row('עיצור')}`;
+    const tile = (p) => `<button class="ph ${p[4] ? 'hard' : ''} ${state.phon[p[0]] ? 'dn' : ''}" data-p="${p[0]}">${p[0]}<small>${p[2].split(' · ')[0]}</small></button>`;
+    const hard = PHONEMES.filter(p => p[4]), easy = PHONEMES.filter(p => !p[4]);
+    sv.innerHTML = `<h2>הצלילים שחשוב לשפר</h2><p class="sub">אלה ${hard.length} הצלילים שדוברי עברית מתקשים בהם. לחץ על צליל כדי לשמוע, לראות איך מפיקים אותו ולתרגל.</p>
+      <div class="grid3">${hard.map(tile).join('')}</div>
+      <details class="card" style="margin-top:14px"><summary><b>שאר הצלילים</b> <span class="mut">(${easy.length}, קלים יותר)</span></summary><div class="grid3" style="margin-top:10px">${easy.map(tile).join('')}</div></details>`;
     on('.ph', b => phoneme(b.dataset.p));
   } else if (sub === 'ear') {
     sv.innerHTML = `<h2>אימון אוזן 👂</h2><p class="sub">מי שלא שומע את ההבדל – לא יפיק אותו. שומעים מילה, ובוחרים מה נאמר. 10 שאלות.</p>
@@ -244,15 +281,14 @@ function phoneme(ipa) {
   $('#ear').onclick = () => startEar('p:' + ipa);
 }
 
-function startEar(filter) {
+function startEar(filter, n = 10) {
   let pool = PAIRS;
   if (filter === 'vowel') pool = PAIRS.filter(p => p[3] === 'vowel'); else if (filter === 'cons') pool = PAIRS.filter(p => p[3] === 'cons');
   else if (filter === 'th') pool = PAIRS.filter(p => /θ|ð/.test(p[2])); else if (filter === 'vb') pool = PAIRS.filter(p => /v/.test(p[2]) && /b|w/.test(p[2]));
   else if (filter === 'rl') pool = PAIRS.filter(p => /ɹ/.test(p[2])); else if (filter?.startsWith('p:')) pool = PAIRS.filter(p => p[2].split(' / ').includes(filter.slice(2)));
   if (!pool.length) pool = PAIRS;
-  const N = 10; let i = 0, ok = 0;
-  const weak = Object.entries(state.ear).filter(([, v]) => v.n >= 2 && v.ok / v.n < .7).map(([k]) => k);
-  const q = Array.from({ length: N }, () => { const wp = pool.filter(p => weak.includes(p[2])); const p = (wp.length && Math.random() < .5) ? pick(wp) : pick(pool); const t = Math.random() < .5 ? 0 : 1; return { p, t, order: Math.random() < .5 }; });
+  const N = Math.min(n, pool.length); let i = 0, ok = 0;
+  const q = fresh(pool, 'ear:' + (filter || 'all'), N, p => p[0] + '|' + p[1]).map(p => ({ p, t: Math.random() < .5 ? 0 : 1, order: Math.random() < .5 })); // בלי חזרות
   const ask = () => {
     const { p, t, order } = q[i], target = p[t], opts = order ? [p[0], p[1]] : [p[1], p[0]];
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${q.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
@@ -270,7 +306,7 @@ function startEar(filter) {
       $('#nx').onclick = () => { if (++i < N) ask(); else sum(); };
     });
   };
-  const sum = () => { const pc = Math.round(ok / N * 100); ctx.stage.celebrate(); V.innerHTML = `<div class="center"><div style="font-size:3rem">${pc >= 80 ? '🏆' : '💪'}</div><h2>${ok}/${N} נכון (${pc}%)</h2><p class="sub">${pc >= 90 ? 'אוזן חדה! עכשיו אפשר להתמקד בהפקה.' : 'האוזן מתחדדת עם חזרות – נסה שוב מחר.'}</p><div class="row"><button class="btn o" id="r">שוב</button><button class="btn g" id="h">סיום</button></div></div>`; $('#r').onclick = () => startEar(filter); $('#h').onclick = () => ctx.go('today'); };
+  const sum = () => { const pc = Math.round(ok / N * 100); ctx.stage.celebrate(); V.innerHTML = `<div class="center"><div style="font-size:3rem">${pc >= 80 ? '🏆' : '💪'}</div><h2>${ok}/${N} נכון (${pc}%)</h2><p class="sub">${pc >= 90 ? 'אוזן חדה! עכשיו אפשר להתמקד בהפקה.' : 'האוזן מתחדדת עם חזרות – נסה שוב מחר.'}</p>${flow ? '<button class="btn full" id="fl">המשך ←</button>' : '<div class="row"><button class="btn o" id="r">עוד סבב</button><button class="btn g" id="h">סיום</button></div>'}</div>`; if (flow) $('#fl').onclick = () => flowNext(); else { $('#r').onclick = () => startEar(filter); $('#h').onclick = () => ctx.go('today'); } };
   ask();
 }
 

@@ -1,0 +1,430 @@
+hopefully|בתקווה|Hopefully, it works.
+roman|רומי|A Roman road.
+couch|ספה|Sit on the couch.
+shoe|נעל|I lost a shoe.
+title|כותרת|The title is long.
+punishment|עונש|A fair punishment.
+closet|ארון בגדים|My closet is full.
+coward|פחדן|Don't be a coward.
+flash|הבזק|A camera flash.
+impressed|מתרשם|I'm impressed.
+siren|סירנה|A loud siren.
+supply|אספקה|Water supply.
+sensitive|רגיש|A sensitive topic.
+dollar|דולר|A dollar bill.
+tone|טון|A friendly tone.
+cheating|הונאה|No cheating allowed.
+confess|להתוודות|I confess.
+demand|דרישה|High demand.
+unknown|לא ידוע|An unknown number.
+drama|דרמה|A TV drama.
+suspicious|חשוד|A suspicious noise.
+frightened|מפוחד|I'm frightened.
+steady|יציב|A steady job.
+joint|משותף / מפרק|A joint account.
+package|חבילה|A package arrived.
+boots|מגפיים|Winter boots.
+possibility|אפשרות|A real possibility.
+civil|אזרחי|Civil rights.
+june|יוני|In June.
+baseball|בייסבול|A baseball game.
+express|להביע|Express yourself.
+miserable|אומלל|I feel miserable.
+lion|אריה|A brave lion.
+shine|לזהור|The sun will shine.
+italy|איטליה|Visit Italy.
+nuclear|גרעיני|Nuclear energy.
+bud|ניצן / חבר|Hey, bud.
+yup|כן (דיבורי)|Yup!
+arranged|סודר|A date was arranged.
+noble|אציל|A noble idea.
+russia|רוסיה|Visit Russia.
+seal|חותם / כלב ים|A seal barks.
+buck|דולר (דיבורי)|Ten bucks.
+confession|וידוי|A confession.
+surveillance|מעקב|Security surveillance.
+deputy|סגן|The deputy manager.
+tokyo|טוקיו|Visit Tokyo.
+berlin|ברלין|Visit Berlin.
+motive|מניע|A clear motive.
+clay|חימר|A clay pot.
+boston|בוסטון|Visit Boston.
+monk|נזיר|A quiet monk.
+tries|מנסה|She tries hard.
+foster|לטפח|Foster creativity.
+punk|פאנק|Punk rock.
+yay|יש!|Yay, we won!
+blah|בלה בלה|Blah, blah, blah.
+jeez|וואו|Jeez, it's hot!
+gambling|הימורים|Gambling is risky.
+ripped|קרוע|A ripped shirt.
+threatening|מאיים|A threatening letter.
+thieves|גנבים|Thieves broke in.
+whiskey|וויסקי|A glass of whiskey.
+florida|פלורידה|Visit Florida.
+punish|להעניש|Don't punish him.
+pro|מקצוען|A pro player.
+gimme|תן לי|Gimme a break.
+burnt|שרוף|Burnt toast.
+miami|מיאמי|Visit Miami.
+fraud|הונאה|A fraud case.
+canada|קנדה|Visit Canada.
+fingerprints|טביעות אצבע|Fingerprints on the glass.
+goddess|אלה|A Greek goddess.
+moscow|מוסקבה|Visit Moscow.
+radar|מכ״ם|A radar screen.
+amber|ענבר|An amber light.
+boo|בו!|Boo!
+vodka|וודקה|A glass of vodka.
+chirping|ציוץ|Birds are chirping.
+undercover|סמוי|An undercover agent.
+poker|פוקר|Let's play poker.
+caesar|קיסר|Caesar salad.
+petty|קטנוני|Petty cash.
+casino|קזינו|A big casino.
+chanting|שירה בציבור|The crowd was chanting.
+superman|סופרמן|Superman can fly.
+ruby|רובי|A ruby ring.
+ash|אפר|Cigarette ash.
+yen|ין|Ten thousand yen.
+happier|שמח יותר|I'm happier now.
+honking|צפירה|Horns honking.
+fee|שכר טרחה|A small fee.
+bloke|בחור (בריטי)|A nice bloke.
+ace|אלוף|An ace player.
+cart|עגלה|A shopping cart.
+nap|תנומה|Take a nap.
+ham|בשר חזיר מעושן|A ham sandwich.
+galaxy|גלקסיה|A distant galaxy.
+jewelry|תכשיטים|Gold jewelry.
+groom|חתן|The groom smiled.
+oops|אופס|Oops, sorry!
+alliance|ברית|A strong alliance.
+denied|הכחיש|He denied it.
+alike|דומה|We look alike.
+burger|המבורגר|A cheese burger.
+dough|בצק|Knead the dough.
+wreck|ריסוק|A car wreck.
+spiritual|רוחני|A spiritual journey.
+inch|אינץ'|Two inches.
+unexpected|בלתי צפוי|An unexpected visit.
+basket|סל|A basket of fruit.
+scandal|שערורייה|A big scandal.
+stink|להסריח|It stinks here.
+toes|אצבעות רגליים|Cold toes.
+shield|מגן|A riot shield.
+instant|מיידי|Instant coffee.
+rehearsal|חזרה (הצגה)|A dress rehearsal.
+scan|לסרוק|Scan the code.
+electronic|אלקטרוני|Electronic devices.
+republic|רפובליקה|A republic.
+overnight|בן לילה|An overnight trip.
+counsel|ייעוץ|Legal counsel.
+bait|פיתיון|Fishing bait.
+dignity|כבוד|Treat me with dignity.
+lean|רזה / להישען|Lean on me.
+gossip|רכילות|Don't gossip.
+humble|צנוע|Stay humble.
+economy|כלכלה|The economy is growing.
+impress|להרשים|I want to impress them.
+tissue|ממחטה|A box of tissues.
+threaten|לאיים|Don't threaten me.
+bump|מכה / בליטה|A bump on the head.
+supreme|עליון|The supreme court.
+bingo|בינגו|Bingo!
+excitement|התרגשות|Pure excitement.
+mankind|האנושות|For all mankind.
+document|מסמך|Sign the document.
+broad|רחב|A broad smile.
+vessel|כלי / ספינה|A fishing vessel.
+lit|מואר|A lit candle.
+foul|מסריח / עבירה|A foul smell.
+stare|לבהות|Don't stare.
+elements|אלמנטים|The four elements.
+puppy|גור כלבים|A cute puppy.
+announcement|הודעה|An important announcement.
+oath|שבועה|He took an oath.
+cotton|כותנה|A cotton shirt.
+deposit|פיקדון|Pay a deposit.
+advise|לייעץ|I advise you to wait.
+gig|הופעה|A live gig.
+lecture|הרצאה|A boring lecture.
+skinny|רזה|Skinny jeans are in style.
+infected|נגוע|An infected cut.
+relieved|שמח שהקל|I'm so relieved.
+assistance|סיוע|Do you need assistance?
+solo|סולו|A solo trip.
+determine|לקבוע|Determine the cause.
+elsewhere|במקום אחר|Look elsewhere.
+practical|מעשי|A practical idea.
+adorable|מקסים|An adorable puppy.
+rubber|גומי|A rubber band.
+suite|סוויטה|A hotel suite.
+personnel|כוח אדם|Hotel personnel.
+beam|קרן|A beam of light.
+poet|משורר|A famous poet.
+arrow|חץ|Follow the arrow.
+counselor|יועץ|A school counselor.
+carpet|שטיח|A red carpet.
+spotted|זיהה|I spotted her.
+floating|צף|A floating boat.
+located|ממוקם|It's located downtown.
+operator|מפעיל|A phone operator.
+eastern|מזרחי|Eastern Europe.
+shave|לגלח|Shave every day.
+toss|לזרוק|Toss the ball.
+lip|שפה|A lip balm.
+acid|חומצה|Citric acid.
+anonymous|אנונימי|An anonymous letter.
+inn|פונדק|A cozy inn.
+error|שגיאה|An error message.
+egypt|מצרים|Visit Egypt.
+roommate|שותף לדירה|My roommate is nice.
+visitor|מבקר|A visitor arrived.
+geez|וואו|Geez, it's late!
+commitment|מחויבות|A big commitment.
+react|להגיב|How did you react?
+protest|הפגנה|A peaceful protest.
+misery|אומללות|Pure misery.
+theft|גנבה|A theft report.
+embrace|לחבק|Embrace change.
+darn|לעזאזל (עדין)|Darn, I'm late!
+harsh|קשוח|A harsh winter.
+communicate|לתקשר|Communicate clearly.
+faithful|נאמן|A faithful friend.
+flame|להבה|A candle flame.
+medal|מדליה|A gold medal.
+silk|משי|A silk scarf.
+rear|אחורי|The rear door.
+emotion|רגש|Strong emotion.
+chap|בחור|A nice chap.
+bin|פח|The recycling bin.
+gum|מסטיק|Chewing gum.
+content|תוכן|Website content.
+rap|ראפ|I like rap music.
+hopeless|חסר סיכוי|It's hopeless.
+debate|ויכוח|A heated debate.
+era|תקופה|The modern era.
+luckily|למרבה המזל|Luckily, we made it.
+ton|טון|A ton of work.
+liquid|נוזל|Drink more liquid.
+swell|לתפוח|My ankle swelled.
+feast|סעודה|A holiday feast.
+attracted|נמשך|I'm attracted to art.
+application|בקשה / אפליקציה|A job application.
+profession|מקצוע|Her profession is law.
+bench|ספסל|Sit on the bench.
+scout|צופה|A boy scout.
+keen|להוט|I'm keen to learn.
+aircraft|כלי טיס|An aircraft landed.
+aggressive|אגרסיבי|An aggressive dog.
+pale|חיוור|A pale face.
+significant|משמעותי|A significant change.
+visual|חזותי|Visual aids.
+embassy|שגרירות|The US embassy.
+defence|הגנה|A strong defence.
+cabinet|ארון|A kitchen cabinet.
+display|תצוגה|On display.
+fame|תהילה|Fame and fortune.
+wolves|זאבים|Wolves howl.
+dunno|לא יודע|I dunno.
+sorrow|צער|Deep sorrow.
+vault|כספת|A bank vault.
+quote|ציטוט|A famous quote.
+penalty|עונש / פנדל|A penalty kick.
+helmet|קסדה|Wear a helmet.
+scar|צלקת|A small scar.
+fuss|מהומה|Don't make a fuss.
+envelope|מעטפה|Seal the envelope.
+african|אפריקאי|African music.
+arrangements|סידורים|Travel arrangements.
+assigned|הוקצה|An assigned seat.
+tin|פח|A tin can.
+collar|צווארון|A white collar.
+mere|בסך הכול|A mere child.
+belief|אמונה|A strong belief.
+storage|אחסון|Storage space.
+rusty|חלוד|A rusty nail.
+sum|סכום|The sum is ten.
+dedicated|מסור|A dedicated nurse.
+ladder|סולם|Climb the ladder.
+alternative|חלופה|An alternative plan.
+dining|סעודה|A dining room.
+corporate|תאגידי|A corporate event.
+folk|עממי|Folk music.
+heels|עקבים|High heels.
+chess|שחמט|Play chess.
+cruise|שייט|A Caribbean cruise.
+primary|ראשי|A primary school.
+drum|תוף|Play the drums.
+motorcycle|אופנוע|A motorcycle ride.
+adopted|אומץ|An adopted child.
+barrel|חבית|A wine barrel.
+cargo|מטען|A cargo ship.
+shove|לדחוף|Don't shove.
+ally|בעל ברית|A close ally.
+wee|זעיר|A wee bit.
+dull|משעמם|A dull day.
+teenage|נעורים|A teenage girl.
+cooperate|לשתף פעולה|Cooperate with us.
+dug|חפר|I dug a hole.
+worthless|חסר ערך|Worthless junk.
+grip|אחיזה|A firm grip.
+relations|יחסים|Public relations.
+skirt|חצאית|A short skirt.
+frog|צפרדע|A green frog.
+perfume|בושם|Sweet perfume.
+instrumental|אינסטרומנטלי|An instrumental song.
+association|עמותה|A sports association.
+spike|דוקר|A spike in prices.
+israel|ישראל|I live in Israel.
+eleven|אחת עשרה|Eleven players.
+ginger|ג'ינג'ר|Ginger tea.
+fist|אגרוף|A clenched fist.
+creation|יצירה|A new creation.
+tension|מתח|Reduce tension.
+certificate|תעודה|A birth certificate.
+bold|נועז|A bold move.
+suspended|מושעה|Suspended from school.
+envy|קנאה|Green with envy.
+whale|לווייתן|A blue whale.
+dial|לחייג|Dial the number.
+martial|לחימה|Martial arts.
+controlled|מבוקר|A controlled test.
+lung|ריאה|A lung test.
+coal|פחם|A lump of coal.
+upside|צד חיובי|The upside is clear.
+imperial|אימפריאלי|An imperial palace.
+paranoid|פרנואיד|Don't be paranoid.
+congress|קונגרס|The US Congress.
+villa|וילה|A villa by the sea.
+comic|קומי|A comic book.
+faint|להתעלף / חלש|A faint sound.
+recovery|החלמה|A quick recovery.
+volunteer|להתנדב|I volunteer at a shelter.
+tech|טכנולוגיה|A tech company.
+bleed|לדמם|My finger bleeds.
+narrow|צר|A narrow street.
+forbid|לאסור|I forbid it.
+perspective|פרספקטיבה|A new perspective.
+neat|מסודר|A neat desk.
+observe|לצפות|Observe carefully.
+cycle|מחזור|A life cycle.
+psychic|מדיום|A psychic reading.
+goose|אווז|A wild goose.
+accidentally|בטעות|I accidentally deleted it.
+conclusion|מסקנה|In conclusion, yes.
+importance|חשיבות|The importance of sleep.
+sweep|לטאטא|Sweep the floor.
+risky|מסוכן|A risky move.
+glorious|מפואר|A glorious day.
+hatred|שנאה|Hatred is poison.
+blank|ריק|A blank page.
+tender|רך|A tender steak.
+tub|אמבט|A bath tub.
+slight|קל|A slight delay.
+addition|תוספת|In addition, we agreed.
+campus|קמפוס|A big campus.
+ritual|טקס|A morning ritual.
+prey|טרף|A bird of prey.
+graduate|בוגר / לסיים לימודים|I graduate in June.
+genuine|אמיתי|A genuine smile.
+ceiling|תקרה|A high ceiling.
+somewhat|במידה מה|Somewhat tired.
+established|מבוסס|An established firm.
+zombie|זומבי|A zombie movie.
+electrical|חשמלי|Electrical work.
+depend|להיות תלוי|It depends on you.
+institute|מכון|A research institute.
+principle|עיקרון|A basic principle.
+therapist|מטפל|A good therapist.
+compete|להתחרות|Compete fairly.
+compliment|מחמאה|Thanks for the compliment.
+worship|פולחן|A place of worship.
+residence|מגורים|A private residence.
+democracy|דמוקרטיה|Democracy matters.
+published|פורסם|A published book.
+myth|מיתוס|A common myth.
+helpless|חסר אונים|I feel helpless.
+execution|ביצוע|Perfect execution.
+appetite|תיאבון|Good appetite!
+formal|רשמי|A formal dinner.
+strictly|בהחלט|Strictly forbidden.
+technical|טכני|A technical problem.
+shepherd|רועה|A shepherd and his flock.
+brazil|ברזיל|Visit Brazil.
+brutal|אכזרי|A brutal winter.
+vain|יהיר / לשווא|In vain.
+deer|צבי|A deer in the forest.
+retire|לפרוש|I retire next year.
+overcome|להתגבר|Overcome fear.
+inspiration|השראה|A great inspiration.
+suggestion|הצעה|A good suggestion.
+dummy|בובה|A crash test dummy.
+sailor|מלח|A brave sailor.
+destination|יעד|Our final destination.
+bass|בס|A bass guitar.
+picnic|פיקניק|Let's have a picnic.
+idol|אליל|A pop idol.
+rank|דרגה|A high rank.
+strict|קפדן|A strict teacher.
+formula|נוסחה|A secret formula.
+clerk|פקיד|A bank clerk.
+cafe|בית קפה|A small cafe.
+wandering|משוטט|A wandering soul.
+consciousness|תודעה|Lose consciousness.
+bare|חשוף|Bare feet.
+butcher|קצב|A local butcher.
+arrangement|סידור|A flower arrangement.
+ministry|משרד ממשלתי|The Ministry of Health.
+locate|לאתר|Locate the exit.
+apologise|להתנצל|I apologise.
+examine|לבדוק|Examine the evidence.
+prior|קודם|Prior notice.
+stream|נחל / זרם|A mountain stream.
+passage|מעבר|A secret passage.
+organ|איבר / עוגב|A vital organ.
+outer|חיצוני|Outer space.
+luxury|יוקרה|A luxury hotel.
+funds|כספים|Raise funds.
+sunset|שקיעה|A beautiful sunset.
+gotcha|הבנתי|Gotcha!
+element|יסוד|A key element.
+balloon|בלון|A red balloon.
+spray|ריסוס|Spray the plants.
+eternity|נצח|It felt like an eternity.
+handy|שימושי|A handy tool.
+crawl|לזחול|Babies crawl.
+slice|פרוסה|A slice of cake.
+behaviour|התנהגות|Good behaviour.
+pace|קצב|A steady pace.
+stiff|נוקשה|A stiff neck.
+lick|ללקק|Lick the spoon.
+concrete|בטון|A concrete wall.
+euros|יורו|Ten euros.
+sausage|נקניק|A grilled sausage.
+spinning|מסתובב|A spinning wheel.
+genetic|גנטי|Genetic research.
+marvelous|נפלא|A marvelous view.
+creep|לזחול|Creep slowly.
+scheme|תוכנית|A savings scheme.
+plug|תקע|Pull the plug.
+rejected|נדחה|My offer was rejected.
+protocol|פרוטוקול|Follow the protocol.
+kidney|כליה|A kidney stone.
+invasion|פלישה|An invasion.
+affection|חיבה|Show affection.
+endless|אינסופי|An endless road.
+discipline|משמעת|Self-discipline.
+absence|היעדרות|In his absence.
+philosophy|פילוסופיה|I study philosophy.
+reed|קנה סוף|A reed pen.
+verdict|פסק דין|The verdict is in.
+privilege|פריבילגיה|It's a privilege.
+anyhow|בכל מקרה|Anyhow, let's go.
+scent|ריח|A sweet scent.
+naive|תמים|Don't be naive.
+daylight|אור יום|In daylight.
+airplane|מטוס|An airplane ticket.
+jolly|עליז|A jolly mood.
+consent|הסכמה|Written consent.

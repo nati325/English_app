@@ -1,0 +1,540 @@
+well|ובכן / היטב|Well, let's begin.
+got|קיבלתי / השגתי|I got a new phone.
+good|טוב|That's a good idea.
+going|הולך|We're going home.
+time|זמן / פעם|What time is it?
+look|להסתכל|Look at this picture.
+man|גבר|That man is very tall.
+could|יכול (בנימוס)|Could you help me?
+too|גם / מדי|It's too cold today.
+down|למטה|Please sit down.
+said|אמר|She said hello.
+off|כבוי|Turn off the light.
+thank|להודות|I thank you very much.
+even|אפילו|Even kids can do it.
+life|חיים|Life is beautiful.
+sir|אדוני|Yes, sir.
+day|יום|Have a nice day.
+must|חייב|I must go now.
+away|הרחק|Don't go away.
+home|בית|I'm going home.
+night|לילה|Good night.
+great|נהדר|That's great news.
+last|אחרון|This is the last one.
+better|יותר טוב|I feel better today.
+told|סיפר|He told me a story.
+long|ארוך|It's a long road.
+money|כסף|I need some money.
+name|שם|What's your name?
+ever|אי פעם|Have you ever been there?
+guy|בחור|He's a nice guy.
+made|עשה|I made dinner.
+big|גדול|It's a big city.
+lot|הרבה|I have a lot to do.
+done|גמור|I'm done.
+nice|נחמד|Nice to meet you.
+fine|בסדר|I'm fine, thanks.
+every|כל|Every day is new.
+course|קורס / כמובן|Of course!
+dad|אבא|My dad is funny.
+came|בא|She came late.
+wrong|שגוי|That's wrong.
+bad|רע|It's a bad idea.
+might|אולי|It might rain.
+today|היום|What's the plan today?
+another|עוד אחד|Give me another chance.
+hear|לשמוע|Can you hear me?
+own|שלי / בעלות|I have my own room.
+same|אותו דבר|We have the same phone.
+else|אחר|Anything else?
+found|מצא|I found my keys.
+next|הבא|See you next week.
+getting|מקבל / נהיה|It's getting late.
+car|מכונית|I drive a car.
+woman|אישה|That woman is my aunt.
+went|הלך|We went to the beach.
+dead|מת / מפורק|The battery is dead.
+mind|מוח / להפריע|Do you mind if I sit here?
+best|הכי טוב|You're the best.
+mom|אמא|My mom called.
+boy|ילד|The boy is smiling.
+yourself|את עצמך|Be yourself.
+saw|ראה|I saw a movie.
+real|אמיתי|Is it real?
+move|לזוז / לעבור|We move next week.
+seen|נראה|Have you seen my phone?
+live|לגור|I live in Haifa.
+both|שניהם|Both are good.
+knew|ידע|I knew it!
+bit|קצת|Wait a bit.
+took|לקח|She took a taxi.
+yet|עדיין / עוד|Not yet.
+men|גברים|The men are working.
+matter|עניין|What's the matter?
+tonight|הלילה|What are we doing tonight?
+hard|קשה|It's hard work.
+myself|בעצמי|I did it myself.
+school|בית ספר|The school is near.
+gone|הלך / נעלם|She's gone.
+end|סוף|This is the end.
+face|פנים|She has a kind face.
+lost|אבוד|I'm lost.
+true|נכון|That's true.
+die|למות|Flowers die in winter.
+each|כל אחד|Each student has a book.
+hand|יד|Give me your hand.
+having|שיש|We're having dinner.
+eat|לאכול|Let's eat!
+person|אדם|She's a great person.
+kids|ילדים|The kids are asleep.
+stuff|דברים|I have a lot of stuff.
+under|מתחת|It's under the bed.
+death|מוות|Death is part of life.
+minute|דקה|Wait a minute.
+crazy|משוגע|That's crazy!
+everybody|כולם|Everybody is here.
+kid|ילד|He's just a kid.
+gave|נתן|She gave me a gift.
+drink|לשתות|What do you want to drink?
+shut|לסגור|Shut the door.
+hit|להכות / להיט|The ball hit me.
+deal|עסקה|It's a deal!
+somebody|מישהו|Somebody is calling you.
+mine|שלי|This is mine.
+body|גוף|Take care of your body.
+afraid|מפחד|I'm afraid of spiders.
+dear|יקר|Dear Anna,
+quite|די|It's quite cold.
+four|ארבע|I have four cats.
+fun|כיף|That was fun!
+set|להגדיר / להציב|Set the table.
+number|מספר|What's your number?
+least|הכי פחות|At least try.
+moment|רגע|Just a moment.
+week|שבוע|See you next week.
+married|נשוי|They're married.
+fire|אש|Be careful with fire.
+child|ילד|Every child needs love.
+goes|הולך|She goes to work by bus.
+hours|שעות|It took two hours.
+women|נשים|The women are talking.
+almost|כמעט|We're almost there.
+truth|אמת|Tell me the truth.
+able|מסוגל|Are you able to come?
+lady|גברת|The lady is waiting.
+shot|ירייה / צילום|Nice shot!
+trouble|בעיה|I'm in trouble.
+war|מלחמה|No more war.
+city|עיר|I love this city.
+town|עיירה|It's a small town.
+met|פגש|We met yesterday.
+brought|הביא|She brought cake.
+yours|שלך|Is this yours?
+high|גבוה|The mountain is high.
+couple|זוג|They're a nice couple.
+cool|מגניב / קריר|That's cool!
+seems|נראה|It seems easy.
+power|כוח / חשמל|The power is out.
+bye|ביי|Bye, see you!
+honey|דבש / מותק|Add some honey.
+tried|ניסה|I tried it once.
+front|חזית|Wait in front of the door.
+line|שורה / קו|Stand in line.
+stupid|טיפש|That was stupid.
+bed|מיטה|Go to bed.
+become|להפוך|I want to become a doctor.
+food|אוכל|The food is great.
+dog|כלב|My dog is friendly.
+country|מדינה|Which country are you from?
+clear|ברור|It's clear to me.
+captain|קפטן|The captain spoke.
+six|שש|It's six o'clock.
+hot|חם|It's hot today.
+alive|חי|He's alive!
+pick|לבחור|Pick a card.
+cause|סיבה|What's the cause?
+ahead|קדימה|Go straight ahead.
+king|מלך|The king is old.
+plan|תוכנית|What's the plan?
+running|רץ|He's running fast.
+alright|בסדר גמור|Alright, let's go.
+taken|נלקח|Is this seat taken?
+book|ספר|I'm reading a book.
+sent|שלח|I sent you an email.
+hour|שעה|It takes an hour.
+anybody|מישהו|Is anybody home?
+small|קטן|It's a small room.
+special|מיוחד|Today is special.
+himself|את עצמו|He hurt himself.
+sounds|נשמע|That sounds great.
+scared|מפוחד|I'm scared.
+earth|כדור הארץ|The earth is round.
+sound|צליל|I hear a strange sound.
+top|ראש / פסגה|Climb to the top.
+cannot|לא יכול|I cannot find it.
+glad|שמח|I'm glad you came.
+control|שליטה|Who's in control?
+human|אנושי|We're all human.
+air|אוויר|Fresh air is good.
+ten|עשר|Count to ten.
+fast|מהיר|He's a fast runner.
+seem|נראה|You seem tired.
+hang|לתלות|Hang your coat here.
+till|עד|Wait till tomorrow.
+others|אחרים|Others will come later.
+sense|היגיון|It makes sense.
+lie|שקר|Don't lie to me.
+master|אמן / שולט|He's a master chef.
+known|ידוע|She's a known artist.
+dream|חלום|I had a strange dream.
+million|מיליון|Thanks a million!
+rather|מעדיף|I'd rather stay home.
+felt|הרגיש|I felt happy.
+sign|שלט / לחתום|Please sign here.
+bet|להמר|I bet you're right.
+less|פחות|Eat less sugar.
+pull|למשוך|Pull the door.
+beat|להכות / מקצב|I love the beat.
+secret|סוד|It's a secret.
+seeing|רואה|I'm seeing the doctor.
+given|ניתן|It was given to me.
+fault|אשמה|It's my fault.
+song|שיר|I love this song.
+future|עתיד|The future is bright.
+calm|רגוע|Stay calm.
+drop|להפיל|Don't drop it.
+step|צעד|Take one step.
+picture|תמונה|Nice picture!
+land|אדמה|The land is green.
+feet|רגליים|My feet hurt.
+worth|שווה|It's worth it.
+darling|יקירה|Hello, darling.
+dude|אחי|Hey dude!
+president|נשיא|The president spoke.
+eye|עין|Close your eye.
+quick|מהיר|Be quick!
+figure|דמות / להבין|I can't figure it out.
+state|מצב / מדינה|The state of things.
+amazing|מדהים|The view is amazing.
+ones|אלה|I like the red ones.
+act|לפעול|Act now!
+weird|מוזר|That's weird.
+chief|ראש|The chief decided.
+general|כללי|In general, yes.
+pain|כאב|I feel pain.
+kidding|צוחק|Are you kidding?
+pass|להעביר|Pass the salt.
+kept|שמר|I kept the receipt.
+worse|גרוע יותר|It's getting worse.
+age|גיל|What's your age?
+ship|ספינה|The ship is huge.
+caught|תפס|I caught a cold.
+meant|התכוון|I meant it.
+system|מערכת|The system is down.
+ride|לרכב / נסיעה|Let's go for a ride.
+completely|לגמרי|I'm completely sure.
+mouth|פה|Open your mouth.
+totally|לגמרי|Totally!
+born|נולד|I was born in 1990.
+information|מידע|I need more information.
+lying|משקר|He's lying.
+unless|אלא אם כן|Don't go unless you want to.
+seven|שבע|Seven days a week.
+attack|התקפה|The attack failed.
+history|היסטוריה|I love history.
+broke|שבר / מרושש|I'm broke.
+entire|שלם|The entire team came.
+rock|סלע / רוק|I love rock music.
+handle|ידית / לטפל|I can handle it.
+middle|אמצע|In the middle of the room.
+buddy|חבר|Hey buddy.
+paid|שילם|I paid in cash.
+using|משתמש|I'm using my phone.
+ran|רץ|He ran home.
+swear|להישבע|I swear it's true.
+situation|מצב|It's a difficult situation.
+ring|טבעת / לצלצל|She wears a ring.
+army|צבא|He joined the army.
+bought|קנה|I bought a gift.
+sun|שמש|The sun is bright.
+letter|מכתב|I wrote a letter.
+fool|טיפש|Don't be a fool.
+attention|תשומת לב|Pay attention!
+club|מועדון|I joined a club.
+simple|פשוט|It's very simple.
+space|חלל / מקום|There's no space.
+test|מבחן|I have a test.
+single|יחיד / רווק|I'm single.
+sitting|יושב|He's sitting there.
+marriage|נישואין|Marriage takes work.
+fear|פחד|Fear is natural.
+peace|שלום|We want peace.
+forgot|שכח|I forgot my keys.
+force|כוח|Don't force it.
+normal|רגיל|It's normal.
+present|מתנה / הווה|This is a present.
+ground|קרקע|Sit on the ground.
+american|אמריקאי|She's American.
+count|לספור|Count to ten.
+honor|כבוד|It's an honor.
+lunch|ארוחת צהריים|Let's have lunch.
+miles|מיילים|It's ten miles away.
+ball|כדור|Throw the ball.
+paper|נייר|I need some paper.
+boat|סירה|We took a boat.
+gold|זהב|It's made of gold.
+bar|בר|Let's go to a bar.
+fish|דג|I eat fish.
+mark|סימן|Make a mark here.
+crying|בוכה|Why are you crying?
+eight|שמונה|It's eight o'clock.
+fell|נפל|I fell down.
+interested|מעוניין|I'm interested.
+deep|עמוק|The water is deep.
+star|כוכב|Look at that star.
+sea|ים|The sea is calm.
+major|עיקרי|It's a major problem.
+stick|מקל / להדביק|Stick it here.
+personal|אישי|That's personal.
+record|להקליט|Record your voice.
+stopped|עצר|The bus stopped.
+relax|להירגע|Relax!
+public|ציבורי|It's a public place.
+list|רשימה|Make a list.
+brain|מוח|Use your brain.
+tea|תה|A cup of tea.
+forward|קדימה|Move forward.
+soul|נשמה|She has a kind soul.
+agent|סוכן|He's a travel agent.
+blow|לנשוף|Blow out the candles.
+scene|סצנה|It's a funny scene.
+ice|קרח|Add some ice.
+mess|בלגן|What a mess!
+tough|קשוח / קשה|It's a tough job.
+church|כנסייה|The church is old.
+sad|עצוב|I'm sad.
+cell|תא|I forgot my cell phone.
+fly|לעוף|Birds fly.
+girlfriend|חברה|His girlfriend is nice.
+smell|ריח|What a nice smell.
+broken|שבור|It's broken.
+often|לעתים קרובות|I often walk to work.
+spent|בילה / הוציא|I spent a lot.
+english|אנגלית|I speak English.
+judge|שופט|The judge decided.
+dare|להעז|Don't you dare!
+prove|להוכיח|Prove it.
+private|פרטי|It's private.
+wall|קיר|A white wall.
+position|תפקיד / עמדה|It's a good position.
+art|אמנות|I love art.
+pleasure|תענוג|My pleasure.
+college|מכללה|He's in college.
+french|צרפתי|I speak French.
+involved|מעורב|I'm involved.
+cry|לבכות|Don't cry.
+became|הפך|She became a doctor.
+accept|לקבל|Please accept my thanks.
+boyfriend|חבר|Her boyfriend is tall.
+queen|מלכה|The queen smiled.
+apartment|דירה|I rent an apartment.
+upset|נסער|She's upset.
+liked|אהב|I liked the movie.
+cute|חמוד|What a cute dog!
+evil|רשע|It's pure evil.
+professor|פרופסור|The professor is kind.
+contact|קשר|Stay in contact.
+holy|קדוש|It's a holy place.
+store|חנות|It's a grocery store.
+doubt|ספק|I have my doubts.
+continue|להמשיך|Please continue.
+cat|חתול|My cat sleeps all day.
+shop|חנות|It's a little shop.
+wrote|כתב|I wrote a note.
+village|כפר|It's a small village.
+quit|להפסיק / להתפטר|I quit my job.
+decision|החלטה|It's a hard decision.
+slow|איטי|The internet is slow.
+laughter|צחוק|I heard laughter.
+glass|כוס / זכוכית|A glass of water, please.
+beginning|התחלה|At the beginning.
+dying|גוסס|The plant is dying.
+difference|הבדל|What's the difference?
+plane|מטוס|The plane landed.
+push|לדחוף|Push the door.
+north|צפון|Go north.
+truck|משאית|A big truck passed by.
+putting|שם|I'm putting it away.
+bear|דוב|A big bear.
+board|לוח|Write it on the board.
+grab|לתפוס|Grab a seat.
+beer|בירה|A cold beer.
+stuck|תקוע|I'm stuck.
+partner|שותף|My business partner.
+upon|על|Once upon a time.
+jump|לקפוץ|Jump high.
+rid|להיפטר|Get rid of it.
+knock|לדפוק|Knock on the door.
+grow|לגדול|Plants grow.
+worst|הכי גרוע|The worst day.
+fat|שמן|Too much fat.
+final|סופי|The final score.
+summer|קיץ|I love summer.
+escape|לברוח|Escape the city.
+moon|ירח|The moon is full.
+arms|זרועות|Open your arms.
+address|כתובת|What's your address?
+grand|גדול / מפואר|A grand hotel.
+mate|חבר|Hey mate.
+press|ללחוץ / עיתונות|Press the button.
+foot|כף רגל|My foot hurts.
+blame|להאשים|Don't blame me.
+mission|משימה|It's an important mission.
+heaven|גן עדן|It's heaven.
+race|מרוץ|Win the race.
+risk|סיכון|It's a risk.
+further|הלאה|Go further.
+action|פעולה|Take action.
+smoke|עשן|I smell smoke.
+favor|טובה|Do me a favor.
+director|במאי / מנהל|The director agreed.
+guard|שומר|A security guard.
+spot|נקודה / כתם|A nice spot.
+herself|את עצמה|She hurt herself.
+feelings|רגשות|You hurt my feelings.
+enemy|אויב|A common enemy.
+battle|קרב|A long battle.
+ourselves|את עצמנו|We did it ourselves.
+dollars|דולרים|Ten dollars.
+nine|תשע|Nine o'clock.
+department|מחלקה|The sales department.
+apart|בנפרד|Take it apart.
+earlier|קודם|Earlier today.
+duty|חובה|Do your duty.
+suit|חליפה|A blue suit.
+bell|פעמון|Ring the bell.
+west|מערב|Go west.
+legs|רגליים|Long legs.
+hero|גיבור|He's my hero.
+stage|במה|On the stage.
+bunch|צרור|A bunch of flowers.
+according|לפי|According to him.
+bigger|גדול יותר|A bigger house.
+low|נמוך|Low prices.
+admit|להודות|I admit it.
+witness|עד|A witness saw it.
+upstairs|למעלה|Go upstairs.
+arm|זרוע|My arm hurts.
+kick|לבעוט|Kick the ball.
+cross|לחצות|Cross the street.
+indeed|אכן|Indeed!
+gas|גז / דלק|Gas is expensive.
+pregnant|בהריון|She's pregnant.
+form|טופס|Fill out the form.
+sold|מכר|I sold my car.
+silly|מטופש|A silly joke.
+hole|חור|There's a hole.
+track|מסלול|Stay on track.
+leg|רגל|My leg hurts.
+written|כתוב|It's written here.
+complete|להשלים|Complete the form.
+applause|מחיאות כפיים|Loud applause.
+pressure|לחץ|I'm under pressure.
+study|ללמוד|I study at night.
+burn|לשרוף|Don't burn the toast.
+crowd|קהל|A big crowd.
+roll|לגלגל|Roll the dice.
+spirit|רוח|Team spirit.
+danger|סכנה|Danger ahead.
+memory|זיכרון|I have a good memory.
+itself|את עצמו|The door opened by itself.
+interest|עניין|I have an interest in art.
+nose|אף|My nose is cold.
+built|בנה|They built a house.
+band|להקה|A rock band.
+raise|להרים|Raise your hand.
+pop|פופ|I like pop music.
+neck|צוואר|My neck hurts.
+extra|נוסף|Extra cheese, please.
+wild|פראי|Wild animals.
+camp|מחנה|A summer camp.
+medical|רפואי|I need medical help.
+asleep|ישן|The baby is asleep.
+beauty|יופי|Natural beauty.
+awful|נורא|It's awful.
+large|גדול|A large coffee, please.
+local|מקומי|A local shop.
+deserve|לזכות|You deserve it.
+stone|אבן|A heavy stone.
+lay|להניח|Lay it down.
+willing|מוכן|I'm willing to help.
+pants|מכנסיים|Blue pants.
+sweetheart|מותק|Hello, sweetheart.
+skin|עור|Dry skin.
+excellent|מצוין|Excellent work!
+responsible|אחראי|I'm responsible for this.
+military|צבאי|Military service.
+bottom|תחתית|At the bottom.
+german|גרמני|German beer.
+hall|אולם|A big hall.
+main|עיקרי|The main street.
+code|קוד|Enter the code.
+note|פתק|Leave a note.
+due|צפוי / מועד|The rent is due.
+correct|נכון|That's correct.
+language|שפה|A new language.
+folks|אנשים|Hi, folks!
+east|מזרח|The east side.
+blind|עיוור|Love is blind.
+ghost|רוח רפאים|A friendly ghost.
+gotten|קיבל|I've gotten better.
+conversation|שיחה|A nice conversation.
+nor|וגם לא|Neither he nor she.
+held|החזיק|I held her hand.
+possibly|ייתכן|Possibly.
+trial|ניסוי|A free trial.
+emergency|חירום|It's an emergency!
+ought|צריך|You ought to rest.
+file|קובץ|Open the file.
+understood|הבין|I understood.
+angel|מלאך|You're an angel.
+tape|סרט הדבקה|Use some tape.
+powerful|חזק|A powerful engine.
+pardon|סליחה|Pardon me?
+national|לאומי|A national park.
+super|סופר|That's super!
+taught|לימד|She taught me.
+natural|טבעי|Natural light.
+copy|עותק|Make a copy.
+plus|ועוד|Two plus two is four.
+cake|עוגה|Birthday cake.
+operation|ניתוח / פעולה|The operation went well.
+crew|צוות|The crew is ready.
+challenge|אתגר|It's a big challenge.
+meat|בשר|I don't eat meat.
+dropped|הפיל|I dropped my phone.
+strength|כוח|Inner strength.
+color|צבע|What's your favorite color?
+monster|מפלצת|A friendly monster.
+sight|ראייה|Love at first sight.
+horrible|נורא|The weather is horrible.
+planning|תכנון|Planning ahead.
+center|מרכז|The city center.
+nonsense|שטויות|That's nonsense.
+trick|תעלול|A magic trick.
+united|מאוחד|United we stand.
+incredible|מדהים|Incredible!
+character|דמות / אופי|A strong character.
+teeth|שיניים|Brush your teeth.
+chinese|סיני|Chinese food.
+truly|באמת|Truly amazing.
+bro|אחי|Thanks, bro.
+target|יעד|Hit the target.
+feed|להאכיל|Feed the cat.
+fake|מזויף|It's fake.
+belong|להשתייך|You belong here.
+forgotten|נשכח|I've forgotten his name.
+remain|להישאר|Please remain seated.
+original|מקורי|The original one.
+concerned|מודאג|I'm concerned.
+easier|קל יותר|It's easier now.
