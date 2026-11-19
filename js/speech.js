@@ -15,7 +15,7 @@ export function listVoices() {
 if (hasTTS) { speechSynthesis.onvoiceschanged = () => hooks.voices?.(listVoices()); listVoices(); }
 const chosen = () => { const s = state.settings; return voices.find(v => v.voiceURI === s.voice) || voices.find(v => v.lang.replace('_','-') === s.accent) || voices[0]; };
 
-export function say(text, { rate, pitch, show = true } = {}) {
+export function say(text, { rate, pitch, show = false } = {}) { // הבועה מציגה רק תגובות, לא את התוכן
   if (show) hooks.bubble?.(text);
   if (az.ttsEnabled()) { // קול עצבי של Azure; נפילה לקול הדפדפן אם נכשל
     return az.speak(text, { voice: az.voiceFor(hooks.animalVoice?.()), rate: rate ?? Math.min(1.3, Math.max(.6, state.settings.rate + .1)),

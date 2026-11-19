@@ -1,7 +1,7 @@
 // Service worker: מטמון offline-first. מעלים גרסה כדי לרענן.
-const V = 'np-v15';
+const V = 'np-v17';
 const SHELL = ['./', 'index.html', 'css/style.css', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
-  'js/app.js', 'js/stage.js', 'js/store.js', 'js/srs.js', 'js/speech.js', 'js/views.js', 'js/azure.js', 'js/tutor.js', 'js/rhythm.js', 'js/placement.js', 'data/placement.js', 'js/rec.js', 'data/rhythm.js', 'data/words.json', 'data/phonemes.js', 'data/talk.js',
+  'js/app.js', 'js/stage.js', 'js/store.js', 'js/srs.js', 'js/speech.js', 'js/views.js', 'js/azure.js', 'js/tutor.js', 'js/rhythm.js', 'js/placement.js', 'js/pages.js', 'data/placement.js', 'js/rec.js', 'data/rhythm.js', 'data/words.json', 'data/phonemes.js', 'data/talk.js',
   'assets/animals/fox.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

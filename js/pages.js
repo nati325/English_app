@@ -1,0 +1,132 @@
+// מסכים ראשיים: תרגול (כל סוגי האימון לפי מיומנות), אני (פרופיל, רמה, הגדרות), ומסכי פתיחה למשתמש חדש
+import { state, save, levelProgress } from './store.js';
+import * as srs from './srs.js';
+import { ANIMALS, animalImg } from './stage.js';
+import { say, listVoices, listen, SR, stopSpeaking } from './speech.js';
+import * as azure from './azure.js';
+import * as Vw from './views.js';
+import * as R from './rhythm.js';
+import { LEVELS } from '../data/placement.js';
+
+let ctx, V;
+export const init = (c) => { ctx = c; V = c.view; };
+const $ = (s) => V.querySelector(s);
+const row = (act, ic, t, s) => `<button class="prow" data-act="${act}"><span class="ic">${ic}</span><span class="t"><b>${t}</b><small>${s}</small></span><span class="st">‹</span></button>`;
+
+// ---------- תרגול ----------
+export function practice() {
+  const due = srs.dueIds().length, left = Vw.ALL.filter(w => !state.cards['w:' + w.w] && !state.known?.[w.w]).length;
+  V.innerHTML = `<h2>תרגול</h2><p class="sub">בחר מה לתרגל. השיעור היומי בלשונית "היום" כבר משלב את כל אלה.</p>
+    <div class="psec"><h3>📚 מילים</h3>
+      ${row('learn', '✨', 'מילים חדשות', `${left.toLocaleString('en')} מילים שעוד לא למדת`)}
+      ${row('review', '🔁', 'חזרות חכמות', due ? `${due} מילים מחכות לחזרה` : 'אין חזרות כרגע')}
+      ${row('words', '🗂️', 'כל המילים', 'רשימה לפי רמות + חיפוש')}</div>
+    <div class="psec"><h3>🔊 הגייה</h3>
+      ${row('ear', '👂', 'אימון אוזן', 'שומעים מילה ובוחרים – ship או sheep?')}
+      ${row('hard', '👄', 'הצלילים הקשים', '20 צלילים שדוברי עברית מתקשים בהם')}
+      ${row('lab', '🎯', 'בדיקת הגייה', 'כותבים משפט, אומרים אותו, ומקבלים ציון לכל מילה')}</div>
+    <div class="psec"><h3>🎤 דיבור</h3>
+      ${row('speak', '🗣️', 'חזור אחריי', 'שומעים משפט ואומרים אותו')}
+      ${row('shadow', '🪞', 'חיקוי דובר', 'מקליטים את עצמך ומקבלים ציון על הקצב')}
+      ${row('talk', '💬', `שיחה עם ${ANIMALS[state.animal].name}`, 'שיחה חופשית עם תיקונים')}</div>
+    <div class="psec"><h3>🥁 מקצב ומנגינה</h3><p class="sub" style="margin:-4px 0 8px">רוב ה"מבטא" בא מהקצב: אילו מילים חזקות ואילו נבלעות.</p>
+      ${row('stressw', '🔨', 'איפה הדגש במילה?', 'WAter או waTER?')}
+      ${row('stresss', '🎵', 'מילים חזקות במשפט', 'מה מדגישים ומה "בולעים"')}
+      ${row('link', '🔗', 'חיבור בין מילים', 'turn it on ← "tur-ni-ton"')}
+      ${row('flap', '🇺🇸', 'ה-T האמריקאית', 'water ← "wadder"')}
+      ${row('red', '⚡', 'קיצורים בדיבור', 'gonna · wanna · lemme')}
+      ${row('weak', '🌫️', 'מילים שנבלעות', 'to · for · and · of')}
+      ${row('intonation', '📈', 'מנגינת המשפט', 'מתי הקול עולה ומתי יורד')}</div>`;
+  const A = {
+    learn: () => Vw.startLearn(), review: () => Vw.startReview(), words: () => ctx.go('words'),
+    ear: () => Vw.startEar(), hard: () => ctx.go('sounds'), lab: () => { ctx.go('sounds'); Vw.sounds('lab'); },
+    speak: () => Vw.startSentences(), shadow: () => R.shadow(), talk: () => ctx.go('talk'),
+    stressw: () => R.stressWords(), stresss: () => R.stressSentence()
+  };
+  V.querySelectorAll('.prow').forEach(b => b.onclick = () => (A[b.dataset.act] || (() => R.lesson(b.dataset.act)))());
+}
+
+// ---------- אני ----------
+export function me() {
+  const P = state.placement, lp = levelProgress(), Aml = ANIMALS[state.animal];
+  const learned = Object.keys(state.cards).length + Object.keys(state.known || {}).length;
+  const ear = Object.values(state.ear); const earAcc = ear.length ? Math.round(ear.reduce((a, e) => a + e.ok, 0) / Math.max(1, ear.reduce((a, e) => a + e.n, 0)) * 100) : null;
+  V.innerHTML = `<div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><img class="av" src="${animalImg(state.animal)}" alt=""><div style="flex:1"><b style="font-size:1.1rem">החבר שלך: ${Aml.name}</b><div class="sub" style="margin:2px 0 0">${Aml.desc}</div></div><button class="btn g" id="fr" style="min-height:44px;padding:0 14px">החלף</button></div></div>
+    <div class="card"><div class="row" style="justify-content:space-between"><b>🎯 הרמה שלי</b>${P ? `<span class="pill ok">${LEVELS[P.overall]}</span>` : ''}</div>
+      ${P ? `<p class="sub" style="margin:6px 0 10px">נבדק ב-${P.date} · אוצר מילים ~${P.size.toLocaleString('en')}</p><div class="row"><button class="btn g" id="res">פרטים</button><button class="btn b" id="pt">מבחן חוזר</button></div>`
+        : `<p class="sub" style="margin:6px 0 10px">עוד לא עשית מבחן רמה. 8 דקות, וחוסך לך ללמוד מה שאתה כבר יודע.</p><button class="btn full" id="pt">התחל מבחן רמה</button>`}</div>
+    <div class="stats"><div class="stat"><b>${learned.toLocaleString('en')}</b><small>מילים שאני מכיר</small></div><div class="stat"><b>${srs.mature()}</b><small>בשליטה מלאה</small></div><div class="stat"><b>${state.streak}🔥</b><small>ימים ברצף</small></div></div>
+    <div class="stats"><div class="stat"><b>${state.best}</b><small>שיא רצף</small></div><div class="stat"><b>${earAcc == null ? '—' : earAcc + '%'}</b><small>דיוק אוזן</small></div><div class="stat"><b>${lp.L}</b><small>רמת משחק</small></div></div>
+    <button class="prow" id="weak"><span class="ic">📊</span><span class="t"><b>הנקודות החלשות שלי</b><small>צלילים שכדאי לתרגל</small></span><span class="st">‹</span></button>
+    <h3>הגדרות</h3>
+    <div class="card"><b>⏱️ מטרה יומית</b><div class="chips" style="margin:8px 0 0">${[10, 20, 30].map(m => `<button data-g="${m}" class="${(state.settings.goal || 20) === m ? 'on' : ''}">${m} דקות</button>`).join('')}</div></div>
+    <button class="prow" id="set"><span class="ic">⚙️</span><span class="t"><b>קול, מהירות, חיבורי AI וגיבוי</b><small>כל ההגדרות</small></span><span class="st">‹</span></button>`;
+  $('#fr').onclick = () => Vw.friends();
+  $('#pt').onclick = () => ctx.placement.start();
+  if ($('#res')) $('#res').onclick = () => ctx.placement.showResult(P);
+  $('#weak').onclick = () => { ctx.go('sounds'); Vw.sounds('me'); };
+  $('#set').onclick = () => Vw.settings();
+  V.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { state.settings.goal = +b.dataset.g; state.settings.newPerDay = Math.max(state.settings.newPerDay || 5, +b.dataset.g >= 30 ? 10 : +b.dataset.g >= 20 ? 6 : 5); save(); me(); });
+}
+
+// ---------- מסכי פתיחה ----------
+const DOTS = (i) => `<div class="dots" style="margin-bottom:14px">${[0, 1, 2, 3, 4].map(k => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>`;
+export function onboarding(step = 0) {
+  const A = ANIMALS[state.animal], next = () => onboarding(step + 1);
+  const done = () => { state.onboarded = true; save(); ctx.go('today'); };
+  if (step === 0) {
+    V.innerHTML = `<div class="onb">${DOTS(0)}<img class="av big" src="${animalImg(state.animal)}" alt=""><h2 class="center">היי! אני ${A.name} 👋</h2>
+      <p class="sub center">אני אעזור לך לדבר אנגלית בביטחון – עם מבטא אמריקאי טבעי.</p>
+      <div class="card" style="line-height:2">📅 כל יום: <b>שיעור של כ-10 דקות</b>, בלחיצה אחת<br>🎤 מדברים <b>בקול</b> – ככה לומדים לדבר<br>👂 מאמנים את האוזן לצלילים של אנגלית<br>🔁 מילים חוזרות בדיוק כשעומדים לשכוח אותן</div>
+      <button class="btn big full" id="n">בוא נתחיל</button></div>`;
+    $('#n').onclick = () => { say(`Hi! I'm ${A.name}. Let's learn English together!`, { show: true }); next(); };
+  } else if (step === 1) {
+    V.innerHTML = `<div class="onb">${DOTS(1)}<h2>בחר חבר ללמידה</h2><p class="sub">לכל אחד קול ואופי משלו. אפשר להחליף בכל רגע.</p>
+      <div class="pick">${Object.entries(ANIMALS).map(([k, a]) => `<button data-a="${k}" class="${k === state.animal ? 'on' : ''}"><img src="${animalImg(k)}" alt="" loading="lazy">${a.name}</button>`).join('')}</div>
+      <button class="btn big full" id="n" style="margin-top:14px">המשך</button></div>`;
+    V.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => { V.querySelectorAll('[data-a]').forEach(x => x.classList.toggle('on', x === b)); await ctx.setAnimal(b.dataset.a, false); say(`Hi! I'm ${ANIMALS[b.dataset.a].name}!`, { show: true }); });
+    $('#n').onclick = next;
+  } else if (step === 2) {
+    const vs = listVoices().slice(0, 4);
+    if (azure.ttsEnabled() || !vs.length) return next();
+    const name = ANIMALS[state.animal].name;
+    V.innerHTML = `<div class="onb">${DOTS(2)}<h2>איזה קול נשמע לך הכי טבעי?</h2><p class="sub">לחץ כדי לשמוע, ובחר את הקול שנעים לך. (הקולות תלויים במכשיר שלך.)</p>
+      ${vs.map((v, i) => `<button class="opt" data-v="${i}">🔊 ${v.name.replace(/Microsoft |Google |\(.*\)/g, '').trim()} <span class="mut" style="font-size:.8rem">${v.lang}</span></button>`).join('')}
+      <button class="btn big full" id="n" style="margin-top:6px">המשך</button></div>`;
+    V.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { const v = vs[+b.dataset.v]; state.settings.voice = v.voiceURI; save(); V.querySelectorAll('[data-v]').forEach(x => x.style.borderColor = x === b ? 'var(--acc)' : ''); say(`Hi! I'm ${name}. Nice to meet you!`, { show: true }); });
+    $('#n').onclick = next;
+  } else if (step === 3) {
+    V.innerHTML = `<div class="onb">${DOTS(3)}<h2>כמה זמן ביום?</h2><p class="sub">עקביות חשובה יותר מכמות. 10 דקות כל יום עדיפות על שעה פעם בשבוע.</p>
+      ${[[10, '🙂 קליל', '5 מילים חדשות ביום'], [20, '💪 רציני', '6 מילים + יותר דיבור'], [30, '🚀 אינטנסיבי', '10 מילים + הכל']].map(([m, t, s]) => `<button class="opt" data-m="${m}"><b>${m} דקות · ${t}</b><br><span class="mut" style="font-size:.85rem">${s}</span></button>`).join('')}</div>`;
+    V.querySelectorAll('[data-m]').forEach(b => b.onclick = () => { const m = +b.dataset.m; state.settings.goal = m; state.settings.newPerDay = m >= 30 ? 10 : m >= 20 ? 6 : 5; save(); next(); });
+  } else if (step === 4) {
+    V.innerHTML = `<div class="onb">${DOTS(4)}<h2>בדיקת מיקרופון 🎤</h2><p class="sub">באפליקציה מדברים בקול. בוא נוודא שהמיקרופון שומע אותך.</p>
+      <div class="meter"><i id="lvl"></i></div><div class="center sub" id="mst">לחץ ואמור משהו, למשל "Hello!"</div>
+      <button class="btn big full" id="mic">🎤 בדוק מיקרופון</button>
+      <div id="tips"></div>
+      <button class="btn g full" id="n" style="margin-top:10px">המשך</button></div>`;
+    $('#mic').onclick = () => micCheck();
+    $('#n').onclick = () => { stopSpeaking(); done(); };
+  }
+}
+
+async function micCheck() {
+  const st = $('#mst'), lvl = $('#lvl'), tips = $('#tips'), btn = $('#mic');
+  if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) { tips.innerHTML = `<div class="tip">המיקרופון עובד רק כשהאתר נפתח בכתובת מאובטחת (https). פתח את האפליקציה מהכתובת שלה ב-Vercel או GitHub Pages.</div>`; return; }
+  btn.disabled = true; st.textContent = '🎙️ דבר עכשיו… (4 שניות)';
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+  catch (e) { btn.disabled = false; st.textContent = '❌ אין גישה למיקרופון';
+    tips.innerHTML = `<div class="tip">${e.name === 'NotAllowedError' ? 'הדפדפן חסם את המיקרופון. לחץ על סמל המנעול ליד הכתובת ← הרשאות ← מיקרופון ← אפשר. ואז נסה שוב.' : 'לא נמצא מיקרופון. בדוק שהוא מחובר ושאף אפליקציה אחרת לא משתמשת בו.'}</div>`; return; }
+  const ac = new (window.AudioContext || window.webkitAudioContext)(); const an = ac.createAnalyser(); an.fftSize = 1024;
+  ac.createMediaStreamSource(stream).connect(an); const buf = new Float32Array(an.fftSize); let peak = 0; const t0 = performance.now();
+  await new Promise(res => { const f = () => { an.getFloatTimeDomainData(buf); let s = 0; for (const x of buf) s += x * x; const rms = Math.sqrt(s / buf.length); peak = Math.max(peak, rms); lvl.style.width = Math.min(100, rms * 600) + '%'; if (performance.now() - t0 < 4000) requestAnimationFrame(f); else res(); }; f(); });
+  stream.getTracks().forEach(t => t.stop()); ac.close?.(); lvl.style.width = '0%'; btn.disabled = false;
+  if (peak < .015) { st.textContent = '🤔 כמעט לא שמעתי'; tips.innerHTML = `<div class="tip">דבר קרוב יותר לטלפון, או בדוק שהמיקרופון לא מושתק. אפשר לנסות שוב.</div>`; return; }
+  st.textContent = '✅ המיקרופון שומע אותך!'; ctx.stage.celebrate();
+  if (!SR && !azure.enabled()) tips.innerHTML = `<div class="tip">הדפדפן הזה לא תומך בזיהוי דיבור. מומלץ Chrome (אנדרואיד) או Safari (אייפון), או לחבר Azure בהגדרות.</div>`;
+  else if (SR && !azure.enabled()) {
+    tips.innerHTML = `<button class="btn b full" id="sr">עכשיו אמור באנגלית: "Hello, how are you?"</button><div class="res" id="srr"></div>`;
+    $('#sr').onclick = async (e) => { try { const a = await listen(e.currentTarget); $('#srr').textContent = a[0] ? `✅ שמעתי: "${a[0]}"` : 'לא זוהה – נסה שוב, לאט וברור.'; } catch (err) { $('#srr').textContent = 'זיהוי הדיבור לא זמין: ' + err.message; } };
+  }
+}

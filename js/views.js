@@ -22,7 +22,7 @@ export const init = (c) => {
   ctx = c; V = c.view; c.flowNext = flowNext;
   // מצב "מיקוד": בזמן תרגיל הבמה מתכווצת והתוכן מקבל את רוב המסך. סרגל התקדמות לשיעור היומי נוסף אוטומטית.
   new MutationObserver(() => {
-    document.body.classList.toggle('compact', !!V.querySelector('.dots,.wcard,.speaker,.chat,.flowfin,.ptest'));
+    document.body.classList.toggle('compact', !V.querySelector('[data-big]')); // הדמות גדולה רק במסך הבית
     if (flow && !V.querySelector('.flowbar') && !V.querySelector('.flowfin')) V.insertAdjacentHTML('afterbegin', `<div class="flowbar"><span>שלב ${flow.i + 1} מתוך ${flow.steps.length} · <b>${flow.names[flow.i]}</b></span><i style="width:${(flow.i + .5) / flow.steps.length * 100}%"></i></div>`);
   }).observe(V, { childList: true });
 };
@@ -30,7 +30,7 @@ export const init = (c) => {
 let flow = null;
 export const clearFlow = () => { flow = null; };
 function flowNext(fallback) {
-  if (!flow) return fallback ? fallback() : ctx.go('today');
+  if (!flow) return fallback ? fallback() : ctx.back();
   flow.i++; if (flow.i >= flow.steps.length) { flow = null; return dailyDone(); } flow.steps[flow.i]();
 }
 function startDaily() {
@@ -75,7 +75,7 @@ export function recordPhonemes(r) {
   save();
 }
 export function renderAssess(out, r) {
-  const pills = [['ציון כולל', r.pron], ['דיוק', r.accuracy], ['שטף', r.fluency], ['מקצב ואינטונציה', r.prosody], ['שלמות', r.completeness]].filter(x => x[1] != null)
+  const pills = [['ציון כולל', r.pron], ['דיוק', r.accuracy], ['שטף', r.fluency], ['קצב ומנגינה', r.prosody], ['שלמות', r.completeness]].filter(x => x[1] != null)
     .map(([l, v]) => `<span class="pill ${v >= 80 ? 'ok' : v < 60 ? 'hot' : ''}">${l} ${Math.round(v)}</span>`).join(' ');
   const worst = r.words.flatMap(w => w.ph.map(p => ({ ...p, w: w.w }))).filter(p => p.acc < 70).sort((a, b) => a.acc - b.acc)[0];
   const tip = worst && byIPA[normP(worst.p)] ? `<div class="tip"><b class="ltr">/${normP(worst.p)}/ במילה ${worst.w}</b> (${Math.round(worst.acc)}): ${byIPA[normP(worst.p)][3]}</div>` : '';
@@ -110,8 +110,9 @@ export function today() {
   const goals = [[d.review, due ? 10 : 0], [d.learn, 5], [d.ear, 6], [d.speak, 3]].filter(g => g[1] > 0);
   const pct = Math.round(goals.reduce((a, g) => a + Math.min(1, g[0] / g[1]), 0) / goals.length * 100);
   const known = Object.keys(state.cards).length, left = ALL.filter(w => !isDone(w)).length;
+  if (!state.onboarded && !known && !state.placement) return ctx.pages.onboarding(0);
   if (!state.placement && !known && !state.skipPlacement) { // משתמש חדש: קודם מבחן רמה
-    V.innerHTML = `<div class="hero center"><img class="av big" src="${animalImg(state.animal)}" alt=""><h2>ברוך הבא! אני ${A.name}</h2>
+    V.innerHTML = `<div class="hero center" data-big><img class="av big" src="${animalImg(state.animal)}" alt=""><h2>ברוך הבא! אני ${A.name}</h2>
       <p class="sub">כדי לא לבזבז לך זמן על מה שאתה כבר יודע, בוא נבדוק את הרמה שלך. לוקח כ-8 דקות.</p>
       <button class="btn big full" id="pt">🎯 התחל מבחן רמה</button>
       <button class="btn g full" id="skip" style="margin-top:10px">אני מתחיל מאפס – דלג</button></div>`;
@@ -121,7 +122,7 @@ export function today() {
   }
   const P = state.placement, LV = ['Pre-A1', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
   V.innerHTML = `
-    <div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><img class="av" src="${animalImg(state.animal)}" alt=""><div style="flex:1"><b style="font-size:1.1rem">${greet()}! אני ${A.name}</b><div class="sub" style="margin:2px 0 6px">${P ? `<button class="pill ok" id="lvl" style="border:0">רמה ${LV[P.overall]}</button> · ` : ''}היום ${pct}%</div><div class="prog"><i style="width:${pct}%"></i></div></div></div>
+    <div class="hero" data-big><div class="row" style="flex-wrap:nowrap;gap:12px"><img class="av" src="${animalImg(state.animal)}" alt=""><div style="flex:1"><b style="font-size:1.1rem">${greet()}! אני ${A.name}</b><div class="sub" style="margin:2px 0 6px">${P ? `<button class="pill ok" id="lvl" style="border:0">רמה ${LV[P.overall]}</button> · ` : ''}היום ${pct}%</div><div class="prog"><i style="width:${pct}%"></i></div></div></div>
       <button class="btn big full" id="goDaily" style="margin-top:14px">▶ ${pct >= 100 ? 'עוד שיעור' : pct > 0 ? 'המשך לשיעור היומי' : 'התחל את השיעור היומי'}</button>
       <div class="sub center" style="margin:8px 0 0">${due ? 'חזרות · ' : ''}5 מילים חדשות · אימון אוזן · דיבור · כ-10 דקות</div></div>
     <h3>תרגול חופשי</h3>
@@ -130,15 +131,15 @@ export function today() {
       <button data-q="learn"><i>📚</i><b>מילים חדשות</b><small>${left} נותרו</small></button>
       <button data-q="ear"><i>👂</i><b>אימון אוזן</b><small>שומעים ובוחרים</small></button>
       <button data-q="speak"><i>🎤</i><b>דיבור</b><small>חוזרים אחרי משפט</small></button>
-      <button data-q="rhythm"><i>🥁</i><b>מקצב</b><small>הטעמה ו-Shadowing</small></button>
+      <button data-q="rhythm"><i>🥁</i><b>מקצב</b><small>הטעמה וחיקוי דובר</small></button>
       <button data-q="talk"><i>💬</i><b>שיחה</b><small>עם ${A.name}</small></button>
     </div>
     <div class="stats"><div class="stat"><b>${known}</b><small>מילים נלמדו</small></div><div class="stat"><b>${srs.mature()}</b><small>בשליטה</small></div><div class="stat"><b>${state.streak}🔥</b><small>ימים ברצף</small></div></div>
-    <details class="card"><summary><b>מסלול Native Path</b> <span class="mut">(לאן אנחנו הולכים)</span></summary><div class="path" style="margin-top:8px">
-      <div class="step on"><i>S0</i><span><b>צלילים</b> · 44 פונמות + אוזן</span></div>
+    <details class="card"><summary><b>המסלול שלי</b> <span class="mut">(לאן אנחנו הולכים)</span></summary><div class="path" style="margin-top:8px">
+      <div class="step on"><i>S0</i><span><b>צלילים</b> · 44 צלילים + אוזן</span></div>
       <div class="step on"><i>S1</i><span><b>אוצר מילים</b> · ${ALL.length} מילים</span></div>
       <div class="step on"><i>S2</i><span><b>מקצב וחיבורים</b></span></div>
-      <div class="step on"><i>S4</i><span><b>Shadowing</b></span></div>
+      <div class="step on"><i>S4</i><span><b>חיקוי דובר</b></span></div>
       <div class="step on"><i>S5</i><span><b>שיחה עם AI</b></span></div>
       <div class="step lock"><i>S6–7</i><span>אידיומות וסלנג 🔒</span></div></div></details>`;
   $('#goDaily').onclick = startDaily;
@@ -154,7 +155,7 @@ export function words(uid) {
   const nextW = ALL.find(w => !isDone(w)); const nextU = nextW && nextW.unit;
   const levels = [...new Set(WORDS.units.map(u => u.lvl))];
   const done = ALL.length - ALL.filter(w => !isDone(w)).length;
-  V.innerHTML = `<h2>מילים</h2>
+  V.innerHTML = `<button class="back" data-back>→ תרגול</button><h2>מילים</h2>
     <button class="btn big full" id="go">▶ ${nextW ? 'המשך ללמוד: 5 מילים הבאות' : 'למדת הכול! 🎉'}</button>
     <div class="sub center" style="margin:8px 0 12px">${done} מתוך ${ALL.length} · כל מילה נלמדת פעם אחת ואז חוזרת רק בזמן החזרות</div>
     <input id="q" class="srch" placeholder="🔍 חפש מילה באנגלית או בעברית…" autocomplete="off"><div id="hits"></div>
@@ -179,7 +180,7 @@ function unitView(uid) {
   on('[data-say]', b => say(b.dataset.say));
 }
 
-function startLearn(uid) {
+export function startLearn(uid) {
   const pool = ALL.filter(w => !isDone(w) && (!uid || w.unit === uid));
   const q = pool.slice(0, state.settings.newPerDay || 5);
   if (!q.length) { ctx.toast('כבר למדת את כל המילים כאן 🎉'); return words(); }
@@ -190,7 +191,7 @@ function startLearn(uid) {
       <div class="wcard"><div class="word">${w.w}</div><div class="ipa">/${w.ipa}/</div><div class="he">${w.he}</div>
       <div class="ex">${hl(w.ex, w.w)}</div><div class="row c"><button class="btn g" data-say="${w.ex}" style="flex:0 0 auto">🔊 המשפט</button><span class="pill">${w.syl} הברות · הטעמה ${w.st}</span></div></div>
       ${speakBtns(w.w)}<button class="btn full" id="nx">${i < q.length - 1 ? 'הבנתי, הבא ←' : 'סיימתי ✔'}</button>`;
-    $('#bk').onclick = () => words(); bindSpeak(V, { kind: 'speak' });
+    $('#bk').onclick = () => ctx.back(); bindSpeak(V, { kind: 'speak' });
     on('[data-say]', b => say(b.dataset.say));
     srs.learn(cid(w.w)); // נכנס לחזרות מרגע שהוצג: לא יוצג שוב כ'חדש' גם אם יצאת באמצע
     ctx.stage.celebrate(); say(w.w, { show: false });
@@ -200,13 +201,13 @@ function startLearn(uid) {
     ctx.stage.celebrate(); ctx.bubble('You learned ' + q.length + ' new words! 🎉');
     V.innerHTML = `<div class="center"><div style="font-size:3rem">🎉</div><h2>למדת ${q.length} מילים!</h2><p class="sub">הן נכנסו לחזרות המרווחות. כדי שיישארו – תחזור אליהן מחר.</p>
       <div class="row c">${q.map(w => `<span class="w ok">${w.w}</span>`).join('')}</div><br>${flow ? '<button class="btn full" id="fl">המשך ←</button>' : '<div class="row"><button class="btn o" id="m">עוד מילים</button><button class="btn g" id="h">למסך הבית</button></div>'}</div>`;
-    if (flow) $('#fl').onclick = () => flowNext(); else { $('#m').onclick = () => startLearn(uid); $('#h').onclick = () => ctx.go('today'); }
+    if (flow) $('#fl').onclick = () => flowNext(); else { $('#m').onclick = () => startLearn(uid); $('#h').onclick = () => ctx.back(); }
   };
   card();
 }
 
 // ---------- חזרות ----------
-function startReview() {
+export function startReview() {
   const q = srs.dueIds().slice(0, 15);
   if (!q.length) { if (flow) return flowNext(); V.innerHTML = `<div class="center"><div style="font-size:3rem">✨</div><h2>אין חזרות כרגע</h2><p class="sub">למד מילים חדשות כדי למלא את הסל.</p><button class="btn o" id="l">📚 מילים חדשות</button></div>`; $('#l').onclick = () => startLearn(); return; }
   let i = 0, ok = 0;
@@ -215,7 +216,7 @@ function startReview() {
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${q.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
       <div class="wcard"><p class="sub">איך אומרים באנגלית?</p><div class="he" style="font-size:2rem">${w.he}</div></div>
       <div class="res" id="res"></div><div class="row"><button class="btn o" id="mic">🎤 אמור</button><button class="btn b" id="show">הצג תשובה</button></div>`;
-    $('#bk').onclick = () => ctx.go('today');
+    $('#bk').onclick = () => ctx.back();
     $('#mic').onclick = (e) => trySpeak(e.currentTarget, w.w, $('#res'), { kind: 'speak', xp: 1 });
     $('#show').onclick = () => back(w);
   };
@@ -234,7 +235,7 @@ function startReview() {
 }
 
 // ---------- משפטים (דיבור) ----------
-function startSentences(n = 5) {
+export function startSentences(n = 5) {
   const learned = ALL.filter(w => isDone(w));
   const q = fresh(learned.length >= 40 ? learned : ALL, 'sent', n, w => w.w); let i = 0;
   const card = () => {
@@ -242,7 +243,7 @@ function startSentences(n = 5) {
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${q.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
       <p class="sub center">שמע, ואז חזור אחרי המשפט בקול</p><div class="ex" style="font-size:1.35rem;text-align:center">${hl(w.ex, w.w)}</div><div class="he center mut" style="font-size:1rem">מילת המפתח: ${w.w} – ${w.he}</div><br>
       ${speakBtns(w.ex)}<button class="btn g full" id="nx">${i < q.length - 1 ? 'הבא ←' : 'סיום'}</button>`;
-    $('#bk').onclick = () => ctx.go('today'); bindSpeak(V, { kind: 'speak', xp: 3 }); say(w.ex);
+    $('#bk').onclick = () => ctx.back(); bindSpeak(V, { kind: 'speak', xp: 3 }); say(w.ex);
     $('#nx').onclick = () => { if (++i < q.length) card(); else flowNext(); };
   };
   card();
@@ -250,7 +251,7 @@ function startSentences(n = 5) {
 
 // ---------- צלילים ----------
 export function sounds(sub = 'map') {
-  V.innerHTML = `<div class="seg"><button data-s="map" class="${sub === 'map' ? 'on' : ''}">מפת הצלילים</button><button data-s="ear" class="${sub === 'ear' ? 'on' : ''}">אימון אוזן</button><button data-s="lab" class="${sub === 'lab' ? 'on' : ''}">מעבדה 🎯</button><button data-s="me" class="${sub === 'me' ? 'on' : ''}">הנקודות שלי</button></div><div id="sv"></div>`;
+  V.innerHTML = `<button class="back" data-back>→ תרגול</button><div class="seg"><button data-s="map" class="${sub === 'map' ? 'on' : ''}">מפת הצלילים</button><button data-s="ear" class="${sub === 'ear' ? 'on' : ''}">אימון אוזן</button><button data-s="lab" class="${sub === 'lab' ? 'on' : ''}">מעבדה 🎯</button><button data-s="me" class="${sub === 'me' ? 'on' : ''}">הנקודות שלי</button></div><div id="sv"></div>`;
   on('.seg button', b => sounds(b.dataset.s));
   const sv = $('#sv');
   if (sub === 'map') {
@@ -266,7 +267,7 @@ export function sounds(sub = 'map') {
     $('#all').onclick = () => startEar();
     on('[data-f]', b => startEar(b.dataset.f));
   } else if (sub === 'lab') {
-    sv.innerHTML = `<h2>מעבדת הגייה 🎯</h2><p class="sub">כתוב כל משפט באנגלית, אמור אותו, וקבל ציון לכל מילה ולכל פונמה (IPA), כולל מקצב ואינטונציה.</p>
+    sv.innerHTML = `<h2>מעבדת הגייה 🎯</h2><p class="sub">כתוב כל משפט באנגלית, אמור אותו, וקבל ציון לכל מילה ולכל צליל, כולל קצב ומנגינה.</p>
       ${azure.enabled() ? '' : '<div class="tip">צריך לחבר Azure כדי להשתמש במעבדה (הגדרות ⚙️ › שירותים מתקדמים). בלי זה אפשר לתרגל עם הזיהוי הרגיל.</div>'}
       <textarea id="labtxt" class="srch ltr" rows="2" placeholder="Type a sentence… e.g. I would like a glass of water, please.">I would like a glass of water, please.</textarea>
       <div class="row"><button class="btn b" id="labhear">🔊 שמע</button><button class="btn o" id="labmic">🎤 אמור</button></div><div class="res" id="res"></div>`;
@@ -279,7 +280,7 @@ export function sounds(sub = 'map') {
     on('[data-ph]', b => { if (byIPA[b.dataset.ph]) phoneme(b.dataset.ph); }, sv);
   }
 }
-function phoneme(ipa) {
+export function phoneme(ipa) {
   const p = PHONEMES.find(x => x[0] === ipa), ex = p[2].split(' · ');
   const rel = PAIRS.filter(x => x[2].split(' / ').includes(ipa));
   V.innerHTML = `<button class="back" id="bk">→ חזרה</button>
@@ -294,7 +295,7 @@ function phoneme(ipa) {
   $('#ear').onclick = () => startEar('p:' + ipa);
 }
 
-function startEar(filter, n = 10) {
+export function startEar(filter, n = 10) {
   let pool = PAIRS;
   if (filter === 'vowel') pool = PAIRS.filter(p => p[3] === 'vowel'); else if (filter === 'cons') pool = PAIRS.filter(p => p[3] === 'cons');
   else if (filter === 'th') pool = PAIRS.filter(p => /θ|ð/.test(p[2])); else if (filter === 'vb') pool = PAIRS.filter(p => /v/.test(p[2]) && /b|w/.test(p[2]));
@@ -307,7 +308,7 @@ function startEar(filter, n = 10) {
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${q.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
       <p class="sub center">איזו מילה שמעת?</p><button class="speaker" id="spk">🔊</button>
       ${opts.map(o => `<button class="choice" data-c="${o}">${o}</button>`).join('')}<div id="fb"></div>`;
-    $('#bk').onclick = () => sounds('ear'); const play = () => say(target, { rate: .75, show: false }); $('#spk').onclick = play; setTimeout(play, 250);
+    $('#bk').onclick = () => ctx.back(); const play = () => say(target, { rate: .75, show: false }); $('#spk').onclick = play; setTimeout(play, 250);
     on('.choice', b => {
       const good = b.dataset.c === target, st = state.ear[p[2]] = state.ear[p[2]] || { ok: 0, n: 0 }; st.n++; if (good) { st.ok++; ok++; } save();
       V.querySelectorAll('.choice').forEach(c => { c.disabled = true; if (c.dataset.c === target) c.classList.add('ok'); else if (c === b) c.classList.add('no'); });
@@ -319,7 +320,7 @@ function startEar(filter, n = 10) {
       $('#nx').onclick = () => { if (++i < N) ask(); else sum(); };
     });
   };
-  const sum = () => { const pc = Math.round(ok / N * 100); ctx.stage.celebrate(); V.innerHTML = `<div class="center"><div style="font-size:3rem">${pc >= 80 ? '🏆' : '💪'}</div><h2>${ok}/${N} נכון (${pc}%)</h2><p class="sub">${pc >= 90 ? 'אוזן חדה! עכשיו אפשר להתמקד בהפקה.' : 'האוזן מתחדדת עם חזרות – נסה שוב מחר.'}</p>${flow ? '<button class="btn full" id="fl">המשך ←</button>' : '<div class="row"><button class="btn o" id="r">עוד סבב</button><button class="btn g" id="h">סיום</button></div>'}</div>`; if (flow) $('#fl').onclick = () => flowNext(); else { $('#r').onclick = () => startEar(filter); $('#h').onclick = () => ctx.go('today'); } };
+  const sum = () => { const pc = Math.round(ok / N * 100); ctx.stage.celebrate(); V.innerHTML = `<div class="center"><div style="font-size:3rem">${pc >= 80 ? '🏆' : '💪'}</div><h2>${ok}/${N} נכון (${pc}%)</h2><p class="sub">${pc >= 90 ? 'אוזן חדה! עכשיו אפשר להתמקד בהפקה.' : 'האוזן מתחדדת עם חזרות – נסה שוב מחר.'}</p>${flow ? '<button class="btn full" id="fl">המשך ←</button>' : '<div class="row"><button class="btn o" id="r">עוד סבב</button><button class="btn g" id="h">סיום</button></div>'}</div>`; if (flow) $('#fl').onclick = () => flowNext(); else { $('#r').onclick = () => startEar(filter); $('#h').onclick = () => ctx.back(); } };
   ask();
 }
 
@@ -327,7 +328,7 @@ function startEar(filter, n = 10) {
 let scen = SCENARIOS[0];
 export function talk() {
   const ai = tutor.enabled();
-  V.innerHTML = `<h2>שיחה 💬 ${ai ? '<span class="pill ok">AI</span>' : ''}</h2><p class="sub">${ai ? `${ANIMALS[state.animal].name} מנהל/ת איתך שיחה אמיתית ומתקן/ת ניסוחים לא טבעיים.` : 'שיחה מבוססת כללים. לשיחה חכמה עם AI – הוסף מפתח Claude בהגדרות ⚙️.'}</p>
+  V.innerHTML = `<button class="back" data-back>→ תרגול</button><h2>שיחה 💬 ${ai ? '<span class="pill ok">AI</span>' : ''}</h2><p class="sub">${ai ? `${ANIMALS[state.animal].name} מנהל/ת איתך שיחה אמיתית ומתקן/ת ניסוחים לא טבעיים.` : 'שיחה מבוססת כללים. לשיחה חכמה עם AI – הוסף מפתח Claude בהגדרות ⚙️.'}</p>
     <div class="chips">${SCENARIOS.map(s => `<button data-s="${s.id}" class="${s.id === scen.id ? 'on' : ''}">${s.icon} ${s.title}</button>`).join('')}</div>
     <div class="chat" id="log"></div><div id="fx"></div>
     <div class="row" style="margin-top:10px"><button class="btn o full" id="mic">🎤 ענה בקול</button>${ai ? '<button class="btn g" id="sum" style="flex:0 0 auto">📋 סיכום</button>' : ''}</div>
@@ -395,7 +396,7 @@ export function settings() {
     <label class="field">גובה קול (קול הדפדפן): <span id="pv">${s.pitch || 'אוטומטי לפי החבר'}</span><input type="range" id="pitch" min="0" max="1.8" step="0.05" value="${s.pitch}"></label>
     <div class="row"><button class="btn b" id="test">🔊 נסה קול</button><button class="btn g" id="close">סגור</button></div>
 
-    <h3 style="margin-top:22px">⚡ שירותים מתקדמים (אופציונלי)</h3>
+    <details class="card" style="margin-top:18px"><summary><b>⚡ מתקדם: חיבורי AI</b> <span class="mut">(אופציונלי)</span></summary>
     <p class="mut" style="font-size:.82rem;margin:0 0 10px">המפתחות נשמרים <b>רק במכשיר הזה</b> ולא נשלחים לשום מקום מלבד השירות עצמו. השתמש במפתחות ייעודיים עם מגבלת הוצאה. מדריך: SETUP.md בריפו.</p>
     <div class="card"><b>🎯 Azure Speech</b> <span class="mut">(הערכת הגייה ברמת פונמה + קולות עצביים; שכבה חינמית F0)</span>
       <label class="field" style="margin-top:8px">מפתח (Key 1)<input id="azk" type="password" class="srch ltr" style="margin:0" autocomplete="off" value="${s.azureKey}"></label>
@@ -413,6 +414,7 @@ export function settings() {
       <label class="field">מודל<select id="clm">${tutor.MODELS.map(([id, l]) => `<option value="${id}" ${id === (s.claudeModel || tutor.MODELS[0][0]) ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
       <button class="btn g full" id="clt">בדוק חיבור Claude</button><div class="res" id="clres"></div></div>
 
+    </details>
     <button class="btn b full" id="ptst" style="margin-top:14px">🎯 מבחן רמה ${state.placement ? '(מחדש)' : ''}</button>
     <h3>💾 גיבוי התקדמות</h3><p class="mut" style="font-size:.82rem;margin:0 0 8px">כדי להעביר בין מכשירים (בלי מפתחות).</p>
     <div class="row"><button class="btn g" id="exp">⬇ ייצוא</button><button class="btn g" id="imp">⬆ ייבוא</button></div><input type="file" id="impf" accept="application/json" hidden>

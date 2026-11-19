@@ -193,8 +193,8 @@ export function showResult(P) {
   const recs = [];
   if (P.v < P.g && P.v < 4) recs.push('📚 אוצר המילים הוא נקודת התורפה – כל יום 5–10 מילים חדשות + חזרות.');
   if (P.wrong?.length && (P.g <= P.v - 1 || P.g < 3)) recs.push('✍️ דקדוק: חזק את הנושאים שמופיעים למטה.');
-  if (P.l < Math.min(P.v, 5)) recs.push('👂 השמיעה מפגרת אחרי הידע – תרגל Shadowing ומשפטים במהירות טבעית.');
-  if (P.ear?.length) recs.push(`🔊 צלילים להתמקד בהם: <span class="ltr">${[...new Set(P.ear)].join(' · ')}</span> (לשונית צלילים › אימון אוזן).`);
+  if (P.l < Math.min(P.v, 5)) recs.push('👂 השמיעה מפגרת אחרי הידע – תרגל "חיקוי דובר" ומשפטים במהירות טבעית.');
+  if (P.ear?.length) recs.push(`🔊 צלילים להתמקד בהם: <span class="ltr">${[...new Set(P.ear)].join(' · ')}</span> (תרגול › אימון אוזן).`);
   if (P.speak != null && P.speak < 70) recs.push('🎤 הגייה: התחל עם 20 הצלילים הקשים ושיעורי המקצב.');
   if (!recs.length) recs.push('💪 בסיס חזק! התמקד במקצב, Shadowing ושיחה כדי להישמע native.');
   V.innerHTML = `<div class="ptest flowfin">

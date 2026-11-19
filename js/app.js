@@ -4,6 +4,7 @@ import { onSpeech, say, listVoices } from './speech.js';
 import * as views from './views.js';
 import * as rhythm from './rhythm.js';
 import * as placement from './placement.js';
+import * as pages from './pages.js';
 
 const $ = (s) => document.querySelector(s);
 rollDay();
@@ -23,30 +24,34 @@ onSpeech({
   animalVoice: () => ANIMALS[state.animal]?.voice,
   azureFail: (e) => toast(e.message === 'azure-auth' ? 'מפתח Azure לא תקין – חוזר לקול הדפדפן' : 'Azure לא זמין כרגע – קול הדפדפן')
 });
-stage.onTap = () => say(['Hello!', 'Hi there!', "Let's practice!", 'You can do it!', 'Great job!'][Math.random() * 5 | 0]);
+stage.onTap = () => say(['Hello!', 'Hi there!', "Let's practice!", 'You can do it!', 'Great job!'][Math.random() * 5 | 0], { show: true });
 
 async function setAnimal(k, greet) {
   state.animal = k; save(); $('#friendName').textContent = ANIMALS[k].name;
   await stage.setAnimal(k);
-  if (greet) { if (curTab === 'today') views.today(); say(`Hi! I'm ${ANIMALS[k].name}. Let's learn English together!`); }
+  if (greet) { if (curTab === 'today') views.today(); say(`Hi! I'm ${ANIMALS[k].name}. Let's learn English together!`, { show: true }); }
 }
 
-const tabs = { today: views.today, sounds: () => views.sounds('map'), words: () => views.words(), rhythm: rhythm.menu, talk: views.talk };
+const tabs = { today: views.today, practice: pages.practice, me: pages.me, sounds: () => views.sounds('map'), words: () => views.words(), rhythm: rhythm.menu, talk: views.talk };
+const NAV = { today: 'today', me: 'me' }; // כל השאר שייך ללשונית 'תרגול'
+let hub = 'today';
 let curTab = 'today';
 function go(tab) {
   curTab = tab;
-  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  if (tab === 'today' || tab === 'practice' || tab === 'me') hub = tab;
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === (NAV[tab] || 'practice')));
   views.clearFlow(); stopSpeakingSafe(); $('#view').scrollTop = 0; tabs[tab]();
 }
 const stopSpeakingSafe = () => { try { speechSynthesis.cancel(); } catch {} stage.speaking = false; };
 document.querySelectorAll('#nav button').forEach(b => b.onclick = () => go(b.dataset.tab));
-$('#btnSettings').onclick = () => views.settings();
+$('#btnSettings').onclick = () => go('me');
+$('#view').addEventListener('click', (e) => { if (e.target.closest('[data-back]')) go('practice'); });
 $('#btnFriend').onclick = () => views.friends();
 document.querySelector('[data-close]').onclick = views.closeSheet;
 
-const C = { stage, view: $('#view'), bubble, toast, refreshTop, go, setAnimal, R: rhythm };
-C.placement = placement;
-views.init(C); rhythm.init(C); placement.init(C);
+const C = { stage, view: $('#view'), bubble, toast, refreshTop, go, setAnimal, R: rhythm, back: () => go(hub) };
+C.placement = placement; C.pages = pages;
+views.init(C); rhythm.init(C); placement.init(C); pages.init(C);
 refreshTop();
 await setAnimal(state.animal, false);
 go('today');
