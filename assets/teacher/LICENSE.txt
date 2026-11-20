@@ -1,0 +1,1 @@
+teacher.glb – "mpfb.glb" example avatar from TalkingHead (met4citizen), created with Blender + MPFB (MakeHuman). License: CC0 1.0. Optimized with gltf-transform (meshopt, WebP 1024).

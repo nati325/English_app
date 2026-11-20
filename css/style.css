@@ -236,3 +236,16 @@ details summary::-webkit-details-marker{display:none}
 .switch{width:54px;height:32px;border-radius:32px;background:var(--neu-sh);position:relative;flex:none}
 .switch::after{content:"";position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:right .15s}
 .switch[aria-checked="true"]{background:var(--good)}.switch[aria-checked="true"]::after{right:26px}
+
+/* ---------- מורה תלת־ממדית ---------- */
+.teacher{position:absolute;inset:0}
+.teacher canvas{display:block}
+.t3d .say{flex-direction:column;align-items:stretch;gap:10px}
+.t3d .say .cslot{width:100%;height:210px;border-radius:24px;overflow:hidden;background:radial-gradient(120% 90% at 50% 30%,var(--surface-2),var(--bg) 75%);border:2px solid var(--line)}
+.t3d .lp .say .cslot{height:190px}
+.t3d .lp-end .say .cslot{height:260px;width:100%}
+.t3d .say .bub{margin-bottom:0 !important;border-bottom-right-radius:20px}
+.t3d .say .bub::before{content:"";position:absolute;top:-10px;right:40px;border:9px solid transparent;border-bottom-color:var(--line);border-top:0}
+.cslot.loading::after{content:"המורה מגיעה…";position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:.8rem;color:var(--mut)}
+.t3d .cslot .cwrap{padding:12px}
+.t3d .say .cslot{height:230px}.t3d .lp .say .cslot{height:200px}

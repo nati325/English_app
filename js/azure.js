@@ -58,28 +58,33 @@ let cur = null;
 export function stop() { if (cur) { try { cur.pause(); } catch {} cur = null; } }
 const key = (text, voice, rate) => `https://tts.local/${voice}/${rate}/${encodeURIComponent(text).slice(0, 400)}`;
 async function synth(text, voice, rate) {
-  const k = key(text, voice, rate); let cache; try { cache = await caches.open('np-tts'); const hit = await cache.match(k); if (hit) return await hit.blob(); } catch {}
+  const k = key(text, voice, rate); let cache;
+  try { cache = await caches.open('np-tts'); const hit = await cache.match(k), hm = await cache.match(k + '#meta'); if (hit) return { blob: await hit.blob(), meta: hm ? await hm.json() : { visemes: [], words: [] } }; } catch {}
   const SDK = await loadSDK(); const cfg = baseCfg(SDK); cfg.speechSynthesisVoiceName = voice; cfg.speechSynthesisOutputFormat = SDK.SpeechSynthesisOutputFormat.Audio24Khz48KBitRateMonoMp3;
   const syn = new SDK.SpeechSynthesizer(cfg, null);
+  const meta = { visemes: [], words: [] }; // תנועות פה ותזמוני מילים – למורה התלת־ממדית
+  syn.visemeReceived = (s, e) => meta.visemes.push({ id: e.visemeId, t: e.audioOffset / 1e4 });
+  syn.wordBoundary = (s, e) => meta.words.push({ text: e.text, t: e.audioOffset / 1e4, d: (e.duration || 0) / 1e4 });
   const pct = Math.round((rate - 1) * 100), esc = text.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
   const ssml = `<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US"><voice name="${voice}"><prosody rate="${pct >= 0 ? '+' : ''}${pct}%">${esc}</prosody></voice></speak>`;
   const buf = await new Promise((res, rej) => syn.speakSsmlAsync(ssml, r => {
     syn.close(); r.reason === SDK.ResultReason.SynthesizingAudioCompleted ? res(r.audioData) : rej(new Error(mapErr(r.errorDetails || '')));
   }, e => { syn.close(); rej(new Error(mapErr(String(e)))); }));
-  const blob = new Blob([buf], { type: 'audio/mpeg' }); try { await cache?.put(k, new Response(blob)); } catch {}
-  return blob;
+  const blob = new Blob([buf], { type: 'audio/mpeg' });
+  try { await cache?.put(k, new Response(blob)); await cache?.put(k + '#meta', new Response(JSON.stringify(meta))); } catch {}
+  return { blob, meta };
 }
 export function voiceFor(animalVoice) { return state.settings.azureVoice || animalVoice || 'en-US-AvaMultilingualNeural'; }
 
 export async function speak(text, { voice, rate = 1, onStart, onPulse, onEnd } = {}) {
-  stop(); const blob = await synth(text, voice, rate); const a = new Audio(URL.createObjectURL(blob)); cur = a;
+  stop(); const { blob, meta } = await synth(text, voice, rate); const a = new Audio(URL.createObjectURL(blob)); cur = a;
   let t; return new Promise((res) => {
     const end = () => { clearInterval(t); if (cur === a) cur = null; onEnd?.(); res(); };
-    a.onplay = () => { onStart?.(); t = setInterval(() => onPulse?.(), 170); }; a.onended = end; a.onerror = end; a.onpause = end;
+    a.onplay = () => { onStart?.(meta, a.duration); t = setInterval(() => onPulse?.(), 170); }; a.onended = end; a.onerror = end; a.onpause = end;
     a.play().catch(end);
   });
 }
 export async function duration(text, { voice, rate = 1 }) {
-  const blob = await synth(text, voice, rate); const a = new Audio(URL.createObjectURL(blob));
+  const { blob } = await synth(text, voice, rate); const a = new Audio(URL.createObjectURL(blob));
   return new Promise(res => { a.onloadedmetadata = () => res(a.duration); a.onerror = () => res(null); });
 }

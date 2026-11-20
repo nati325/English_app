@@ -19,7 +19,7 @@ export function say(text, { rate, pitch, show = false } = {}) { // הבועה מ
   if (show) hooks.bubble?.(text);
   if (az.ttsEnabled()) { // קול עצבי של Azure; נפילה לקול הדפדפן אם נכשל
     return az.speak(text, { voice: az.voiceFor(hooks.animalVoice?.()), rate: rate ?? Math.min(1.3, Math.max(.6, state.settings.rate + .1)),
-      onStart: () => hooks.speaking?.(true), onPulse: () => hooks.pulse?.(), onEnd: () => hooks.speaking?.(false) })
+      onStart: (meta, dur) => { hooks.speaking?.(true); hooks.lip?.({ text, ...meta, dur }); }, onPulse: () => hooks.pulse?.(), onEnd: () => { hooks.speaking?.(false); hooks.lipStop?.(); } })
       .catch(e => { hooks.speaking?.(false); hooks.azureFail?.(e); return browserSay(text, { rate, pitch }); });
   }
   return browserSay(text, { rate, pitch });
@@ -31,14 +31,14 @@ function browserSay(text, { rate, pitch } = {}) {
     const u = new SpeechSynthesisUtterance(text); const v = chosen();
     if (v) { u.voice = v; u.lang = v.lang; } else u.lang = state.settings.accent;
     u.rate = rate ?? state.settings.rate; u.pitch = pitch ?? (state.settings.pitch || hooks.defaultPitch?.() || 1);
-    u.onstart = () => hooks.speaking?.(true);
+    u.onstart = () => { hooks.speaking?.(true); hooks.lip?.({ text, rate: u.rate }); };
     u.onboundary = () => hooks.pulse?.();
-    const end = () => { hooks.speaking?.(false); res(); };
+    const end = () => { hooks.speaking?.(false); hooks.lipStop?.(); res(); };
     u.onend = end; u.onerror = end;
     speechSynthesis.speak(u);
   });
 }
-export const stopSpeaking = () => { az.stop(); if (hasTTS) speechSynthesis.cancel(); hooks.speaking?.(false); };
+export const stopSpeaking = () => { az.stop(); if (hasTTS) speechSynthesis.cancel(); hooks.speaking?.(false); hooks.lipStop?.(); };
 
 // ----- זיהוי דיבור -----
 export function listen(btn) {

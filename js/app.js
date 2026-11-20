@@ -7,6 +7,7 @@ import * as rhythm from './rhythm.js';
 import * as placement from './placement.js';
 import * as pages from './pages.js';
 import * as learn from './learn.js';
+import * as teacher from './teacher.js';
 import { LEVELS } from '../data/placement.js';
 
 const $ = (s) => document.querySelector(s);
@@ -45,8 +46,10 @@ onSpeech({
   bubble, voices: () => {},
   speaking: (v) => { stage.speaking = v; },
   pulse: () => { stage.pulse = 1; },
-  defaultPitch: () => ANIMALS[state.animal]?.pitch ?? 1,
-  animalVoice: () => ANIMALS[state.animal]?.voice,
+  defaultPitch: () => teacher.wanted() ? 1.05 : (ANIMALS[state.animal]?.pitch ?? 1),
+  lip: (m) => { if (!teacher.isReady()) return; m.visemes?.length ? teacher.lipVisemes(m) : teacher.lipText(m.text, m.rate || 1); },
+  lipStop: () => teacher.stopTalk(),
+  animalVoice: () => teacher.wanted() ? (state.settings.azureVoice || 'en-US-AvaMultilingualNeural') : ANIMALS[state.animal]?.voice,
   azureFail: (e) => toast(e.message === 'azure-auth' ? 'מפתח Azure לא תקין – חוזר לקול הדפדפן' : 'Azure לא זמין כרגע – קול הדפדפן')
 });
 stage.onTap = () => say(['Hello!', 'Hi there!', "Let's practice!", 'You can do it!', 'Great job!'][Math.random() * 5 | 0], { show: true });
@@ -71,13 +74,28 @@ document.querySelectorAll('#nav button').forEach(b => b.onclick = () => go(b.dat
 V.addEventListener('click', (e) => { if (e.target.closest('[data-back]')) go('practice'); });
 document.querySelector('[data-close]').onclick = views.closeSheet;
 
-// הדמות נכנסת אוטומטית ל"חריץ" שבמסך; מסכי תרגול ושיעור במסך מלא (בלי פס עליון וניווט)
+// תגובות הדמות: גם החיה וגם המורה
+const oc = stage.celebrate.bind(stage), os = stage.sad.bind(stage);
+stage.celebrate = () => { oc(); teacher.react(true); }; stage.sad = () => { os(); teacher.react(false); };
+
+// הדמות נכנסת אוטומטית ל"חריץ" שבמסך: המורה התלת־ממדית (אם פעילה), ובינתיים/כגיבוי – החיה
+function placeChar() {
+  const slot = V.querySelector('.cslot');
+  document.body.classList.toggle('t3d', teacher.wanted());
+  if (!slot) { teacher.park(); return; }
+  if (teacher.wanted()) {
+    if (teacher.isReady()) { stage.root.remove(); teacher.mount(slot, slot.dataset.view || 'upper'); return; }
+    stage.mount(slot); slot.classList.add('loading');
+    teacher.ensure().then(() => { const s2 = V.querySelector('.cslot'); if (s2) { stage.root.remove(); s2.classList.remove('loading'); teacher.mount(s2, s2.dataset.view || 'upper'); } })
+      .catch(() => { document.body.classList.remove('t3d'); slot.classList.remove('loading'); stage.mount(V.querySelector('.cslot')); });
+  } else { teacher.park(); stage.mount(slot); }
+}
 new MutationObserver(() => {
-  stage.mount(V.querySelector('.cslot'));
+  placeChar();
   document.body.classList.toggle('focus', !!V.querySelector('.lp,.ptest:not(.flowfin),.onb'));
 }).observe(V, { childList: true, subtree: false });
 
-const C = { stage, view: V, bubble, toast, refreshTop, go, setAnimal, R: rhythm, back: () => go(hub), applyLook };
+const C = { stage, view: V, bubble, toast, refreshTop, go, setAnimal, R: rhythm, back: () => go(hub), applyLook, teacher, placeChar };
 C.placement = placement; C.pages = pages; C.learn = learn;
 views.init(C); rhythm.init(C); placement.init(C); pages.init(C); learn.init(C);
 await stage.setAnimal(state.animal);

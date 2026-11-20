@@ -47,7 +47,7 @@ export function home() {
   const win = units.slice(Math.max(0, ci - 2), ci + 4);
   const offs = [150, 70, 120, 40, 110, 60];
   V.innerHTML = `
-    <div class="say" style="margin-top:4px"><div class="cslot" style="--s:78px"></div><div class="bub" style="margin-bottom:16px"><div class="cbub ltr" style="font-weight:800;text-align:left">${hi}</div><div class="mut" style="font-size:.92rem">${doneToday ? 'כל הכבוד! עוד שיעור?' : `אני ${A.name}. מוכן לשיעור של היום?`}</div></div></div>
+    <div class="say" style="margin-top:4px"><div class="cslot" style="--s:78px"></div><div class="bub" style="margin-bottom:16px"><div class="cbub ltr" style="font-weight:800;text-align:left">${hi}</div><div class="mut" style="font-size:.92rem">${doneToday ? 'כל הכבוד! עוד שיעור?' : state.settings.teacher === 'animal' ? `אני ${A.name}. מוכן לשיעור של היום?` : 'אני המורה שלך לאנגלית. מוכן לשיעור?'}</div></div></div>
     ${!state.placement && !state.skipPlacement && !known ? `<button class="prow" id="pt" style="margin-top:10px"><span class="ic">${icon('target')}</span><span class="t"><b>בדיקת רמה (8 דק')</b><small>כדי לא ללמוד מה שכבר יודעים</small></span><span class="st">${icon('chevron')}</span></button>` : ''}
     <div class="hero today" data-big>
       <div class="lbl">${icon('clock', 16)}<span>השיעור של היום · כ-8 דקות${due ? ` · ${due} לחזרה` : ''}</span></div>
@@ -153,7 +153,7 @@ function sheet(ok, { answer, audio, tip, retry } = {}) {
 function intro(e) {
   const w = e.w; srs.learn(cid(w.w)); // נכנס לחזרות מרגע שהוצג
   frame('מילה חדשה', 'sparkle', `
-    <div class="say"><div class="cslot" style="--s:84px"></div><div class="bub" style="flex:1;margin-bottom:14px">
+    <div class="say"><div class="cslot" data-view="head" style="--s:84px"></div><div class="bub" style="flex:1;margin-bottom:14px">
       <div class="lp-q en">${esc(w.w)}</div><div class="ipa" style="text-align:left">/${esc(w.ipa)}/</div><div class="he" style="font-weight:700">${esc(w.he)}</div>
       <div>${audioBtn(w.w)}</div></div></div>
     <div class="ex">${hl(w.ex, w.w)}</div><button class="lp-audio" id="exa" data-t="${esc(w.ex)}">${icon('sound', 18)} שמע את המשפט</button>`,
@@ -166,7 +166,7 @@ function intro(e) {
 function meaning(e) {
   const w = e.w, opts = shuf([w.he, ...shuf(ALL.filter(x => x.he !== w.he && x.w !== w.w)).slice(0, 3).map(x => x.he)]);
   frame('מה זה אומר?', 'ear', `
-    <div class="say"><div class="cslot" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q en">${esc(w.w)}</div><div>${audioBtn(w.w)}</div></div></div>
+    <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q en">${esc(w.w)}</div><div>${audioBtn(w.w)}</div></div></div>
     <div class="lp-opts">${opts.map(o => `<button class="lp-opt" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div>`, checkBtn(), 'info');
   bindAudio(); say(w.w);
   choose(o => o === w.he, () => ({ answer: `<span dir="rtl">${esc(w.he)}</span>`, audio: w.w }));
@@ -177,7 +177,7 @@ function english(e) {
   const w = e.w, others = L.others.filter(x => x.w !== w.w).map(x => x.w);
   const opts = shuf([w.w, ...shuf([...others, ...shuf(ALL).slice(0, 6).map(x => x.w)].filter((x, i, a) => x !== w.w && a.indexOf(x) === i)).slice(0, 3)]);
   frame('איך אומרים באנגלית?', 'chat', `
-    <div class="say"><div class="cslot" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q">${esc(w.he)}</div></div></div>
+    <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q">${esc(w.he)}</div></div></div>
     <div class="lp-opts">${opts.map(o => `<button class="lp-opt en" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div>`, checkBtn());
   choose(o => o === w.w, () => ({ answer: esc(w.w), audio: w.w }), (o) => say(o));
 }
@@ -203,7 +203,7 @@ function sayEx(e) {
     : recall ? `<div class="lp-q">${esc(w.he)}</div><button class="lp-audio" id="hint">${icon('bulb', 18)} רמז</button><div id="hintv" class="ltr mut" style="text-align:left"></div>`
     : `<div class="lp-q en">${esc(w.w)}</div><div class="mut">${esc(w.he)}</div><div>${audioBtn(w.w)}</div>`;
   frame(lbl, 'mic', `
-    <div class="say"><div class="cslot" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px">${q}</div></div>
+    <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px">${q}</div></div>
     <button class="lp-mic" id="mic" aria-label="לחץ ודבר">${icon('mic', 46)}</button><div class="lp-hint" id="mh">לחץ ודבר</div><div id="heard"></div>`,
     `<button class="lp-skip" id="cant">לא יכול לדבר עכשיו</button>`);
   bindAudio(); if (!recall) say(target);
@@ -244,7 +244,7 @@ function build(e) {
   const extra = shuf(L.others.filter(x => !toks.map(t => t.toLowerCase()).includes(x.w.toLowerCase())).map(x => x.w)).slice(0, 2);
   const bank = shuf([...toks, ...extra].map((t, i) => ({ t, i })));
   frame('הקשב וסדר את המילים', 'sound', `
-    <div class="say"><div class="cslot" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q" style="font-size:1.1rem">מה הוא אמר?</div><div>${audioBtn(w.ex)}</div></div></div>
+    <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q" style="font-size:1.1rem">מה הוא אמר?</div><div>${audioBtn(w.ex)}</div></div></div>
     <div class="lp-ans" id="ans" aria-label="התשובה שלך"></div>
     <div class="lp-bank" id="bank">${bank.map(b => `<button class="tile" data-i="${b.i}">${esc(b.t)}</button>`).join('')}</div>`, checkBtn(), 'info');
   bindAudio(); say(w.ex);
