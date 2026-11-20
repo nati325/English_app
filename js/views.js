@@ -16,7 +16,7 @@ const pick = (a) => a[Math.random() * a.length | 0];
 const shuffle = (a) => a.map(x => [Math.random(), x]).sort((p, q) => p[0] - q[0]).map(x => x[1]);
 const hl = (ex, w) => ex.replace(new RegExp(`\\b(${w}\\w*)`, 'i'), '<b>$1</b>');
 
-export { ALL, hl, pick, shuffle, trySpeak, fresh };
+export { ALL, WORDS, hl, pick, shuffle, trySpeak, fresh };
 let ctx, V;
 export const init = (c) => {
   ctx = c; V = c.view; c.flowNext = flowNext;

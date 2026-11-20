@@ -7,38 +7,39 @@ import * as azure from './azure.js';
 import * as Vw from './views.js';
 import * as R from './rhythm.js';
 import { LEVELS } from '../data/placement.js';
+import { icon } from './icons.js';
 
 let ctx, V;
 export const init = (c) => { ctx = c; V = c.view; };
 const $ = (s) => V.querySelector(s);
-const row = (act, ic, t, s) => `<button class="prow" data-act="${act}"><span class="ic">${ic}</span><span class="t"><b>${t}</b><small>${s}</small></span><span class="st">‹</span></button>`;
+const row = (act, ic, t, s) => `<button class="prow" data-act="${act}"><span class="ic">${icon(ic)}</span><span class="t"><b>${t}</b><small>${s}</small></span><span class="st">${icon('chevron')}</span></button>`;
 
 // ---------- תרגול ----------
 export function practice() {
   const due = srs.dueIds().length, left = Vw.ALL.filter(w => !state.cards['w:' + w.w] && !state.known?.[w.w]).length;
-  V.innerHTML = `<h2>תרגול</h2><p class="sub">בחר מה לתרגל. השיעור היומי בלשונית "היום" כבר משלב את כל אלה.</p>
-    <div class="psec"><h3>📚 מילים</h3>
-      ${row('learn', '✨', 'מילים חדשות', `${left.toLocaleString('en')} מילים שעוד לא למדת`)}
-      ${row('review', '🔁', 'חזרות חכמות', due ? `${due} מילים מחכות לחזרה` : 'אין חזרות כרגע')}
-      ${row('words', '🗂️', 'כל המילים', 'רשימה לפי רמות + חיפוש')}</div>
-    <div class="psec"><h3>🔊 הגייה</h3>
-      ${row('ear', '👂', 'אימון אוזן', 'שומעים מילה ובוחרים – ship או sheep?')}
-      ${row('hard', '👄', 'הצלילים הקשים', '20 צלילים שדוברי עברית מתקשים בהם')}
-      ${row('lab', '🎯', 'בדיקת הגייה', 'כותבים משפט, אומרים אותו, ומקבלים ציון לכל מילה')}</div>
-    <div class="psec"><h3>🎤 דיבור</h3>
-      ${row('speak', '🗣️', 'חזור אחריי', 'שומעים משפט ואומרים אותו')}
-      ${row('shadow', '🪞', 'חיקוי דובר', 'מקליטים את עצמך ומקבלים ציון על הקצב')}
-      ${row('talk', '💬', `שיחה עם ${ANIMALS[state.animal].name}`, 'שיחה חופשית עם תיקונים')}</div>
-    <div class="psec"><h3>🥁 מקצב ומנגינה</h3><p class="sub" style="margin:-4px 0 8px">רוב ה"מבטא" בא מהקצב: אילו מילים חזקות ואילו נבלעות.</p>
-      ${row('stressw', '🔨', 'איפה הדגש במילה?', 'WAter או waTER?')}
-      ${row('stresss', '🎵', 'מילים חזקות במשפט', 'מה מדגישים ומה "בולעים"')}
-      ${row('link', '🔗', 'חיבור בין מילים', 'turn it on ← "tur-ni-ton"')}
-      ${row('flap', '🇺🇸', 'ה-T האמריקאית', 'water ← "wadder"')}
-      ${row('red', '⚡', 'קיצורים בדיבור', 'gonna · wanna · lemme')}
-      ${row('weak', '🌫️', 'מילים שנבלעות', 'to · for · and · of')}
-      ${row('intonation', '📈', 'מנגינת המשפט', 'מתי הקול עולה ומתי יורד')}</div>`;
+  V.innerHTML = `<h2>תרגול</h2><p class="sub">בחר מה לתרגל. השיעור היומי כבר משלב את כל אלה.</p>
+    <div class="psec"><h3>${icon('book')} מילים</h3>
+      ${row('learn', 'sparkle', 'מילים חדשות', `${left.toLocaleString('en')} מילים שעוד לא למדת`)}
+      ${row('review', 'repeat', 'חזרות חכמות', due ? `${due} מילים מחכות לחזרה` : 'אין חזרות כרגע')}
+      ${row('words', 'list', 'כל המילים', 'רשימה לפי רמות + חיפוש')}</div>
+    <div class="psec"><h3>${icon('ear')} הגייה</h3>
+      ${row('ear', 'ear', 'אימון אוזן', 'שומעים מילה ובוחרים – ship או sheep?')}
+      ${row('hard', 'grid', 'הצלילים הקשים', '20 צלילים שדוברי עברית מתקשים בהם')}
+      ${row('lab', 'target', 'בדיקת הגייה', 'כותבים משפט, אומרים אותו, ומקבלים ציון לכל מילה')}</div>
+    <div class="psec"><h3>${icon('mic')} דיבור</h3>
+      ${row('speak', 'mic', 'חזור אחריי', 'שומעים משפט ואומרים אותו')}
+      ${row('shadow', 'mirror', 'חיקוי דובר', 'מקליטים את עצמך ומקבלים ציון על הקצב')}
+      ${row('talk', 'chat', `שיחה עם ${ANIMALS[state.animal].name}`, 'שיחה חופשית עם תיקונים')}</div>
+    <div class="psec"><h3>${icon('music')} מקצב ומנגינה</h3><p class="sub" style="margin:-4px 0 8px">רוב ה"מבטא" בא מהקצב: אילו מילים חזקות ואילו נבלעות.</p>
+      ${row('stressw', 'bolt', 'איפה הדגש במילה?', 'WAter או waTER?')}
+      ${row('stresss', 'music', 'מילים חזקות במשפט', 'מה מדגישים ומה "בולעים"')}
+      ${row('link', 'link', 'חיבור בין מילים', 'turn it on ← "tur-ni-ton"')}
+      ${row('flap', 'sound', 'ה-T האמריקאית', 'water ← "wadder"')}
+      ${row('red', 'wave', 'קיצורים בדיבור', 'gonna · wanna · lemme')}
+      ${row('weak', 'volume', 'מילים שנבלעות', 'to · for · and · of')}
+      ${row('intonation', 'music', 'מנגינת המשפט', 'מתי הקול עולה ומתי יורד')}</div>`;
   const A = {
-    learn: () => Vw.startLearn(), review: () => Vw.startReview(), words: () => ctx.go('words'),
+    learn: () => ctx.learn.startLesson(), review: () => ctx.learn.startLesson(null, { review: true }), words: () => ctx.go('words'),
     ear: () => Vw.startEar(), hard: () => ctx.go('sounds'), lab: () => { ctx.go('sounds'); Vw.sounds('lab'); },
     speak: () => Vw.startSentences(), shadow: () => R.shadow(), talk: () => ctx.go('talk'),
     stressw: () => R.stressWords(), stresss: () => R.stressSentence()
@@ -47,26 +48,48 @@ export function practice() {
 }
 
 // ---------- אני ----------
+const TH = [0, 300, 800, 1600, 3000, 5000, 8000, 16000];
+const sw = (id, on, label) => `<button class="setrow" id="${id}" role="switch" aria-checked="${on}"><span class="t">${label}</span><span class="switch" aria-checked="${on}"></span></button>`;
 export function me() {
-  const P = state.placement, lp = levelProgress(), Aml = ANIMALS[state.animal];
+  const P = state.placement, A = ANIMALS[state.animal], s = state.settings;
   const learned = Object.keys(state.cards).length + Object.keys(state.known || {}).length;
-  const ear = Object.values(state.ear); const earAcc = ear.length ? Math.round(ear.reduce((a, e) => a + e.ok, 0) / Math.max(1, ear.reduce((a, e) => a + e.n, 0)) * 100) : null;
-  V.innerHTML = `<div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><img class="av" src="${animalImg(state.animal)}" alt=""><div style="flex:1"><b style="font-size:1.1rem">החבר שלך: ${Aml.name}</b><div class="sub" style="margin:2px 0 0">${Aml.desc}</div></div><button class="btn g" id="fr" style="min-height:44px;padding:0 14px">החלף</button></div></div>
-    <div class="card"><div class="row" style="justify-content:space-between"><b>🎯 הרמה שלי</b>${P ? `<span class="pill ok">${LEVELS[P.overall]}</span>` : ''}</div>
-      ${P ? `<p class="sub" style="margin:6px 0 10px">נבדק ב-${P.date} · אוצר מילים ~${P.size.toLocaleString('en')}</p><div class="row"><button class="btn g" id="res">פרטים</button><button class="btn b" id="pt">מבחן חוזר</button></div>`
-        : `<p class="sub" style="margin:6px 0 10px">עוד לא עשית מבחן רמה. 8 דקות, וחוסך לך ללמוד מה שאתה כבר יודע.</p><button class="btn full" id="pt">התחל מבחן רמה</button>`}</div>
-    <div class="stats"><div class="stat"><b>${learned.toLocaleString('en')}</b><small>מילים שאני מכיר</small></div><div class="stat"><b>${srs.mature()}</b><small>בשליטה מלאה</small></div><div class="stat"><b>${state.streak}🔥</b><small>ימים ברצף</small></div></div>
-    <div class="stats"><div class="stat"><b>${state.best}</b><small>שיא רצף</small></div><div class="stat"><b>${earAcc == null ? '—' : earAcc + '%'}</b><small>דיוק אוזן</small></div><div class="stat"><b>${lp.L}</b><small>רמת משחק</small></div></div>
-    <button class="prow" id="weak"><span class="ic">📊</span><span class="t"><b>הנקודות החלשות שלי</b><small>צלילים שכדאי לתרגל</small></span><span class="st">‹</span></button>
-    <h3>הגדרות</h3>
-    <div class="card"><b>⏱️ מטרה יומית</b><div class="chips" style="margin:8px 0 0">${[10, 20, 30].map(m => `<button data-g="${m}" class="${(state.settings.goal || 20) === m ? 'on' : ''}">${m} דקות</button>`).join('')}</div></div>
-    <button class="prow" id="set"><span class="ic">⚙️</span><span class="t"><b>קול, מהירות, חיבורי AI וגיבוי</b><small>כל ההגדרות</small></span><span class="st">‹</span></button>`;
+  const lvl = P ? P.overall : null, size = Math.max(P?.size || 0, learned);
+  const pct = lvl == null ? 0 : Math.max(.04, Math.min(1, (size - TH[lvl]) / ((TH[lvl + 1] || TH[lvl] * 2) - TH[lvl])));
+  const C = 2 * Math.PI * 38, mins = Object.values(state.hist || {}).reduce((a, h) => a + (h.min || 0), 0);
+  const goal = s.goal || 20, days = [...Array(7)].map((_, i) => { const d = new Date(Date.now() - (6 - i) * 864e5); return { k: d.toLocaleDateString('sv'), l: 'אבגדהוש'[d.getDay()] }; });
+  const vals = days.map(d => state.hist?.[d.k]?.min || 0), mx = Math.max(goal, ...vals);
+  const skill = (lab, lv, txt) => `<div class="skill"><div class="h"><span>${lab}</span><span class="ltr" style="color:${lv >= 3 ? 'var(--good-ink)' : 'var(--brand-ink)'}">${txt}</span></div><div class="prog"><i style="width:${Math.max(6, lv / 6 * 100)}%;background:${lv >= 3 ? 'var(--good)' : 'var(--brand)'}"></i></div></div>`;
+  const weak = Object.entries(state.ear).filter(([, v]) => v.n >= 2).map(([k, v]) => ({ k, a: Math.round(v.ok / v.n * 100) })).sort((a, b) => a.a - b.a).slice(0, 3);
+  V.innerHTML = `<h2 style="font-size:1.6rem">אני</h2>
+    <div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><img class="av" src="${animalImg(state.animal)}" alt=""><div style="flex:1"><div class="mut" style="font-size:.85rem;font-weight:700">החבר שלך</div><b style="font-size:1.15rem">${A.name}</b></div><button class="btn g" id="fr" style="min-height:46px;padding:0 16px">החלף</button></div></div>
+    <div class="card">${P ? `<div class="row" style="flex-wrap:nowrap;gap:16px"><div class="ring"><svg width="92" height="92" viewBox="0 0 92 92" role="img" aria-label="${Math.round(pct * 100)}% בדרך לרמה הבאה"><circle cx="46" cy="46" r="38" fill="none" stroke="var(--neu)" stroke-width="10"/><circle cx="46" cy="46" r="38" fill="none" stroke="var(--brand)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(C * pct).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 46 46)"/></svg><div class="v">${LEVELS[lvl]}</div></div>
+      <div style="flex:1"><div class="mut" style="font-size:.85rem;font-weight:700">הרמה שלי</div><div style="font-size:1.15rem;font-weight:800">${Math.round(pct * 100)}% בדרך ל-<span dir="ltr">${LEVELS[Math.min(6, lvl + 1)]}</span></div><div class="mut" style="font-size:.88rem">~${size.toLocaleString('en')} מילים</div></div></div>
+      ${skill('אוצר מילים', P.v, LEVELS[P.v])}${skill('דקדוק', P.g, LEVELS[P.g])}${skill('שמיעה', P.l, LEVELS[Math.floor(P.l)])}${P.speak != null ? skill('הגייה', P.speak / 17, P.speak + '/100') : ''}
+      <div class="row" style="margin-top:14px"><button class="btn g" id="res">פרטים</button><button class="btn b" id="pt">בדיקה חוזרת</button></div>`
+      : `<b>הרמה שלי</b><p class="sub" style="margin:6px 0 12px">עוד לא בדקנו. 8 דקות, וחוסך ללמוד מה שכבר יודעים.</p><button class="btn o full" id="pt">${icon('target')} בדיקת רמה</button>`}</div>
+    <div class="stats"><div class="stat"><b>${state.streak}</b><small>ימים ברצף</small></div><div class="stat"><b>${learned.toLocaleString('en')}</b><small>מילים שאני מכיר</small></div><div class="stat"><b>${mins}</b><small>דקות למידה</small></div></div>
+    <div class="card"><div class="row" style="justify-content:space-between"><b>השבוע</b><span class="mut" style="font-size:.85rem">מטרה: ${goal} דקות ביום</span></div>
+      <div class="week" role="img" aria-label="דקות למידה ב-7 הימים האחרונים: ${vals.join(', ')}">${vals.map(v => `<i class="${v >= goal ? 'ok' : v ? 'lo' : ''}" style="height:${Math.max(4, v / mx * 100)}%"></i>`).join('')}</div>
+      <div class="wdays">${days.map(d => `<span>${d.l}</span>`).join('')}</div></div>
+    ${weak.length ? `<div class="card"><b>צלילים לשפר</b>${weak.map(w => `<button class="setrow" data-weak><span class="t ltr" style="text-align:start">${w.k}</span><span class="v">${w.a}%</span>${icon('chevron')}</button>`).join('')}</div>` : ''}
+    <div class="card" style="padding:4px 16px"><b style="display:block;padding-top:12px">נוחות ונגישות</b>
+      ${sw('swDark', (s.theme || 'dark') !== 'light', `${icon('moon')} מצב כהה`)}
+      ${sw('swBig', !!s.bigText, `${icon('text')} טקסט גדול`)}
+      ${sw('swMotion', !!s.reduceMotion, `${icon('motion')} פחות תנועה`)}
+      ${sw('swSnd', s.sounds !== false, `${icon('volume')} צלילי משוב ורטט`)}
+      <div class="setrow"><span class="t">${icon('clock')} מטרה יומית</span><span class="chips" style="margin:0">${[10, 20, 30].map(m => `<button data-g="${m}" class="${goal === m ? 'on' : ''}" aria-pressed="${goal === m}">${m}</button>`).join('')}</span></div>
+      <button class="setrow" id="set"><span class="t">${icon('sliders')} קול, מהירות וחיבורי AI</span>${icon('chevron')}</button></div>`;
   $('#fr').onclick = () => Vw.friends();
   $('#pt').onclick = () => ctx.placement.start();
   if ($('#res')) $('#res').onclick = () => ctx.placement.showResult(P);
-  $('#weak').onclick = () => { ctx.go('sounds'); Vw.sounds('me'); };
+  V.querySelectorAll('[data-weak]').forEach(b => b.onclick = () => Vw.startEar());
+  const tog = (id, fn) => { $('#' + id).onclick = () => { fn(); save(); ctx.applyLook(); me(); }; };
+  tog('swDark', () => { s.theme = (s.theme || 'dark') === 'light' ? 'dark' : 'light'; });
+  tog('swBig', () => { s.bigText = !s.bigText; });
+  tog('swMotion', () => { s.reduceMotion = !s.reduceMotion; });
+  tog('swSnd', () => { s.sounds = s.sounds === false; });
   $('#set').onclick = () => Vw.settings();
-  V.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { state.settings.goal = +b.dataset.g; state.settings.newPerDay = Math.max(state.settings.newPerDay || 5, +b.dataset.g >= 30 ? 10 : +b.dataset.g >= 20 ? 6 : 5); save(); me(); });
+  V.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { state.settings.goal = +b.dataset.g; state.settings.newPerDay = +b.dataset.g >= 30 ? 5 : 4; save(); me(); });
 }
 
 // ---------- מסכי פתיחה ----------

@@ -18,8 +18,8 @@ export const ANIMALS = {
 export const animalImg = (key) => `assets/animals/${(ANIMALS[key] || ANIMALS.fox).img}.png`;
 
 export class Stage {
-  constructor(root) {
-    this.root = root;
+  constructor(root = document.createElement('div')) {
+    this.root = root; root.classList.add('cwrap');
     root.innerHTML = `<div class="char" id="char"><div class="rings"><i></i><i></i></div><img id="charImg" alt="" draggable="false"><div class="cshadow"></div></div><div class="cfx" id="cfx"></div>`;
     this.box = root.querySelector('#char'); this.img = root.querySelector('#charImg'); this.fx = root.querySelector('#cfx');
     this.speaking = false; this.pulse = 0; this.t = 0; this.react = 0; this.rt = 0; this.kind = ''; this.ptr = 0; this.key = null;
@@ -28,6 +28,7 @@ export class Stage {
     this.box.addEventListener('pointerdown', (e) => { move(e); this.celebrate(); this.onTap?.(); });
     this.last = performance.now(); this.loop = this.loop.bind(this); requestAnimationFrame(this.loop);
   }
+  mount(slot) { if (slot && this.root.parentNode !== slot) slot.appendChild(this.root); } // הדמות "עוברת" למסך הנוכחי
   async setAnimal(key) {
     if (!ANIMALS[key]) key = 'fox';
     if (this.key === key) return;
@@ -37,7 +38,7 @@ export class Stage {
     this.celebrate();
   }
   celebrate() { this.kind = 'happy'; this.react = 1; this.rt = 0; this.burst(['⭐', '✨', '🎉', '💛']); }
-  sad() { this.kind = 'sad'; this.react = 1; this.rt = 0; this.burst(['💭']); }
+  sad() { this.kind = 'sad'; this.react = 1; this.rt = 0; this.burst(['💭']); navigator.vibrate?.([60, 40, 60]); }
   burst(set) {
     for (let i = 0; i < (set.length > 1 ? 7 : 1); i++) {
       const s = document.createElement('span'); s.textContent = set[i % set.length];
