@@ -46,10 +46,10 @@ onSpeech({
   bubble, voices: () => {},
   speaking: (v) => { stage.speaking = v; },
   pulse: () => { stage.pulse = 1; },
-  defaultPitch: () => teacher.wanted() ? 1.05 : (ANIMALS[state.animal]?.pitch ?? 1),
+  defaultPitch: () => teacher.wanted() ? teacher.info().pitch : (ANIMALS[state.animal]?.pitch ?? 1),
   lip: (m) => { if (!teacher.isReady()) return; m.visemes?.length ? teacher.lipVisemes(m) : teacher.lipText(m.text, m.rate || 1); },
   lipStop: () => teacher.stopTalk(),
-  animalVoice: () => teacher.wanted() ? (state.settings.azureVoice || 'en-US-AvaMultilingualNeural') : ANIMALS[state.animal]?.voice,
+  animalVoice: () => teacher.wanted() ? teacher.info().voice : ANIMALS[state.animal]?.voice,
   azureFail: (e) => toast(e.message === 'azure-auth' ? 'מפתח Azure לא תקין – חוזר לקול הדפדפן' : 'Azure לא זמין כרגע – קול הדפדפן')
 });
 stage.onTap = () => say(['Hello!', 'Hi there!', "Let's practice!", 'You can do it!', 'Great job!'][Math.random() * 5 | 0], { show: true });

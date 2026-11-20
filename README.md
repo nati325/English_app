@@ -17,4 +17,4 @@ python3 -m http.server 8000      # ואז http://localhost:8000
 - `data/core.txt` → `node tools/build-words.mjs` → `data/words.json` (IPA מ-CMUdict)
 
 ## קרדיטים
-דמויות: Microsoft Fluent Emoji 3D (MIT, `assets/animals/LICENSE-MIT.txt`) · הגייה: CMUdict (BSD) · שכיחות: FrequencyWords (OpenSubtitles)
+מורה תלת־ממדית: TalkingHead (MIT) + אווטארים לדוגמה – **לשימוש אישי בלבד** (Avaturn, Ready Player Me CC BY-NC 4.0, AvatarSDK, VRoid; Sam ב-CC0), ראו `assets/teacher/LICENSE.txt` · חברים-חיות: Microsoft Fluent Emoji 3D (MIT) · הגייה: CMUdict (BSD) · שכיחות: FrequencyWords (OpenSubtitles)

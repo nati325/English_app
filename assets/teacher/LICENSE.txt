@@ -1,1 +1,7 @@
-teacher.glb – "mpfb.glb" example avatar from TalkingHead (met4citizen), created with Blender + MPFB (MakeHuman). License: CC0 1.0. Optimized with gltf-transform (meshopt, WebP 1024).
+Teacher avatars (from the TalkingHead project examples by met4citizen), optimized with gltf-transform (meshopt, WebP 1024).
+PERSONAL / NON-COMMERCIAL USE ONLY for all except sam.glb.
+- sam.glb    – "mpfb.glb", created with Blender + MPFB (MakeHuman). CC0 1.0.
+- emma.glb   – "avaturn.glb", created at Avaturn (avaturn.me). Non-commercial use.
+- mia.glb    – "brunette.glb", created at Ready Player Me. CC BY-NC 4.0 (attribution: Ready Player Me, via TalkingHead examples).
+- daniel.glb – "avatarsdk.glb", created at AvatarSDK (avatarsdk.com). Non-commercial use.
+- yuki.glb   – "vroid.glb", created with VRoid Studio. Non-commercial use.

@@ -2,6 +2,21 @@
 // נטענת בעצלות; אם אין WebGL או שהטעינה נכשלת – האפליקציה חוזרת לחבר-החיה.
 import { state } from './store.js';
 
+// המורים (לשימוש אישי – ראו assets/teacher/LICENSE.txt)
+export const TEACHERS = {
+  emma:   { name: 'Emma',   file: 'emma',   body: 'F', desc: 'ריאליסטית, רגועה',   voice: 'en-US-AvaMultilingualNeural',   pitch: 1.0,  baseline: { headRotateX: -0.05, eyeBlinkLeft: 0.15, eyeBlinkRight: 0.15 } },
+  daniel: { name: 'Daniel', file: 'daniel', body: 'M', desc: 'ריאליסטי, חברי',     voice: 'en-US-AndrewMultilingualNeural', pitch: .9 },
+  mia:    { name: 'Mia',    file: 'mia',    body: 'F', desc: 'מצוירת, אנרגטית',    voice: 'en-US-JennyNeural',             pitch: 1.1 },
+  yuki:   { name: 'Yuki',   file: 'yuki',   body: 'F', desc: 'סגנון אנימה',         voice: 'en-US-AriaNeural',              pitch: 1.2 },
+  sam:    { name: 'Sam',    file: 'sam',    body: 'F', desc: 'פשוטה וקלילה',        voice: 'en-US-EmmaMultilingualNeural',   pitch: 1.05 }
+};
+export const current = () => TEACHERS[state.settings.teacherId] ? state.settings.teacherId : 'emma';
+export const info = () => TEACHERS[current()];
+export const thumb = (id) => `assets/teacher/${TEACHERS[id].file}.webp`;
+let shown = null;
+const avatarOpts = (id) => { const t = TEACHERS[id]; return { url: `assets/teacher/${t.file}.glb`, body: t.body, avatarMood: 'happy', lipsyncLang: 'en', ...(t.baseline ? { baseline: t.baseline } : {}) }; };
+export async function switchTo(id) { state.settings.teacherId = id; if (head && shown !== id) { await head.showAvatar(avatarOpts(id)); shown = id; } }
+
 let head = null, box = null, loading = null, failed = false, mounted = false;
 const webgl = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; } })();
 export const wanted = () => state.settings.teacher !== 'animal' && webgl && !failed;
@@ -16,7 +31,7 @@ export function ensure() {
       ttsEndpoint: null, lipsyncModules: ['en'], lipsyncLang: 'en', cameraView: 'upper', cameraRotateEnable: false, cameraZoomEnable: false, cameraPanEnable: false,
       modelFPS: 30, modelPixelRatio: Math.min(devicePixelRatio || 1, 2), lightAmbientIntensity: 2.2, lightDirectIntensity: 28, avatarMood: 'happy'
     });
-    await head.showAvatar({ url: 'assets/teacher/teacher.glb', body: 'F', avatarMood: 'happy', lipsyncLang: 'en' });
+    await head.showAvatar(avatarOpts(current())); shown = current();
     const wake = () => head?.audioCtx?.state === 'suspended' && head.audioCtx.resume();
     addEventListener('pointerdown', wake, { passive: true });
   })().catch(e => { failed = true; head = null; console.warn('teacher failed', e); throw e; });
@@ -25,7 +40,7 @@ export function ensure() {
 
 export function mount(slot, view = 'upper') {
   if (!head || !slot) return false;
-  if (box.parentNode !== slot) { slot.appendChild(box); head.setView(view, { cameraDistance: view === 'head' ? .1 : 0 }); }
+  if (box.parentNode !== slot) { slot.appendChild(box); head.setView(view, { cameraDistance: view === 'head' ? .45 : 0 }); }
   if (!mounted) { head.start(); mounted = true; }
   return true;
 }

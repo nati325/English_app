@@ -7,6 +7,7 @@ import { ALL, WORDS } from './views.js';
 import { ANIMALS } from './stage.js';
 import { PAIRS, byIPA } from '../data/phonemes.js';
 import { icon, iconFill } from './icons.js';
+import * as T from './teacher.js';
 
 let ctx, V;
 export const init = (c) => { ctx = c; V = c.view; };
@@ -47,7 +48,7 @@ export function home() {
   const win = units.slice(Math.max(0, ci - 2), ci + 4);
   const offs = [150, 70, 120, 40, 110, 60];
   V.innerHTML = `
-    <div class="say" style="margin-top:4px"><div class="cslot" style="--s:78px"></div><div class="bub" style="margin-bottom:16px"><div class="cbub ltr" style="font-weight:800;text-align:left">${hi}</div><div class="mut" style="font-size:.92rem">${doneToday ? 'כל הכבוד! עוד שיעור?' : state.settings.teacher === 'animal' ? `אני ${A.name}. מוכן לשיעור של היום?` : 'אני המורה שלך לאנגלית. מוכן לשיעור?'}</div></div></div>
+    <div class="say" style="margin-top:4px"><div class="cslot" style="--s:78px"></div><div class="bub" style="margin-bottom:16px"><div class="cbub ltr" style="font-weight:800;text-align:left">${hi}</div><div class="mut" style="font-size:.92rem">${doneToday ? 'כל הכבוד! עוד שיעור?' : state.settings.teacher === 'animal' ? `אני ${A.name}. מוכן לשיעור של היום?` : `אני ${T.info().name}, ${T.info().body === 'M' ? 'המורה' : 'המורה'} שלך. מוכן לשיעור?`}</div></div></div>
     ${!state.placement && !state.skipPlacement && !known ? `<button class="prow" id="pt" style="margin-top:10px"><span class="ic">${icon('target')}</span><span class="t"><b>בדיקת רמה (8 דק')</b><small>כדי לא ללמוד מה שכבר יודעים</small></span><span class="st">${icon('chevron')}</span></button>` : ''}
     <div class="hero today" data-big>
       <div class="lbl">${icon('clock', 16)}<span>השיעור של היום · כ-8 דקות${due ? ` · ${due} לחזרה` : ''}</span></div>

@@ -8,6 +8,7 @@ import * as Vw from './views.js';
 import * as R from './rhythm.js';
 import { LEVELS } from '../data/placement.js';
 import { icon } from './icons.js';
+import * as T from './teacher.js';
 
 let ctx, V;
 export const init = (c) => { ctx = c; V = c.view; };
@@ -61,7 +62,7 @@ export function me() {
   const skill = (lab, lv, txt) => `<div class="skill"><div class="h"><span>${lab}</span><span class="ltr" style="color:${lv >= 3 ? 'var(--good-ink)' : 'var(--brand-ink)'}">${txt}</span></div><div class="prog"><i style="width:${Math.max(6, lv / 6 * 100)}%;background:${lv >= 3 ? 'var(--good)' : 'var(--brand)'}"></i></div></div>`;
   const weak = Object.entries(state.ear).filter(([, v]) => v.n >= 2).map(([k, v]) => ({ k, a: Math.round(v.ok / v.n * 100) })).sort((a, b) => a.a - b.a).slice(0, 3);
   V.innerHTML = `<h2 style="font-size:1.6rem">אני</h2>
-    ${s.teacher !== 'animal' ? '' : `<div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><img class="av" src="${animalImg(state.animal)}" alt=""><div style="flex:1"><div class="mut" style="font-size:.85rem;font-weight:700">החבר שלך</div><b style="font-size:1.15rem">${A.name}</b></div><button class="btn g" id="fr" style="min-height:46px;padding:0 16px">החלף</button></div></div>`}
+    ${s.teacher !== 'animal' ? `<div class="card"><b>המורה שלך</b><div class="pick" style="margin-top:10px">${Object.entries(T.TEACHERS).map(([k, t]) => `<button data-t="${k}" class="${k === T.current() ? 'on' : ''}" aria-pressed="${k === T.current()}"><img src="${T.thumb(k)}" alt="" style="border-radius:50%">${t.name}<br><span class="mut" style="font-weight:500">${t.desc}</span></button>`).join('')}</div></div>` : `<div class="hero"><div class="row" style="flex-wrap:nowrap;gap:12px"><img class="av" src="${animalImg(state.animal)}" alt=""><div style="flex:1"><div class="mut" style="font-size:.85rem;font-weight:700">החבר שלך</div><b style="font-size:1.15rem">${A.name}</b></div><button class="btn g" id="fr" style="min-height:46px;padding:0 16px">החלף</button></div></div>`}
     <div class="card">${P ? `<div class="row" style="flex-wrap:nowrap;gap:16px"><div class="ring"><svg width="92" height="92" viewBox="0 0 92 92" role="img" aria-label="${Math.round(pct * 100)}% בדרך לרמה הבאה"><circle cx="46" cy="46" r="38" fill="none" stroke="var(--neu)" stroke-width="10"/><circle cx="46" cy="46" r="38" fill="none" stroke="var(--brand)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(C * pct).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 46 46)"/></svg><div class="v">${LEVELS[lvl]}</div></div>
       <div style="flex:1"><div class="mut" style="font-size:.85rem;font-weight:700">הרמה שלי</div><div style="font-size:1.15rem;font-weight:800">${Math.round(pct * 100)}% בדרך ל-<span dir="ltr">${LEVELS[Math.min(6, lvl + 1)]}</span></div><div class="mut" style="font-size:.88rem">~${size.toLocaleString('en')} מילים</div></div></div>
       ${skill('אוצר מילים', P.v, LEVELS[P.v])}${skill('דקדוק', P.g, LEVELS[P.g])}${skill('שמיעה', P.l, LEVELS[Math.floor(P.l)])}${P.speak != null ? skill('הגייה', P.speak / 17, P.speak + '/100') : ''}
@@ -81,6 +82,7 @@ export function me() {
       <div class="setrow"><span class="t">${icon('clock')} מטרה יומית</span><span class="chips" style="margin:0">${[10, 20, 30].map(m => `<button data-g="${m}" class="${goal === m ? 'on' : ''}" aria-pressed="${goal === m}">${m}</button>`).join('')}</span></div>
       <button class="setrow" id="set"><span class="t">${icon('sliders')} קול, מהירות וחיבורי AI</span>${icon('chevron')}</button></div>`;
   if ($('#fr')) $('#fr').onclick = () => Vw.friends();
+  V.querySelectorAll('[data-t]').forEach(b => b.onclick = async () => { await T.switchTo(b.dataset.t); save(); me(); ctx.toast(`${T.TEACHERS[b.dataset.t].name} היא המורה שלך עכשיו`.replace('היא', T.TEACHERS[b.dataset.t].body === 'M' ? 'הוא' : 'היא')); });
   $('#pt').onclick = () => ctx.placement.start();
   if ($('#res')) $('#res').onclick = () => ctx.placement.showResult(P);
   V.querySelectorAll('[data-weak]').forEach(b => b.onclick = () => Vw.startEar());
@@ -106,9 +108,12 @@ export function onboarding(step = 0) {
       <button class="btn big full" id="n">בוא נתחיל</button></div>`;
     $('#n').onclick = () => { say(`Hi! I'm ${A.name}. Let's learn English together!`, { show: true }); next(); };
   } else if (step === 1) {
-    V.innerHTML = `<div class="onb">${DOTS(1)}<h2>בחר חבר ללמידה</h2><p class="sub">לכל אחד קול ואופי משלו. אפשר להחליף בכל רגע.</p>
-      <div class="pick">${Object.entries(ANIMALS).map(([k, a]) => `<button data-a="${k}" class="${k === state.animal ? 'on' : ''}"><img src="${animalImg(k)}" alt="" loading="lazy">${a.name}</button>`).join('')}</div>
+    const t3 = T.wanted();
+    V.innerHTML = `<div class="onb">${DOTS(1)}<h2>${t3 ? 'בחר את המורה שלך' : 'בחר חבר ללמידה'}</h2><p class="sub">לכל אחד קול ואופי משלו. אפשר להחליף בכל רגע.</p>
+      <div class="pick">${t3 ? Object.entries(T.TEACHERS).map(([k, t]) => `<button data-tt="${k}" class="${k === T.current() ? 'on' : ''}"><img src="${T.thumb(k)}" alt="" style="border-radius:50%">${t.name}<br><span class="mut" style="font-weight:500">${t.desc}</span></button>`).join('')
+        : Object.entries(ANIMALS).map(([k, a]) => `<button data-a="${k}" class="${k === state.animal ? 'on' : ''}"><img src="${animalImg(k)}" alt="" loading="lazy">${a.name}</button>`).join('')}</div>
       <button class="btn big full" id="n" style="margin-top:14px">המשך</button></div>`;
+    V.querySelectorAll('[data-tt]').forEach(b => b.onclick = () => { V.querySelectorAll('[data-tt]').forEach(x => x.classList.toggle('on', x === b)); T.switchTo(b.dataset.tt); save(); });
     V.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => { V.querySelectorAll('[data-a]').forEach(x => x.classList.toggle('on', x === b)); await ctx.setAnimal(b.dataset.a, false); say(`Hi! I'm ${ANIMALS[b.dataset.a].name}!`, { show: true }); });
     $('#n').onclick = next;
   } else if (step === 2) {
