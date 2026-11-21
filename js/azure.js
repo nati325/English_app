@@ -53,6 +53,14 @@ export async function assess(referenceText, { stream } = {}) {
 }
 const mapErr = (m) => /401|403|Authentication|subscription|key/i.test(m) ? 'azure-auth' : /1006|network|websocket|connection/i.test(m) ? 'azure-network' : /Microphone|permission|NotAllowed/i.test(m) ? 'not-allowed' : m || 'azure-unknown';
 
+// ---------- תמלול רציף (לשיחה ולתרגום) ----------
+export async function recognizer() {
+  const SDK = await loadSDK(); const cfg = baseCfg(SDK);
+  cfg.setProperty(SDK.PropertyId.SpeechServiceConnection_InitialSilenceTimeoutMs, '10000');
+  cfg.setProperty(SDK.PropertyId.Speech_SegmentationSilenceTimeoutMs, '1200');
+  return { SDK, rec: new SDK.SpeechRecognizer(cfg, SDK.AudioConfig.fromDefaultMicrophoneInput()), mapErr };
+}
+
 // ---------- קול עצבי ----------
 let cur = null;
 export function stop() { if (cur) { try { cur.pause(); } catch {} cur = null; } }

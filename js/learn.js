@@ -8,6 +8,7 @@ import { ANIMALS } from './stage.js';
 import { PAIRS, byIPA } from '../data/phonemes.js';
 import { icon, iconFill } from './icons.js';
 import * as T from './teacher.js';
+import * as coach from './coach.js';
 
 let ctx, V;
 export const init = (c) => { ctx = c; V = c.view; };
@@ -56,6 +57,7 @@ export function home() {
       <div class="segs" aria-label="שיעור ${lessonsDone + 1} מתוך ${lessons}">${Array.from({ length: lessons }, (_, i) => `<i class="${i < lessonsDone ? 'on' : ''}"></i>`).join('')}</div>
       <button class="btn o big full" id="go" style="margin-top:16px">${doneToday ? 'עוד שיעור' : lessonsDone ? 'המשך ללמוד' : 'התחל שיעור'} ${icon('chevron', 20)}</button>
     </div>
+    <button class="prow" id="drill" style="margin-top:4px"><span class="ic">${icon('chat')}</span><span class="t"><b>אימון דיבור · תרגם ודבר</b><small>${coach.dueMistakes().length ? `${coach.dueMistakes().length} טעויות מחכות לתיקון` : '8 משפטים, תיקון מיידי'}</small></span><span class="st">${icon('chevron')}</span></button>
     <div class="row" style="justify-content:space-between;margin-top:18px"><b style="font-size:1.1rem">המסלול שלך</b><span class="mut" style="font-size:.85rem">יחידה ${ci + 1} מתוך ${units.length}</span></div>
     <div class="trail">${win.map((u, k) => {
       const idx = units.indexOf(u), done = u.words.every(isDone), now = u.id === curId;
@@ -64,6 +66,7 @@ export function home() {
         <div class="nl">${now ? `<b>${esc(u.title)}</b><span class="here">אתה כאן</span>` : esc(u.title)}</div></div>`;
     }).join('')}</div>`;
   $('#go').onclick = () => startLesson(curId);
+  $('#drill').onclick = () => coach.drill();
   if ($('#pt')) $('#pt').onclick = () => ctx.placement.start();
   V.querySelectorAll('.node').forEach(b => b.onclick = () => {
     const u = units.find(x => x.id === +b.dataset.u);
@@ -92,6 +95,7 @@ function buildLesson(unitId, review) {
   newW.slice(0, 2).forEach(w => ex.push({ t: 'say', w, mode: 'recall' }));
   // 3) חזרות: רק הפקה (הקלדה/דיבור), לא זיהוי
   rev.forEach((w, i) => ex.push(i % 2 ? { t: 'say', w, mode: 'recall', rev: true } : { t: 'type', w, rev: true }));
+  coach.dueMistakes().slice(0, review ? 3 : 2).forEach(id => ex.push({ t: 'fix', id }));
   const sw = [...newW, ...rev].find(w => { const k = w.ex.split(' ').length; return k >= 3 && k <= 8; });
   if (sw) ex.push({ t: 'build', w: sw });
   const weak = Object.entries(state.ear).filter(([, v]) => v.n >= 2).sort((a, b) => a[1].ok / a[1].n - b[1].ok / b[1].n)[0]?.[0];
@@ -129,7 +133,7 @@ function show() {
   let e = L.ex[L.i];
   if ((e.t === 'say' || e.t === 'sayex') && !canSpeak()) e = L.ex[L.i] = { ...e, t: e.t === 'say' ? 'type' : 'build' };
   if (e.skip) { L.i++; return show(); }
-  ({ intro, meaning, english, type: typeEx, say: sayEx, sayex: sayEx, build, ear })[e.t](e);
+  ({ intro, meaning, english, type: typeEx, say: sayEx, sayex: sayEx, build, ear, fix: fixEx })[e.t](e);
 }
 
 function record(e, ok) {
@@ -299,6 +303,19 @@ function ear(e) {
   const play = () => say(target, { rate: .8 }); $('#spk').onclick = play; setTimeout(play, 250);
   choose(o => o === target, () => ({ answer: esc(target), audio: target, tip: byIPA[p[2].split(' / ')[0]] ? `ההבדל: <b dir="ltr">${esc(p[2])}</b>. ${esc(byIPA[p[2].split(' / ')[0]][3])}` : '' }));
   const old = $('#chk').onclick; $('#chk').onclick = () => { const sel = V.querySelector('.lp-opt.sel'); if (sel) { const st = state.ear[p[2]] ||= { ok: 0, n: 0 }; st.n++; if (sel.dataset.o === target) st.ok++; save(); } old(); };
+}
+
+// ---------- 7. מחברת טעויות: תקן ----------
+function fixEx(e) {
+  const m = state.mistakes?.[e.id]; if (!m) { L.i++; return show(); }
+  frame(m.o ? 'תקן את הטעות שלך' : 'אמור באנגלית', 'repeat', `
+    <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px">${coach.fixPrompt(m)}</div></div>${coach.answerBlock()}`, '');
+  coach.bindAnswer(async (ans) => {
+    V.querySelectorAll('#mic,#send').forEach(b => b.disabled = true);
+    const r = await coach.checkFix(m, ans);
+    if (!e.again) srs.grade('m:' + e.id, r.ok ? 2 : 0);
+    sheet(r.ok, r.ok ? { tip: m.why ? esc(m.why) : '' } : { answer: esc(m.b), audio: m.b, tip: m.why ? esc(m.why) : '' });
+  });
 }
 
 // ================== סוף שיעור ==================

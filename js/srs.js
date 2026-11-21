@@ -4,7 +4,7 @@ import { state, save } from './store.js';
 const DAY = 864e5;
 export const get = (id) => state.cards[id];
 export function learn(id) { if (!state.cards[id]) { state.cards[id] = { ease: 2.5, ivl: 0, reps: 0, lapses: 0, due: Date.now() }; save(); } }
-export function dueIds() { const n = Date.now(); return Object.entries(state.cards).filter(([,c]) => c.due <= n).sort((a,b)=>a[1].due-b[1].due).map(([id])=>id); }
+export function dueIds(pre = 'w:') { const n = Date.now(); return Object.entries(state.cards).filter(([id, c]) => c.due <= n && id.startsWith(pre)).sort((a,b)=>a[1].due-b[1].due).map(([id])=>id); }
 
 export function preview(id) { // כמה זמן עד החזרה הבאה לכל ציון
   const c = state.cards[id]; return [0,1,2,3].map(g => fmt(next(c, g).ivl));

@@ -8,6 +8,7 @@ import * as placement from './placement.js';
 import * as pages from './pages.js';
 import * as learn from './learn.js';
 import * as teacher from './teacher.js';
+import * as coach from './coach.js';
 import { LEVELS } from '../data/placement.js';
 
 const $ = (s) => document.querySelector(s);
@@ -60,7 +61,7 @@ async function setAnimal(k, greet) {
   if (greet) { if (curTab === 'today') learn.home(); if (curTab === 'me') pages.me(); say(`Hi! I'm ${ANIMALS[k].name}. Let's learn English together!`, { show: true }); }
 }
 
-const tabs = { today: learn.home, practice: pages.practice, me: pages.me, sounds: () => views.sounds('map'), words: () => views.words(), rhythm: rhythm.menu, talk: views.talk };
+const tabs = { today: learn.home, practice: pages.practice, me: pages.me, sounds: () => views.sounds('map'), words: () => views.words(), rhythm: rhythm.menu, talk: views.talk, voice: coach.voice, notebook: coach.notebook };
 const NAV = { today: 'today', me: 'me' };
 let hub = 'today', curTab = 'today';
 function go(tab) {
@@ -96,8 +97,8 @@ new MutationObserver(() => {
 }).observe(V, { childList: true, subtree: false });
 
 const C = { stage, view: V, bubble, toast, refreshTop, go, setAnimal, R: rhythm, back: () => go(hub), applyLook, teacher, placeChar };
-C.placement = placement; C.pages = pages; C.learn = learn;
-views.init(C); rhythm.init(C); placement.init(C); pages.init(C); learn.init(C);
+C.placement = placement; C.pages = pages; C.learn = learn; C.coach = coach;
+views.init(C); rhythm.init(C); placement.init(C); pages.init(C); learn.init(C); coach.init(C);
 await stage.setAnimal(state.animal);
 go('today');
 

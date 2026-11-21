@@ -13,7 +13,9 @@ const DEFAULT = {
   pacc: {},           // ipa -> { s, n } ממוצע דיוק לפי Azure
   daily: { date: '', review: 0, ear: 0, learn: 0, speak: 0, rhythm: 0, shadow: 0, xp: 0, lessons: 0 },
   hist: {},           // יום -> { xp, min }
-  mastery: {}         // מילה -> 0..5
+  mastery: {},        // מילה -> 0..5
+  mistakes: {},       // מחברת טעויות: id -> { o, b, why, src, t }
+  convos: []          // דוחות שיחה אחרונים
 };
 let S;
 try { S = { ...DEFAULT, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; S.settings = { ...DEFAULT.settings, ...S.settings }; S.daily = { ...DEFAULT.daily, ...S.daily }; } catch { S = structuredClone(DEFAULT); }

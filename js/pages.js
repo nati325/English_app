@@ -18,7 +18,12 @@ const row = (act, ic, t, s) => `<button class="prow" data-act="${act}"><span cla
 // ---------- תרגול ----------
 export function practice() {
   const due = srs.dueIds().length, left = Vw.ALL.filter(w => !state.cards['w:' + w.w] && !state.known?.[w.w]).length;
+  const mDue = ctx.coach.dueMistakes().length, mAll = ctx.coach.mistakeCount();
   V.innerHTML = `<h2>תרגול</h2><p class="sub">בחר מה לתרגל. השיעור היומי כבר משלב את כל אלה.</p>
+    <div class="psec"><h3>${icon('chat')} לדבר כמו native</h3>
+      ${row('drill', 'chat', 'תרגם ודבר', 'משפט בעברית ← אתה אומר באנגלית ← תיקון מיידי')}
+      ${row('voice', 'mic', `שיחה קולית עם ${T.wanted() ? T.info().name : ANIMALS[state.animal].name}`, 'מצבים מהחיים, עם משימה ודוח בסוף')}
+      ${row('notebook', 'book', 'מחברת טעויות', mAll ? `${mAll} פריטים${mDue ? ` · ${mDue} לחזרה` : ''}` : 'כל טעות שלך נשמרת וחוזרת לתרגול')}</div>
     <div class="psec"><h3>${icon('book')} מילים</h3>
       ${row('learn', 'sparkle', 'מילים חדשות', `${left.toLocaleString('en')} מילים שעוד לא למדת`)}
       ${row('review', 'repeat', 'חזרות חכמות', due ? `${due} מילים מחכות לחזרה` : 'אין חזרות כרגע')}
@@ -30,7 +35,7 @@ export function practice() {
     <div class="psec"><h3>${icon('mic')} דיבור</h3>
       ${row('speak', 'mic', 'חזור אחריי', 'שומעים משפט ואומרים אותו')}
       ${row('shadow', 'mirror', 'חיקוי דובר', 'מקליטים את עצמך ומקבלים ציון על הקצב')}
-      ${row('talk', 'chat', `שיחה עם ${ANIMALS[state.animal].name}`, 'שיחה חופשית עם תיקונים')}</div>
+</div>
     <div class="psec"><h3>${icon('music')} מקצב ומנגינה</h3><p class="sub" style="margin:-4px 0 8px">רוב ה"מבטא" בא מהקצב: אילו מילים חזקות ואילו נבלעות.</p>
       ${row('stressw', 'bolt', 'איפה הדגש במילה?', 'WAter או waTER?')}
       ${row('stresss', 'music', 'מילים חזקות במשפט', 'מה מדגישים ומה "בולעים"')}
@@ -43,6 +48,7 @@ export function practice() {
     learn: () => ctx.learn.startLesson(), review: () => ctx.learn.startLesson(null, { review: true }), words: () => ctx.go('words'),
     ear: () => Vw.startEar(), hard: () => ctx.go('sounds'), lab: () => { ctx.go('sounds'); Vw.sounds('lab'); },
     speak: () => Vw.startSentences(), shadow: () => R.shadow(), talk: () => ctx.go('talk'),
+    drill: () => ctx.coach.drill(), voice: () => ctx.go('voice'), notebook: () => ctx.go('notebook'),
     stressw: () => R.stressWords(), stresss: () => R.stressSentence()
   };
   V.querySelectorAll('.prow').forEach(b => b.onclick = () => (A[b.dataset.act] || (() => R.lesson(b.dataset.act)))());

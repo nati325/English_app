@@ -100,6 +100,16 @@ export function session(animalName, scenarioTitle) {
   };
 }
 
+// שיחה מרובת תורות שמחזירה JSON
+export async function chat(system, messages, schema) {
+  const txt = await call({ system, messages, format: { type: 'json_schema', schema } });
+  return JSON.parse(txt.replace(/^```(?:json)?|```$/g, '').trim());
+}
+// בקשה כללית שמחזירה JSON לפי סכמה (תרגום, בדיקה, דוחות)
+export async function ask(system, user, schema) {
+  const txt = await call({ system, messages: [{ role: 'user', content: user }], format: { type: 'json_schema', schema } });
+  return JSON.parse(txt.replace(/^```(?:json)?|```$/g, '').trim());
+}
 export const errMsg = (e) => {
   const s = e?.status, m = String(e?.message || e);
   if (provider() === 'gemini') {

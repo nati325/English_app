@@ -249,3 +249,34 @@ details summary::-webkit-details-marker{display:none}
 .cslot.loading::after{content:"המורה מגיעה…";position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:.8rem;color:var(--mut)}
 .t3d .cslot .cwrap{padding:12px}
 .t3d .say .cslot{height:230px}.t3d .lp .say .cslot{height:200px}
+
+/* ---------- אימון דיבור: תרגם ודבר, שיחה קולית, מחברת ---------- */
+.spin{width:44px;height:44px;margin:auto;border-radius:50%;border:5px solid var(--neu);border-top-color:var(--brand);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fixes{margin-top:10px;display:grid;gap:8px}
+.fx{background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:8px 12px}
+.fx .ltr{text-align:left}.fx s{color:var(--bad-ink);opacity:.85}.fx b{color:var(--good-ink)}.fx small{display:block;color:var(--mut);margin-top:2px}
+.lp-sheet{max-height:80dvh;overflow:auto}
+.lp-sheet .lp-audio{margin-top:0;padding:4px 10px;min-height:32px;vertical-align:middle}
+.drow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}.drow:last-child{border:0}
+.drow .ltr{text-align:left}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;margin-top:6px;background:var(--bad)}.dot.correct{background:var(--good)}.dot.minor{background:var(--warn,#FAB005)}
+.mrow{display:flex;gap:8px;align-items:flex-start;padding:12px 14px}.mrow .ltr{text-align:left}.mrow s{color:var(--bad-ink)}
+.vc{display:flex;flex-direction:column;min-height:calc(100dvh - 40px)}
+.vc .lp-top{gap:8px}
+.vc-t{flex:1;display:flex;flex-direction:column;min-width:0}.vc-t b{font-size:1.05rem}.vc-t small{color:var(--mut);font-size:.82rem;display:flex;gap:4px;align-items:center}
+.vc .lp-x[aria-pressed="true"]{color:var(--brand-ink);background:var(--brand-soft)}
+.vc-stage .say{justify-content:center}
+.vc-stage .cslot{margin:6px auto}
+.t3d .vc-stage .say .cslot{height:min(42dvh,360px)}
+.vc-cap{direction:ltr;text-align:left;font-size:1.2rem;font-weight:700;line-height:1.4;min-height:2.6em;margin-top:12px;padding:0 4px}
+.vc-cap .lp-skip,.vc-cap #trv{direction:rtl;display:block;text-align:right;font-size:.92rem;font-weight:500}
+.vc-cap #trv{color:var(--mut)}
+.vc-you{direction:ltr;text-align:right;color:var(--good-ink);font-weight:700;min-height:1.5em;margin:8px 4px 0}
+.vc-fix{display:flex;gap:8px;align-items:center;width:100%;background:var(--warn-soft);border-radius:14px;padding:8px 12px;margin-top:8px;text-align:left;font-size:.95rem}
+.vc-fix s{color:var(--bad-ink)}.vc-fix b{color:var(--good-ink)}
+.vc-ctl{display:flex;align-items:center;justify-content:center;gap:28px;margin-top:auto;padding-top:16px}
+.vc-side{width:60px;height:60px;border-radius:50%;background:var(--surface);border:2px solid var(--line);display:grid;place-items:center;color:var(--ink);align-content:center}
+.vc-side small{font-size:.7rem;font-weight:700;line-height:1}
+.lp-mic[disabled]{opacity:.5}
+.vc-cap #trv[hidden]{display:none}
