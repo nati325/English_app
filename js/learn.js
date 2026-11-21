@@ -9,6 +9,7 @@ import { PAIRS, byIPA } from '../data/phonemes.js';
 import { icon, iconFill } from './icons.js';
 import * as T from './teacher.js';
 import * as coach from './coach.js';
+import * as mine from './mine.js';
 
 let ctx, V;
 export const init = (c) => { ctx = c; V = c.view; };
@@ -19,7 +20,7 @@ const pick = (a) => a[Math.random() * a.length | 0];
 const cid = (w) => 'w:' + w;
 const BYW = Object.fromEntries(ALL.map(w => [w.w, w]));
 const isDone = (w) => !!srs.get(cid(w.w)) || !!state.known?.[w.w];
-const hl = (ex, w) => esc(ex).replace(new RegExp(`\\b(${w}\\w*)`, 'i'), '<b>$1</b>');
+const hl = (ex, w) => { const W = mine.wordOf(w); let o = esc(ex).replace(new RegExp(`\\b(${w}\\w*)`, 'i'), '<b>$1</b>'); if (!o.includes('<b>') && W?.form) o = o.replace(new RegExp(`\\b(${W.form})\\b`, 'i'), '<b>$1</b>'); return o; };
 const canSpeak = () => (azure.enabled() || !!SR) && !(state.noSpeakUntil > Date.now());
 const today = () => new Date().toLocaleDateString('sv');
 
@@ -57,6 +58,7 @@ export function home() {
       <div class="segs" aria-label="שיעור ${lessonsDone + 1} מתוך ${lessons}">${Array.from({ length: lessons }, (_, i) => `<i class="${i < lessonsDone ? 'on' : ''}"></i>`).join('')}</div>
       <button class="btn o big full" id="go" style="margin-top:16px">${doneToday ? 'עוד שיעור' : lessonsDone ? 'המשך ללמוד' : 'התחל שיעור'} ${icon('chevron', 20)}</button>
     </div>
+    ${(() => { const a = mine.activeDeck(); return a && a.left ? `<button class="prow" id="deck" style="margin-top:4px"><span class="ic">${icon('play')}</span><span class="t"><b>הכנה: ${esc(a.d.title)}</b><small>עוד ${a.left} מילים ואתה מוכן</small></span><span class="st">${icon('chevron')}</span></button>` : ''; })()}
     <button class="prow" id="drill" style="margin-top:4px"><span class="ic">${icon('chat')}</span><span class="t"><b>אימון דיבור · תרגם ודבר</b><small>${coach.dueMistakes().length ? `${coach.dueMistakes().length} טעויות מחכות לתיקון` : '8 משפטים, תיקון מיידי'}</small></span><span class="st">${icon('chevron')}</span></button>
     <div class="row" style="justify-content:space-between;margin-top:18px"><b style="font-size:1.1rem">המסלול שלך</b><span class="mut" style="font-size:.85rem">יחידה ${ci + 1} מתוך ${units.length}</span></div>
     <div class="trail">${win.map((u, k) => {
@@ -67,6 +69,7 @@ export function home() {
     }).join('')}</div>`;
   $('#go').onclick = () => startLesson(curId);
   $('#drill').onclick = () => coach.drill();
+  if ($('#deck')) $('#deck').onclick = () => mine.deck(state.activeDeck);
   if ($('#pt')) $('#pt').onclick = () => ctx.placement.start();
   V.querySelectorAll('.node').forEach(b => b.onclick = () => {
     const u = units.find(x => x.id === +b.dataset.u);
@@ -77,12 +80,12 @@ export function home() {
 }
 
 // ================== בניית שיעור ==================
-function buildLesson(unitId, review) {
+function buildLesson(unitId, review, words) {
   const n = Math.min(state.settings.newPerDay || 4, 4);
   let pool = ALL.filter(w => !isDone(w) && (!unitId || w.unit === unitId));
   if (pool.length < n) pool = pool.concat(ALL.filter(w => !isDone(w) && !pool.includes(w)));
-  const newW = review ? [] : pool.slice(0, n);
-  let rev = srs.dueIds().map(id => BYW[id.slice(2)]).filter(Boolean).slice(0, review ? 6 : 3);
+  const newW = words ? words.slice(0, 6) : review ? [] : pool.slice(0, n);
+  let rev = srs.dueIds().map(id => mine.wordOf(id.slice(2))).filter(w => w && w.he).slice(0, words ? 2 : review ? 6 : 3);
   if (review && rev.length < 4) rev = rev.concat(fresh(ALL.filter(w => w.unit === unitId && isDone(w) && !rev.includes(w)), 'rev:' + unitId, 6 - rev.length, w => w.w));
   if (!newW.length && !rev.length) rev = fresh(ALL.filter(isDone), 'rev:any', 5, w => w.w);
   const ex = [];
@@ -108,10 +111,10 @@ function buildLesson(unitId, review) {
 
 // ================== נגן ==================
 let L;
-export function startLesson(unitId, { review = false } = {}) {
-  const b = buildLesson(unitId, review);
+export function startLesson(unitId, { review = false, words = null, deck = null } = {}) {
+  const b = buildLesson(unitId, review, words);
   if (!b.ex.length) { ctx.toast('אין מה לתרגל כרגע 🎉'); return; }
-  L = { ...b, i: 0, ok: 0, n: 0, res: {}, t0: Date.now(), xp: 0, tries: 0 };
+  L = { ...b, i: 0, ok: 0, n: 0, res: {}, t0: Date.now(), xp: 0, tries: 0, deck };
   show();
 }
 const total = () => L.ex.length;
@@ -165,7 +168,7 @@ function intro(e) {
   const w = e.w; srs.learn(cid(w.w)); // נכנס לחזרות מרגע שהוצג
   frame('מילה חדשה', 'sparkle', `
     <div class="say"><div class="cslot" data-view="head" style="--s:84px"></div><div class="bub" style="flex:1;margin-bottom:14px">
-      <div class="lp-q en">${esc(w.w)}</div><div class="ipa" style="text-align:left">/${esc(w.ipa)}/</div><div class="he" style="font-weight:700">${esc(w.he)}</div>
+      <div class="lp-q en">${esc(w.w)}</div>${w.ipa ? `<div class="ipa" style="text-align:left">/${esc(w.ipa)}/</div>` : ''}<div class="he" style="font-weight:700">${esc(w.he)}</div>
       <div>${audioBtn(w.w)}</div></div></div>
     <div class="ex">${hl(w.ex, w.w)}</div><button class="lp-audio" id="exa" data-t="${esc(w.ex)}">${icon('sound', 18)} שמע את המשפט</button>`,
     `<button class="btn o big full" id="nx">הבנתי, המשך</button><button class="lp-skip" id="know">אני כבר יודע את המילה</button>`);
@@ -177,7 +180,7 @@ function intro(e) {
 // ---------- הקלדה מהזיכרון (הפקה) ----------
 const reEsc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const levD = (a, b) => { const d = Array.from({ length: a.length + 1 }, (_, i) => [i]); for (let j = 1; j <= b.length; j++) d[0][j] = j; for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[a.length][b.length]; };
-function blankOf(w) { const m = w.ex.match(new RegExp(`\\b(${reEsc(w.w)}\\w*)\\b`, 'i')); return m ? { tok: m[1], before: w.ex.slice(0, m.index), after: w.ex.slice(m.index + m[1].length) } : { tok: w.w, before: '', after: '' }; }
+function blankOf(w) { const m = w.ex.match(new RegExp(`\\b(${reEsc(w.w)}\\w*)\\b`, 'i')) || (w.form && w.ex.match(new RegExp(`\\b(${reEsc(w.form)})\\b`, 'i'))); return m ? { tok: m[1], before: w.ex.slice(0, m.index), after: w.ex.slice(m.index + m[1].length) } : { tok: w.w, before: '', after: '' }; }
 const typedOk = (ans, tok, base) => { const a = ans.trim().toLowerCase().replace(/[^a-z' ]/g, ''); const t = tok.toLowerCase(), b = base.toLowerCase(); return !!a && (a === t || a === b || (t.length >= 6 && levD(a, t) <= 1)); };
 function typeEx(e, { onDone } = {}) {
   const w = e.w, bl = blankOf(w);
@@ -336,5 +339,5 @@ function finish() {
     ${L.newW.length ? `<div class="card"><b>מילים חדשות</b><div style="margin-top:8px">${L.newW.map(w => `<span class="w ok">${esc(w.w)}</span>`).join('')}</div></div>` : ''}
     ${missed.length ? `<div class="card"><b>נחזור עליהן בקרוב</b><div class="mut" style="font-size:.88rem;margin:4px 0 8px">טעית בהן – הן יחזרו מוקדם יותר</div>${missed.map(w => `<span class="w mid">${esc(w)}</span>`).join('')}</div>` : ''}
     <div class="lp-foot"><button class="btn o big full" id="h">המשך</button></div></div>`;
-  $('#h').onclick = () => ctx.go('today');
+  $('#h').onclick = () => L.deck ? mine.deck(L.deck) : ctx.go('today');
 }

@@ -32,6 +32,7 @@ const P = {
   music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
   mirror: '<circle cx="12" cy="9" r="6"/><path d="M12 15v6M9 21h6"/>',
   grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  play: '<rect x="2" y="4" width="20" height="16" rx="3"/><path d="m10 9 5 3-5 3z" fill="currentColor"/>',
   bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'
 };
 export const icon = (name, size = 22, extra = '') =>

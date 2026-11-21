@@ -208,11 +208,11 @@ export function startLearn(uid) {
 
 // ---------- חזרות ----------
 export function startReview() {
-  const q = srs.dueIds().slice(0, 15);
+  const q = srs.dueIds().filter(id => BYW[id.slice(2)] || state.extra?.[id.slice(2)]).slice(0, 15);
   if (!q.length) { if (flow) return flowNext(); V.innerHTML = `<div class="center"><div style="font-size:3rem">✨</div><h2>אין חזרות כרגע</h2><p class="sub">למד מילים חדשות כדי למלא את הסל.</p><button class="btn o" id="l">📚 מילים חדשות</button></div>`; $('#l').onclick = () => startLearn(); return; }
   let i = 0, ok = 0;
   const front = () => {
-    const w = BYW[q[i].slice(2)];
+    const w = BYW[q[i].slice(2)] || state.extra?.[q[i].slice(2)]; if (!w) { i++; return i < q.length ? front() : fin(); }
     V.innerHTML = `<button class="back" id="bk">→ יציאה</button><div class="dots">${q.map((_, k) => `<i class="${k <= i ? 'on' : ''}"></i>`).join('')}</div>
       <div class="wcard"><p class="sub">איך אומרים באנגלית?</p><div class="he" style="font-size:2rem">${w.he}</div></div>
       <div class="res" id="res"></div><div class="row"><button class="btn o" id="mic">🎤 אמור</button><button class="btn b" id="show">הצג תשובה</button></div>`;
