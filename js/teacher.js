@@ -14,7 +14,7 @@ export const current = () => TEACHERS[state.settings.teacherId] ? state.settings
 export const info = () => TEACHERS[current()];
 export const thumb = (id) => `assets/teacher/${TEACHERS[id].file}.webp`;
 let shown = null;
-const avatarOpts = (id) => { const t = TEACHERS[id]; return { url: `assets/teacher/${t.file}.glb`, body: t.body, avatarMood: 'happy', lipsyncLang: 'en', ...(t.baseline ? { baseline: t.baseline } : {}) }; };
+const avatarOpts = (id) => { const t = TEACHERS[id]; return { url: `assets/teacher/${t.file}.glb`, body: t.body, avatarMood: 'happy', lipsyncLang: 'en', avatarIdleEyeContact: .85, avatarSpeakingEyeContact: .95, avatarListeningEyeContact: .9, avatarSpeakingHeadMove: .35, ...(t.baseline ? { baseline: t.baseline } : {}) }; };
 export async function switchTo(id) { state.settings.teacherId = id; if (head && shown !== id) { await head.showAvatar(avatarOpts(id)); shown = id; } }
 
 let head = null, box = null, loading = null, failed = false, mounted = false;
@@ -29,6 +29,7 @@ export function ensure() {
     const { TalkingHead } = await import('../vendor/talkinghead/talkinghead.mjs');
     head = new TalkingHead(box, {
       ttsEndpoint: null, lipsyncModules: ['en'], lipsyncLang: 'en', cameraView: 'upper', cameraRotateEnable: false, cameraZoomEnable: false, cameraPanEnable: false,
+      avatarIdleEyeContact: .85, avatarSpeakingEyeContact: .95, avatarListeningEyeContact: .9, avatarIdleHeadMove: .35, avatarSpeakingHeadMove: .35,
       modelFPS: 30, modelPixelRatio: Math.min(devicePixelRatio || 1, 2), lightAmbientIntensity: 2.2, lightDirectIntensity: 28, avatarMood: 'happy'
     });
     await head.showAvatar(avatarOpts(current())); shown = current();
@@ -79,6 +80,6 @@ export function react(good) {
   try {
     if (good) { head.setMood('happy'); head.playGesture(Math.random() < .5 ? 'thumbup' : 'ok', 1.6); }
     else { head.setMood('neutral'); head.playGesture('index', 1.4); setTimeout(() => head?.setMood('happy'), 1800); }
-    head.lookAtCamera(1500);
+    head.lookAtCamera(2500);
   } catch {}
 }

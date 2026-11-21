@@ -83,10 +83,15 @@ function buildLesson(unitId, review) {
   if (review && rev.length < 4) rev = rev.concat(fresh(ALL.filter(w => w.unit === unitId && isDone(w) && !rev.includes(w)), 'rev:' + unitId, 6 - rev.length, w => w.w));
   if (!newW.length && !rev.length) rev = fresh(ALL.filter(isDone), 'rev:any', 5, w => w.w);
   const ex = [];
-  newW.forEach((w, i) => { ex.push({ t: 'intro', w }); ex.push({ t: 'meaning', w }); if (i) ex.push({ t: 'english', w: newW[i - 1] }); });
-  if (newW.length) ex.push({ t: 'english', w: newW.at(-1) });
-  newW.slice(0, 2).forEach(w => ex.push({ t: 'say', w, mode: 'repeat' }));
-  rev.forEach((w, i) => ex.push(i % 2 ? { t: 'say', w, mode: 'recall', rev: true } : { t: 'english', w, rev: true }));
+  // 1) היכרות עם רווח: לא שואלים על מילה מיד אחרי שהוצגה
+  newW.forEach((w, i) => { ex.push({ t: 'intro', w }); if (i) ex.push({ t: 'meaning', w: newW[i - 1] }); });
+  if (newW.length) ex.push({ t: 'meaning', w: newW.at(-1) });
+  // 2) שליפה: בחירה עם מסיחים קשים ← הקלדה מהזיכרון ← דיבור מעברית בלבד
+  shuf(newW).forEach(w => ex.push({ t: 'english', w }));
+  shuf(newW).forEach(w => ex.push({ t: 'type', w }));
+  newW.slice(0, 2).forEach(w => ex.push({ t: 'say', w, mode: 'recall' }));
+  // 3) חזרות: רק הפקה (הקלדה/דיבור), לא זיהוי
+  rev.forEach((w, i) => ex.push(i % 2 ? { t: 'say', w, mode: 'recall', rev: true } : { t: 'type', w, rev: true }));
   const sw = [...newW, ...rev].find(w => { const k = w.ex.split(' ').length; return k >= 3 && k <= 8; });
   if (sw) ex.push({ t: 'build', w: sw });
   const weak = Object.entries(state.ear).filter(([, v]) => v.n >= 2).sort((a, b) => a[1].ok / a[1].n - b[1].ok / b[1].n)[0]?.[0];
@@ -122,8 +127,9 @@ function checkBtn(label = 'בדוק') { return `<button class="btn big full" id=
 function show() {
   if (L.i >= L.ex.length) return finish();
   let e = L.ex[L.i];
-  if ((e.t === 'say' || e.t === 'sayex') && !canSpeak()) e = L.ex[L.i] = { ...e, t: e.t === 'say' ? 'english' : 'build' };
-  ({ intro, meaning, english, say: sayEx, sayex: sayEx, build, ear })[e.t](e);
+  if ((e.t === 'say' || e.t === 'sayex') && !canSpeak()) e = L.ex[L.i] = { ...e, t: e.t === 'say' ? 'type' : 'build' };
+  if (e.skip) { L.i++; return show(); }
+  ({ intro, meaning, english, type: typeEx, say: sayEx, sayex: sayEx, build, ear })[e.t](e);
 }
 
 function record(e, ok) {
@@ -158,14 +164,44 @@ function intro(e) {
       <div class="lp-q en">${esc(w.w)}</div><div class="ipa" style="text-align:left">/${esc(w.ipa)}/</div><div class="he" style="font-weight:700">${esc(w.he)}</div>
       <div>${audioBtn(w.w)}</div></div></div>
     <div class="ex">${hl(w.ex, w.w)}</div><button class="lp-audio" id="exa" data-t="${esc(w.ex)}">${icon('sound', 18)} שמע את המשפט</button>`,
-    `<button class="btn o big full" id="nx">הבנתי, המשך</button>`);
+    `<button class="btn o big full" id="nx">הבנתי, המשך</button><button class="lp-skip" id="know">אני כבר יודע את המילה</button>`);
   bindAudio(); say(w.w);
   $('#nx').onclick = () => { L.i++; show(); };
+  $('#know').onclick = () => knowCheck(w);
+}
+
+// ---------- הקלדה מהזיכרון (הפקה) ----------
+const reEsc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const levD = (a, b) => { const d = Array.from({ length: a.length + 1 }, (_, i) => [i]); for (let j = 1; j <= b.length; j++) d[0][j] = j; for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[a.length][b.length]; };
+function blankOf(w) { const m = w.ex.match(new RegExp(`\\b(${reEsc(w.w)}\\w*)\\b`, 'i')); return m ? { tok: m[1], before: w.ex.slice(0, m.index), after: w.ex.slice(m.index + m[1].length) } : { tok: w.w, before: '', after: '' }; }
+const typedOk = (ans, tok, base) => { const a = ans.trim().toLowerCase().replace(/[^a-z' ]/g, ''); const t = tok.toLowerCase(), b = base.toLowerCase(); return !!a && (a === t || a === b || (t.length >= 6 && levD(a, t) <= 1)); };
+function typeEx(e, { onDone } = {}) {
+  const w = e.w, bl = blankOf(w);
+  frame('כתוב באנגלית', 'text', `
+    <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q">${esc(w.he)}</div></div></div>
+    <div class="ex" style="font-size:1.15rem;line-height:1.9">${esc(bl.before)}<b class="ltr">${esc(bl.tok[0])}${'_'.repeat(Math.max(2, bl.tok.length - 1))}</b>${esc(bl.after)}</div>
+    <input id="ans" class="srch ltr" style="font-size:1.25rem" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" lang="en" enterkeyhint="done" placeholder="${esc(bl.tok[0])}…" aria-label="המילה באנגלית">`, checkBtn());
+  const inp = $('#ans'), chk = $('#chk'); setTimeout(() => inp.focus(), 60);
+  inp.oninput = () => { chk.disabled = !inp.value.trim(); };
+  const go = () => { if (!inp.value.trim()) return; const ok = typedOk(inp.value, bl.tok, w.w); inp.disabled = true; if (onDone) return onDone(ok); sheet(ok, ok ? { audio: w.ex } : { answer: esc(bl.tok), audio: w.w }); if (ok) say(w.w); };
+  chk.onclick = go; inp.onkeydown = (ev) => { if (ev.key === 'Enter') go(); };
+}
+// "אני כבר יודע": בדיקה מיידית בהקלדה; הצלחה → המילה מסומנת כידועה ותרגיליה מדולגים
+function knowCheck(w) {
+  typeEx({ w }, { onDone: (ok) => {
+    if (ok) { srs.grade(cid(w.w), 3); (state.known ||= {})[w.w] = 1; L.ex.forEach((x, k) => { if (k > L.i && x.w === w) x.skip = true; }); L.newW = L.newW.filter(x => x !== w); save(); chime(true); ctx.toast('מעולה! דילגנו על המילה'); L.i++; show(); }
+    else { chime(false); ctx.toast('נלמד אותה ביחד 🙂'); intro({ w }); }
+  } });
+}
+// מסיחים קשים: דומים בכתיב/אורך, מאותה יחידה
+function nearWords(w, n) {
+  const sc = (x) => levD(x.w.toLowerCase(), w.w.toLowerCase()) + Math.abs(x.w.length - w.w.length) * .5 + (x.unit === w.unit ? -1 : 0) + (x.w[0] === w.w[0] ? -1 : 0);
+  return shuf(ALL.filter(x => x.w !== w.w && x.he !== w.he)).slice(0, 400).sort((a, b) => sc(a) - sc(b)).slice(0, n);
 }
 
 // ---------- 2. זיהוי: מה זה אומר? ----------
 function meaning(e) {
-  const w = e.w, opts = shuf([w.he, ...shuf(ALL.filter(x => x.he !== w.he && x.w !== w.w)).slice(0, 3).map(x => x.he)]);
+  const w = e.w, opts = shuf([w.he, ...nearWords(w, 3).map(x => x.he)]); // מסיחים: מילים שנראות דומה
   frame('מה זה אומר?', 'ear', `
     <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q en">${esc(w.w)}</div><div>${audioBtn(w.w)}</div></div></div>
     <div class="lp-opts">${opts.map(o => `<button class="lp-opt" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div>`, checkBtn(), 'info');
@@ -175,8 +211,7 @@ function meaning(e) {
 
 // ---------- 3. שליפה: איך אומרים באנגלית? ----------
 function english(e) {
-  const w = e.w, others = L.others.filter(x => x.w !== w.w).map(x => x.w);
-  const opts = shuf([w.w, ...shuf([...others, ...shuf(ALL).slice(0, 6).map(x => x.w)].filter((x, i, a) => x !== w.w && a.indexOf(x) === i)).slice(0, 3)]);
+  const w = e.w, opts = shuf([w.w, ...nearWords(w, 3).map(x => x.w)]); // מסיחים קשים: כתיב דומה
   frame('איך אומרים באנגלית?', 'chat', `
     <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q">${esc(w.he)}</div></div></div>
     <div class="lp-opts">${opts.map(o => `<button class="lp-opt en" data-o="${esc(o)}">${esc(o)}</button>`).join('')}</div>`, checkBtn());
@@ -246,10 +281,10 @@ function build(e) {
   const bank = shuf([...toks, ...extra].map((t, i) => ({ t, i })));
   frame('הקשב וסדר את המילים', 'sound', `
     <div class="say"><div class="cslot" data-view="head" style="--s:76px"></div><div class="bub" style="flex:1;margin-bottom:14px"><div class="lp-q" style="font-size:1.1rem">מה הוא אמר?</div><div>${audioBtn(w.ex)}</div></div></div>
-    <div class="lp-ans" id="ans" aria-label="התשובה שלך"></div>
+    <div class="lp-ans" id="bAns" aria-label="התשובה שלך"></div>
     <div class="lp-bank" id="bank">${bank.map(b => `<button class="tile" data-i="${b.i}">${esc(b.t)}</button>`).join('')}</div>`, checkBtn(), 'info');
   bindAudio(); say(w.ex);
-  const ans = [], chk = $('#chk'), A = $('#ans');
+  const ans = [], chk = $('#chk'), A = $('#bAns');
   const redraw = () => { A.innerHTML = ans.map((b, k) => `<button class="tile" data-k="${k}">${esc(b.t)}</button>`).join(''); A.querySelectorAll('.tile').forEach(t => t.onclick = () => { const b = ans.splice(+t.dataset.k, 1)[0]; V.querySelector(`#bank .tile[data-i="${b.i}"]`).classList.remove('used'); redraw(); }); chk.disabled = !ans.length; };
   V.querySelectorAll('#bank .tile').forEach(t => t.onclick = () => { if (t.classList.contains('used')) return; t.classList.add('used'); ans.push(bank.find(b => b.i === +t.dataset.i)); redraw(); });
   chk.onclick = () => { const ok = ans.map(b => b.t.toLowerCase()).join(' ') === toks.map(t => t.toLowerCase()).join(' '); sheet(ok, ok ? {} : { answer: esc(w.ex), audio: w.ex }); };
