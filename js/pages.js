@@ -21,12 +21,14 @@ export function practice() {
   const mDue = ctx.coach.dueMistakes().length, mAll = ctx.coach.mistakeCount();
   V.innerHTML = `<h2>תרגול</h2><p class="sub">בחר מה לתרגל. השיעור היומי כבר משלב את כל אלה.</p>
     <div class="psec"><h3>${icon('play')} סדרות וטקסטים</h3>
-      ${row('mine', 'play', 'הכנה לפרק / לטקסט', 'מעלים כתוביות, לומדים את המילים החסרות, ואז מבינים הכול')}</div>
+      ${row('mine', 'play', 'הכנה לפרק / לטקסט', 'מעלים כתוביות, לומדים את המילים החסרות, ואז מבינים הכול')}
+      ${row('story', 'sparkle', 'סיפור בשבילי', 'AI כותב טקסט ברמה שלך, עם מילים חדשות')}</div>
     <div class="psec"><h3>${icon('chat')} לדבר כמו native</h3>
       ${row('drill', 'chat', 'תרגם ודבר', 'משפט בעברית ← אתה אומר באנגלית ← תיקון מיידי')}
       ${row('voice', 'mic', `שיחה קולית עם ${T.wanted() ? T.info().name : ANIMALS[state.animal].name}`, 'מצבים מהחיים, עם משימה ודוח בסוף')}
       ${row('notebook', 'book', 'מחברת טעויות', mAll ? `${mAll} פריטים${mDue ? ` · ${mDue} לחזרה` : ''}` : 'כל טעות שלך נשמרת וחוזרת לתרגול')}</div>
     <div class="psec"><h3>${icon('book')} מילים</h3>
+      ${row('fast', 'bolt', 'הרחבת אוצר מילים · מהיר', `${ctx.vocab.fastCount().toLocaleString('en')} מתוך 22,000 מילים נוספות${ctx.vocab.dueFast().length ? ` · ${ctx.vocab.dueFast().length} לחזרה` : ''}`)}
       ${row('learn', 'sparkle', 'מילים חדשות', `${left.toLocaleString('en')} מילים שעוד לא למדת`)}
       ${row('review', 'repeat', 'חזרות חכמות', due ? `${due} מילים מחכות לחזרה` : 'אין חזרות כרגע')}
       ${row('words', 'list', 'כל המילים', 'רשימה לפי רמות + חיפוש')}</div>
@@ -50,7 +52,7 @@ export function practice() {
     learn: () => ctx.learn.startLesson(), review: () => ctx.learn.startLesson(null, { review: true }), words: () => ctx.go('words'),
     ear: () => Vw.startEar(), hard: () => ctx.go('sounds'), lab: () => { ctx.go('sounds'); Vw.sounds('lab'); },
     speak: () => Vw.startSentences(), shadow: () => R.shadow(), talk: () => ctx.go('talk'),
-    drill: () => ctx.coach.drill(), mine: () => ctx.go('mine'), voice: () => ctx.go('voice'), notebook: () => ctx.go('notebook'),
+    drill: () => ctx.coach.drill(), mine: () => ctx.go('mine'), story: () => ctx.stories.newStory(), fast: () => ctx.go('fast'), voice: () => ctx.go('voice'), notebook: () => ctx.go('notebook'),
     stressw: () => R.stressWords(), stresss: () => R.stressSentence()
   };
   V.querySelectorAll('.prow').forEach(b => b.onclick = () => (A[b.dataset.act] || (() => R.lesson(b.dataset.act)))());
@@ -76,6 +78,10 @@ export function me() {
       ${skill('אוצר מילים', P.v, LEVELS[P.v])}${skill('דקדוק', P.g, LEVELS[P.g])}${skill('שמיעה', P.l, LEVELS[Math.floor(P.l)])}${P.speak != null ? skill('הגייה', P.speak / 17, P.speak + '/100') : ''}
       <div class="row" style="margin-top:14px"><button class="btn g" id="res">פרטים</button><button class="btn b" id="pt">בדיקה חוזרת</button></div>`
       : `<b>הרמה שלי</b><p class="sub" style="margin:6px 0 12px">עוד לא בדקנו. 8 דקות, וחוסך ללמוד מה שכבר יודעים.</p><button class="btn o full" id="pt">${icon('target')} בדיקת רמה</button>`}</div>
+    <div class="card"><div class="row" style="justify-content:space-between"><b>היעד לשנה: 10,000 מילים</b><span class="ltr" style="font-weight:800;color:var(--brand-ink)">${ctx.vocab.vocabSize().toLocaleString('en')}</span></div>
+      <div class="prog" style="margin:10px 0 6px"><i style="width:${Math.min(100, ctx.vocab.vocabSize() / 100)}%"></i></div>
+      <div class="row" style="justify-content:space-between"><span class="mut" style="font-size:.85rem">מילים שקראת ושמעת</span><b class="ltr">${(state.readWords || 0).toLocaleString('en')} / 1,000,000</b></div>
+      <div class="prog" style="margin-top:6px"><i style="width:${Math.min(100, (state.readWords || 0) / 10000)}%;background:var(--info)"></i></div></div>
     <div class="stats"><div class="stat"><b>${state.streak}</b><small>ימים ברצף</small></div><div class="stat"><b>${learned.toLocaleString('en')}</b><small>מילים שאני מכיר</small></div><div class="stat"><b>${mins}</b><small>דקות למידה</small></div></div>
     <div class="card"><div class="row" style="justify-content:space-between"><b>השבוע</b><span class="mut" style="font-size:.85rem">מטרה: ${goal} דקות ביום</span></div>
       <div class="week" role="img" aria-label="דקות למידה ב-7 הימים האחרונים: ${vals.join(', ')}">${vals.map(v => `<i class="${v >= goal ? 'ok' : v ? 'lo' : ''}" style="height:${Math.max(4, v / mx * 100)}%"></i>`).join('')}</div>

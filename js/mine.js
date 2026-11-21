@@ -1,9 +1,9 @@
 // "מצב סדרה" ו"שמור מילה": מעלים כתוביות או מדביקים טקסט → האפליקציה מוצאת מה עוד לא מכירים,
 // מחשבת כמה מהטקסט תבינו, ומלמדת את המילים החסרות (עם המשפט המקורי) לפני הצפייה/הקריאה.
-import { state, save } from './store.js';
+import { state, save, addXP } from './store.js';
 import * as srs from './srs.js';
 import * as tutor from './tutor.js';
-import { say } from './speech.js';
+import { say, stopSpeaking } from './speech.js';
 import { icon } from './icons.js';
 import { ALL } from './views.js';
 
@@ -121,14 +121,16 @@ export function library() {
   const D = Object.values(state.decks || {}).sort((a, b) => b.t - a.t);
   V.innerHTML = `${back('practice')}<h2>סדרות וטקסטים</h2>
     <p class="sub">מעלים כתוביות של פרק שרוצים לראות (או מדביקים כתבה, שיר, הודעה). האפליקציה מוצאת את המילים שעוד לא מכירים ומלמדת אותן לפני הצפייה.</p>
+    <button class="prow" id="story"><span class="ic">${icon('sparkle')}</span><span class="t"><b>סיפור חדש בשבילי</b><small>AI כותב טקסט ברמה שלך, עם כמה מילים חדשות</small></span><span class="st">${icon('chevron')}</span></button>
     <label class="prow" for="srt" style="cursor:pointer"><span class="ic">${icon('play')}</span><span class="t"><b>העלה כתוביות של פרק</b><small>קובץ srt / vtt / txt</small></span><span class="st">${icon('chevron')}</span></label>
     <input type="file" id="srt" accept=".srt,.vtt,.txt,.ass,text/plain" hidden>
     <button class="prow" id="paste"><span class="ic">${icon('text')}</span><span class="t"><b>הדבק טקסט</b><small>כתבה, תמליל מיוטיוב, שיר, מייל</small></span><span class="st">${icon('chevron')}</span></button>
     <details class="card" style="padding:12px 16px"><summary><b>איפה משיגים כתוביות?</b></summary><p class="sub" style="margin:8px 0 0">מחפשים בגוגל: <span class="ltr">"שם הסדרה S01E01 english srt"</span>. אתרים נפוצים: OpenSubtitles, Subdl, Addic7ed. מורידים את קובץ ה-srt באנגלית ומעלים כאן.</p></details>
-    ${D.length ? `<h3 style="margin-top:18px">ההכנות שלי</h3>${D.map(d => { const left = d.words.filter(w => !isKnown(w) && !isLearning(w)).length, learn = d.words.filter(isLearning).length; return `<button class="prow" data-deck="${d.id}"><span class="ic">${icon(d.type === 'srt' ? 'play' : 'book')}</span><span class="t"><b>${esc(d.title)}</b><small>${left ? `${left} מילים ללמוד` : 'מוכן! ✓'}${learn ? ` · ${learn} בתרגול` : ''} · הבנה ${pct(d.cov0)} ← ${pct(deckCov(d))}</small></span><span class="st">${icon('chevron')}</span></button>`; }).join('')}` : ''}`;
+    ${D.length ? `<h3 style="margin-top:18px">ההכנות שלי</h3>${D.map(d => { const left = d.words.filter(w => !isKnown(w) && !isLearning(w)).length, learn = d.words.filter(isLearning).length; return `<button class="prow" data-deck="${d.id}"><span class="ic">${icon(d.type === 'srt' ? 'play' : d.type === 'story' ? 'sparkle' : 'book')}</span><span class="t"><b>${esc(d.title)}</b><small>${left ? `${left} מילים ללמוד` : 'מוכן! ✓'}${learn ? ` · ${learn} בתרגול` : ''} · הבנה ${pct(d.cov0)} ← ${pct(deckCov(d))}</small></span><span class="st">${icon('chevron')}</span></button>`; }).join('')}` : ''}`;
   V.querySelectorAll('[data-go]').forEach(b => b.onclick = () => ctx.go(b.dataset.go));
   $('#srt').onchange = async (ev) => { const f = ev.target.files[0]; if (!f) return; const t = await f.text(); open({ title: f.name.replace(/\.(srt|vtt|txt|ass)$/i, '').replace(/[._]+/g, ' ').slice(0, 60), text: cleanSrt(t), type: 'srt' }); };
   $('#paste').onclick = () => pasteScreen();
+  $('#story').onclick = () => ctx.stories.newStory();
   V.querySelectorAll('[data-deck]').forEach(b => b.onclick = () => deck(b.dataset.deck));
 }
 function deckCov(d) { const A = { list: d.stats, total: d.total }; return coverage(A, new Set(d.words.filter(w => srs.get('w:' + w)))); }
@@ -210,15 +212,20 @@ export function deck(id) {
       <p class="sub" style="margin:8px 0 0">${learning.length} מתוך ${ws.length} מילים נלמדו. <b>${covMsg(c)}</b></p></div>
     ${done ? `<div class="hero center"><b style="font-size:1.2rem">מוכן לצפייה! 🎬</b><p class="sub" style="margin:6px 0 0">המילים ימשיכו לחזור בחזרות היומיות.</p></div>`
       : `<button class="btn o big full" id="learn">${icon('sparkle')} למד ${Math.min(6, todo.length)} מילים הבאות</button>`}
-    ${d.text ? `<button class="btn g full" id="read" style="margin-top:10px">${icon('book')} קרא את הטקסט (מילים מסומנות)</button>` : ''}
+    ${d.text ? `<button class="btn ${d.type === 'story' && !d.readDone ? 'o big' : 'g'} full" id="read" style="margin-top:10px">${icon('book')} ${d.type === 'story' ? (d.readDone ? 'קרא שוב' : 'קרא את הסיפור') : 'קרא את הטקסט (מילים מסומנות)'}</button>` : ''}
+    ${d.qScore ? `<p class="sub center" style="margin-top:8px">הבנת הנקרא: <b>${d.qScore}</b></p>` : ''}
+    ${d.type === 'srt' && !d.readDone ? `<button class="btn g full" id="watched" style="margin-top:10px">${icon('check')} צפיתי בפרק</button>` : ''}
     <div class="card" style="margin-top:12px"><b>המילים</b><div style="margin-top:8px">${ws.map(w => `<button class="w ${srs.get('w:' + w.w) ? 'ok' : 'mid'}" data-say="${esc(w.w)}">${esc(w.w)} <small>${esc(w.he)}</small></button>`).join('')}</div></div>
     <button class="lp-skip" id="del" style="margin:8px auto;display:block">מחק את ההכנה</button>`;
   V.querySelectorAll('[data-go]').forEach(b => b.onclick = () => ctx.go(b.dataset.go));
   V.querySelectorAll('[data-say]').forEach(b => b.onclick = () => say(b.dataset.say));
   if ($('#learn')) $('#learn').onclick = () => { state.activeDeck = id; save(); ctx.learn.startLesson(null, { words: todo.slice(0, 6).map(w => ({ ...w, ...(d.cx?.[w.w] || {}) })), deck: id }); }; // המשפט מהפרק עצמו
   if ($('#read')) $('#read').onclick = () => reader(id);
+  if ($('#watched')) $('#watched').onclick = () => { finishRead(d); ctx.toast(`+${d.total.toLocaleString('en')} מילים ששמעת 🎬`); deck(id); };
   $('#del').onclick = () => { if (!confirm('למחוק את ההכנה? (מילים שכבר למדת יישארו בחזרות)')) return; delete state.decks[id]; if (state.activeDeck === id) state.activeDeck = null; save(); library(); };
 }
+// מונה "מילים שקראת/שמעת" (מטרה: מיליון בשנה)
+function finishRead(d) { if (d.readDone) return; d.readDone = true; state.readWords = (state.readWords || 0) + (d.total || 0); addXP(Math.min(30, Math.round((d.total || 0) / 40)), 'review'); save(); ctx.refreshTop(); }
 export function activeDeck() {
   const d = state.decks?.[state.activeDeck]; if (!d) return null;
   const left = d.words.filter(w => !srs.get('w:' + w) && !state.known?.[w]).length;
@@ -229,11 +236,28 @@ export function activeDeck() {
 export async function reader(id) {
   const d = state.decks[id]; await loadRank();
   const sents = splitSent(d.text).slice(0, 400);
-  const cls = (low) => { const L = lemma(low); if (d.words.includes(L)) return srs.get('w:' + L) ? 'rl' : 'rn'; if (!RANK.has(low) && !BYW[low]) return ''; return isKnown(L) ? '' : 'ru'; };
+  const lowSeen = new Set((d.text.match(/\b[a-z]+/g) || []));
+  const cls = (low, raw) => { if (/^[A-Z]/.test(raw) && !lowSeen.has(low) && !BYW[low] && !d.words.includes(low)) return ''; const L = lemma(low); if (d.words.includes(L)) return srs.get('w:' + L) ? 'rl' : 'rn'; if (!RANK.has(low) && !BYW[low]) return ''; return isKnown(L) ? '' : 'ru'; };
   V.innerHTML = `${back()}<h2 style="margin-bottom:4px">${esc(d.title)}</h2>
+    <button class="lp-audio" id="listen" style="margin:0 0 8px">${icon('sound', 18)} הקרא לי</button>
     <p class="mut" style="font-size:.85rem"><span class="rn">כתום</span> = ללמוד · <span class="rl">ירוק</span> = בתרגול · <span class="ru">מקווקו</span> = אולי לא מוכר. לחץ על מילה.</p>
-    <div class="reader ltr">${sents.map((s, i) => `<p data-s="${i}">${s.replace(/[A-Za-z]+(?:['’][A-Za-z]+)?|[^A-Za-z]+/g, (t) => /^[A-Za-z]/.test(t) ? (() => { const low = t.toLowerCase().replace(/['’].*$/, ''); const c = cls(low); return `<span class="tk ${c}" data-t="${esc(low)}">${esc(t)}</span>`; })() : esc(t))}</p>`).join('')}</div>`;
+    <div class="reader ltr">${sents.map((s, i) => `<p data-s="${i}">${s.replace(/[A-Za-z]+(?:['’][A-Za-z]+)?|[^A-Za-z]+/g, (t) => /^[A-Za-z]/.test(t) ? (() => { const low = t.toLowerCase().replace(/['’].*$/, ''); const c = cls(low, t); return `<span class="tk ${c}" data-t="${esc(low)}">${esc(t)}</span>`; })() : esc(t))}</p>`).join('')}</div>`;
   V.querySelectorAll('[data-go]').forEach(b => b.onclick = () => ctx.go(b.dataset.go));
+  V.insertAdjacentHTML('beforeend', `<div class="lp-foot">${d.q?.length && !d.qScore ? `<button class="btn o big full" id="qz">סיימתי · שאלות הבנה (${d.q.length})</button>` : `<button class="btn o big full" id="fin">סיימתי לקרוא</button>`}</div>`);
+  if ($('#qz')) $('#qz').onclick = () => { stopRead(); finishRead(d); ctx.stories.quiz(id); };
+  if ($('#fin')) $('#fin').onclick = () => { stopRead(); finishRead(d); deck(id); };
+  let playing = false; const root = V.querySelector('.reader');
+  const stopRead = () => { playing = false; stopSpeaking(); root.querySelectorAll('p.on').forEach(p => p.classList.remove('on')); $('#listen') && ($('#listen').innerHTML = `${icon('sound', 18)} הקרא לי`); };
+  $('#listen').onclick = async () => {
+    if (playing) return stopRead();
+    playing = true; $('#listen').innerHTML = `${icon('x', 18)} עצור`;
+    for (const p of root.querySelectorAll('p')) {
+      if (!playing || !V.contains(root)) break;
+      root.querySelectorAll('p.on').forEach(x => x.classList.remove('on')); p.classList.add('on'); p.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      await say(p.textContent, { rate: state.settings.readRate || .95 });
+    }
+    if (V.contains(root)) stopRead();
+  };
   V.querySelector('.reader').onclick = (ev) => { const tk = ev.target.closest('.tk'); if (!tk) return; wordSheet(id, tk.dataset.t, sents[+tk.parentElement.dataset.s], tk); };
 }
 async function wordSheet(id, low, sent, tk) {

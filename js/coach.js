@@ -108,7 +108,7 @@ export async function hear({ onText = () => {}, silence = 2200, maxWait = 12000 
 }
 
 // ================== מסגרת מסך (כמו נגן השיעור) ==================
-function frame({ i, n, label, ic, body, foot, onExit }) {
+export function frame({ i, n, label, ic, body, foot, onExit }) {
   V.innerHTML = `<div class="lp">
     <div class="lp-top"><button class="lp-x" id="lpx" aria-label="יציאה">${icon('x', 26)}</button>
       ${n ? `<div class="lp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${i}"><i style="width:${Math.round(i / n * 100)}%"></i></div>` : '<div style="flex:1"></div>'}</div>
@@ -142,11 +142,11 @@ export function bindAnswer(submit) {
   };
 }
 let ac;
-function chime(good) {
+export function chime(good) {
   navigator.vibrate?.(good ? 25 : [60, 40, 60]); if (state.settings.sounds === false) return;
   try { ac ||= new (window.AudioContext || window.webkitAudioContext)(); (good ? [784, 1047] : [330, 262]).forEach((f, i) => { const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = f; o.connect(g); g.connect(ac.destination); const t = ac.currentTime + i * .11; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.18, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .22); o.start(t); o.stop(t + .25); }); } catch {}
 }
-function sheet(kind, html, { onNext, onRetry } = {}) {
+export function sheet(kind, html, { onNext, onRetry } = {}) {
   const good = kind !== 'wrong';
   const t = kind === 'correct' ? 'מעולה! בדיוק ככה' : kind === 'minor' ? 'נכון! אפשר טבעי יותר' : 'עוד לא. ככה אומרים:';
   chime(good); good ? ctx.stage.celebrate() : ctx.stage.sad();

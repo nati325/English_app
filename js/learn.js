@@ -59,6 +59,7 @@ export function home() {
       <button class="btn o big full" id="go" style="margin-top:16px">${doneToday ? 'עוד שיעור' : lessonsDone ? 'המשך ללמוד' : 'התחל שיעור'} ${icon('chevron', 20)}</button>
     </div>
     ${(() => { const a = mine.activeDeck(); return a && a.left ? `<button class="prow" id="deck" style="margin-top:4px"><span class="ic">${icon('play')}</span><span class="t"><b>הכנה: ${esc(a.d.title)}</b><small>עוד ${a.left} מילים ואתה מוכן</small></span><span class="st">${icon('chevron')}</span></button>` : ''; })()}
+    ${(() => { const n = ctx.vocab?.dueFast().length || 0; return `<button class="prow" id="fast" style="margin-top:4px"><span class="ic">${icon('bolt')}</span><span class="t"><b>הרחבת אוצר מילים · 5 דק'</b><small>${n ? `${n} חזרות מהירות + מילים חדשות` : '10 מילים חדשות מעבר לליבה'}</small></span><span class="st">${icon('chevron')}</span></button>`; })()}
     <button class="prow" id="drill" style="margin-top:4px"><span class="ic">${icon('chat')}</span><span class="t"><b>אימון דיבור · תרגם ודבר</b><small>${coach.dueMistakes().length ? `${coach.dueMistakes().length} טעויות מחכות לתיקון` : '8 משפטים, תיקון מיידי'}</small></span><span class="st">${icon('chevron')}</span></button>
     <div class="row" style="justify-content:space-between;margin-top:18px"><b style="font-size:1.1rem">המסלול שלך</b><span class="mut" style="font-size:.85rem">יחידה ${ci + 1} מתוך ${units.length}</span></div>
     <div class="trail">${win.map((u, k) => {
@@ -69,6 +70,7 @@ export function home() {
     }).join('')}</div>`;
   $('#go').onclick = () => startLesson(curId);
   $('#drill').onclick = () => coach.drill();
+  $('#fast').onclick = () => ctx.go('fast');
   if ($('#deck')) $('#deck').onclick = () => mine.deck(state.activeDeck);
   if ($('#pt')) $('#pt').onclick = () => ctx.placement.start();
   V.querySelectorAll('.node').forEach(b => b.onclick = () => {
